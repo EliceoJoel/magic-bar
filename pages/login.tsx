@@ -15,11 +15,11 @@ function Login() {
 					alt="login banner"
 				/>
 			</div>
-			<div className="h-screen flex flex-col p-10 justify-center lg:w-3/6 lg:px-28">
+			<div className="h-screen flex flex-col p-10 justify-center lg:w-3/6 lg:px-28 2xl:px-40">
 				<div className="flex justify-center text-5xl pb-4 text-[#597EF7]">
 					<FaCocktail />
 				</div>
-				<h1 className="text-4xl text-center font-bold text-[#597EF7] pb-8 lg:text-5xl lg:pb-10">
+				<h1 className="text-3xl text-center font-bold text-[#597EF7] pb-8 lg:text-4xl lg:pb-10">
 					Welcome to Magic Bar
 				</h1>
 				<p>A wonderful place where you can enjoy with your friends</p>
