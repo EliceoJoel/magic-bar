@@ -17,32 +17,32 @@ function LeftSidebarMenu() {
 					<IoCloseOutline className="h-6 w-6" />
 				</label>
 			</div>
-			<li className="bg-white rounded-btn mb-3 shadow-lg">
-				<Link href="promotions">
+			<li className="bg-white rounded-btn mb-4 shadow-lg">
+				<Link href="catalog/promotions">
 					<HiOutlineSparkles className="h-6 w-6" />
 					Promotions
 				</Link>
 			</li>
-			<li className="bg-white rounded-btn mb-3 shadow-lg">
-				<Link href="combos">
+			<li className="bg-white rounded-btn mb-4 shadow-lg">
+				<Link href="catalog/combos">
 					<GiWineBottle className="h-6 w-6" />
 					Combos
 				</Link>
 			</li>
-			<li className="bg-white rounded-btn mb-3 shadow-lg">
-				<Link href="games">
+			<li className="bg-white rounded-btn mb-4 shadow-lg">
+				<Link href="catalog/games">
 					<IoDiceOutline className="h-6 w-6" />
 					Games
 				</Link>
 			</li>
-			<li className="bg-white rounded-btn mb-3 shadow-lg">
-				<Link href="categories">
+			<li className="bg-white rounded-btn mb-4 shadow-lg">
+				<Link href="catalog/categories">
 					<RxDashboard className="h-6 w-6" />
 					Categories
 				</Link>
 			</li>
-			<li className="bg-white rounded-btn mb-3 shadow-lg">
-				<Link href="brands">
+			<li className="bg-white rounded-btn mb-4 shadow-lg">
+				<Link href="catalog/brands">
 					<TbTriangleSquareCircle className="h-6 w-6" />
 					Brands
 				</Link>
