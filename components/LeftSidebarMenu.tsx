@@ -18,31 +18,31 @@ function LeftSidebarMenu() {
 				</label>
 			</div>
 			<li className="bg-white rounded-btn mb-4 shadow-lg">
-				<Link href="catalog/promotions">
+				<Link href="/catalog/promotions">
 					<HiOutlineSparkles className="h-6 w-6" />
 					Promotions
 				</Link>
 			</li>
 			<li className="bg-white rounded-btn mb-4 shadow-lg">
-				<Link href="catalog/combos">
+				<Link href="/catalog/combos">
 					<GiWineBottle className="h-6 w-6" />
 					Combos
 				</Link>
 			</li>
 			<li className="bg-white rounded-btn mb-4 shadow-lg">
-				<Link href="catalog/games">
+				<Link href="/catalog/games">
 					<IoDiceOutline className="h-6 w-6" />
 					Games
 				</Link>
 			</li>
 			<li className="bg-white rounded-btn mb-4 shadow-lg">
-				<Link href="catalog/categories">
+				<Link href="/catalog/categories">
 					<RxDashboard className="h-6 w-6" />
 					Categories
 				</Link>
 			</li>
 			<li className="bg-white rounded-btn mb-4 shadow-lg">
-				<Link href="catalog/brands">
+				<Link href="/catalog/brands">
 					<TbTriangleSquareCircle className="h-6 w-6" />
 					Brands
 				</Link>

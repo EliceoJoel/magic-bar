@@ -2,7 +2,12 @@ import Link from "next/link";
 import React from "react";
 import { FaCocktail } from "react-icons/fa";
 import { FiLogOut, FiSettings } from "react-icons/fi";
-import { HiOutlineMenu, HiOutlineUserCircle } from "react-icons/hi";
+import {
+	HiOutlineMenu,
+	HiOutlineUserCircle,
+	HiOutlineShoppingBag,
+	HiOutlineMoon,
+} from "react-icons/hi";
 
 function Navbar() {
 	return (
@@ -15,15 +20,10 @@ function Navbar() {
 				>
 					<HiOutlineMenu className="w-6 h-6" />
 				</label>
-				<Link href="/" className="btn btn-ghost text-xl hidden lg:inline-flex">
-					<span className="text-primary p-2">
-						<FaCocktail />
-					</span>
-					<span className="uppercase">Magic Bar</span>
-				</Link>
-			</div>
-			<div className="navbar-center">
-				<Link href="/" className="btn btn-ghost text-xl lg:hidden">
+				<Link
+					href="/"
+					className="btn btn-ghost text-xl hidden lg:inline-flex"
+				>
 					<span className="text-primary p-2">
 						<FaCocktail />
 					</span>
@@ -31,6 +31,17 @@ function Navbar() {
 				</Link>
 			</div>
 			<div className="navbar-end">
+				<button className="btn btn-circle btn-ghost">
+					<HiOutlineMoon className="w-6 h-6" />
+				</button>
+				<label
+					htmlFor="leftMenuDrawer"
+					tabIndex={0}
+					className="btn btn-circle btn-ghost relative"
+				>
+					<HiOutlineShoppingBag className="w-6 h-6" />
+					<div className="badge badge-primary absolute badge-xs top-2 right-1"></div>
+				</label>
 				<div className="dropdown dropdown-end dropdown-hover">
 					<label tabIndex={0} className="btn btn-ghost btn-circle">
 						<div className="indicator">
