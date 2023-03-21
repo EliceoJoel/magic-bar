@@ -8,15 +8,24 @@ import {
 	HiOutlineShoppingBag,
 	HiOutlineMoon,
 } from "react-icons/hi";
+import LeftSidebarMenu from "./LeftSidebarMenu";
+import Cart from "./Cart";
 
-function Navbar() {
+interface OpenDrawer {
+	openDrawer: Function;
+}
+
+function Navbar({ openDrawer }: OpenDrawer) {
 	return (
 		<div className="navbar bg-base-200">
 			<div className="navbar-start">
 				<label
-					htmlFor="leftMenuDrawer"
+					htmlFor="theDrawer"
 					tabIndex={0}
 					className="btn btn-ghost btn-circle lg:hidden"
+					onClick={() =>
+						openDrawer({ position: "", content: <LeftSidebarMenu /> })
+					}
 				>
 					<HiOutlineMenu className="w-6 h-6" />
 				</label>
@@ -35,9 +44,15 @@ function Navbar() {
 					<HiOutlineMoon className="w-6 h-6" />
 				</button>
 				<label
-					htmlFor="leftMenuDrawer"
+					htmlFor="theDrawer"
 					tabIndex={0}
 					className="btn btn-circle btn-ghost relative"
+					onClick={() =>
+						openDrawer({
+							position: "drawer-end",
+							content: <Cart />,
+						})
+					}
 				>
 					<HiOutlineShoppingBag className="w-6 h-6" />
 					<div className="badge badge-primary absolute badge-xs top-2 right-1"></div>

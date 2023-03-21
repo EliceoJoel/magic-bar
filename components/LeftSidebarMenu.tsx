@@ -9,11 +9,9 @@ import { TbTriangleSquareCircle } from "react-icons/tb";
 function LeftSidebarMenu() {
 	return (
 		<ul className="menu p-4 w-60 ssm:w-80 bg-base-200">
-			<div className="mb-3 flex justify-center lg:hidden">
-				<label
-					htmlFor="leftMenuDrawer"
-					className="btn btn-outline btn-circle"
-				>
+			<div className="mb-4 flex items-center justify-between lg:hidden">
+				<h2 className="text-xl ">Order Details</h2>
+				<label htmlFor="theDrawer" className="btn btn-outline btn-circle">
 					<IoCloseOutline className="h-6 w-6" />
 				</label>
 			</div>
