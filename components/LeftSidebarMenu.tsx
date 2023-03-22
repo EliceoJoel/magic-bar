@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import { FaCocktail } from "react-icons/fa";
 import { GiWineBottle } from "react-icons/gi";
 import { HiOutlineSparkles } from "react-icons/hi";
 import { IoCloseOutline, IoDiceOutline } from "react-icons/io5";
@@ -10,7 +11,12 @@ function LeftSidebarMenu() {
 	return (
 		<ul className="menu p-4 w-60 ssm:w-80 bg-base-200">
 			<div className="mb-4 flex items-center justify-between lg:hidden">
-				<h2 className="text-xl ">Order Details</h2>
+				<div className="flex items-center text-xl">
+					<span className="text-primary p-2">
+						<FaCocktail />
+					</span>
+					<span className="uppercase font-semibold">Magic Bar</span>
+				</div>
 				<label htmlFor="theDrawer" className="btn btn-outline btn-circle">
 					<IoCloseOutline className="h-6 w-6" />
 				</label>
