@@ -3,7 +3,7 @@ import React from "react";
 import CocaColaImage from "@/public/cocacola.jpg";
 import Image from "next/image";
 import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
-import { productsForPromotion } from "data/test";
+import { productsForPromotions } from "data/test";
 
 function Promotions() {
 	return (
@@ -19,7 +19,7 @@ function Promotions() {
 					<div className="input-group input-group-sm md:input-group-md">
 						<input
 							type="text"
-							placeholder="Search…"
+							placeholder="Search in promotions..."
 							className="input input-bordered input-sm input-primary w-full max-w-md md:input-md"
 						/>
 						<button className="btn btn-primary btn-square btn-sm md:btn-md">
@@ -29,7 +29,7 @@ function Promotions() {
 				</div>
 			</div>
 			<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
-				{productsForPromotion.map((product) => (
+				{productsForPromotions.map((product) => (
 					<div
 						className="card card-compact bg-base-100 shadow-xl"
 						key={product.name}
