@@ -25,11 +25,11 @@ function Layout({ children } : { children : React.ReactNode }) {
 				/>
 				<div className="drawer-content flex flex-col">
 					<Navbar openDrawer={openDrawer} />
-					<div className="flex">
+					<div className="flex h-full overflow-hidden">
 						<aside className="hidden lg:block">
 							<LeftSidebarMenu />
 						</aside>
-                  <main className="p-4 w-full">
+                  <main className="p-4 w-full overflow-y-auto">
                      {children}
                   </main>
 					</div>
