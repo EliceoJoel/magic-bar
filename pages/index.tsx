@@ -28,44 +28,43 @@ const LoginForm = ({
 }: {
 	changeRegister: Dispatch<SetStateAction<boolean>>;
 }) => (
-	<>
-		<h3 className="font-bold text-lg mb-2">Login</h3>
-		<div className="flex flex-col gap-2">
-			<div className="form-control w-full">
-				<label htmlFor="emailInput" className="label">
-					<span className="label-text">Email</span>
-				</label>
-				<input
-					id="emailInput"
-					type="email"
-					placeholder="name@example.com"
-					className="input input-bordered input-primary w-full"
-				/>
-			</div>
-			<div className="form-control w-full">
-				<label htmlFor="passwordInput" className="label">
-					<span className="label-text">Password</span>
-				</label>
-				<input
-					id="passwordInput"
-					type="password"
-					placeholder="Type your password"
-					className="input input-bordered input-primary w-full"
-				/>
-			</div>
-			<Link href="/catalog" className="btn btn-primary w-full mt-4">Login</Link>
-			<div className="mt-2">
-				<p>Do not you have an account yet?</p>
-				<span
-					className="text-primary cursor-pointer"
-					tabIndex={0}
-					onClick={() => changeRegister(true)}
-				>
-					Sign up
-				</span>
-			</div>
+	<div className="flex flex-col gap-2">
+		<div className="form-control w-full">
+			<label htmlFor="emailInput" className="label">
+				<span className="label-text">Email</span>
+			</label>
+			<input
+				id="emailInput"
+				type="email"
+				placeholder="name@example.com"
+				className="input input-bordered input-primary w-full"
+			/>
 		</div>
-	</>
+		<div className="form-control w-full">
+			<label htmlFor="passwordInput" className="label">
+				<span className="label-text">Password</span>
+			</label>
+			<input
+				id="passwordInput"
+				type="password"
+				placeholder="Type your password"
+				className="input input-bordered input-primary w-full"
+			/>
+		</div>
+		<Link href="/catalog" className="btn btn-primary w-full mt-4">
+			Login
+		</Link>
+		<div className="mt-2">
+			<p>Do not you have an account yet?</p>
+			<span
+				className="text-primary cursor-pointer"
+				tabIndex={0}
+				onClick={() => changeRegister(true)}
+			>
+				Sign up
+			</span>
+		</div>
+	</div>
 );
 
 const RegisterForm = ({
@@ -73,79 +72,78 @@ const RegisterForm = ({
 }: {
 	changeRegister: Dispatch<SetStateAction<boolean>>;
 }) => (
-	<>
-		<h3 className="font-bold text-lg mb-2">Create an account</h3>
-		<div className="flex flex-col gap-2">
-			<div className="flex gap-2">
-				<div className="form-control w-full">
-					<label htmlFor="nameInput" className="label">
-						<span className="label-text">Name</span>
-					</label>
-					<input
-						id="nameInput"
-						type="text"
-						placeholder="Type your name"
-						className="input input-bordered input-primary w-full"
-					/>
-				</div>
-				<div className="form-control w-full">
-					<label htmlFor="lastnameInput" className="label">
-						<span className="label-text">Last name</span>
-					</label>
-					<input
-						id="lastnameInput"
-						type="text"
-						placeholder="Type your last name"
-						className="input input-bordered input-primary w-full"
-					/>
-				</div>
-			</div>
+	<div className="flex flex-col gap-2">
+		<div className="flex gap-2">
 			<div className="form-control w-full">
-				<label htmlFor="emailInput" className="label">
-					<span className="label-text">Email</span>
+				<label htmlFor="nameInput" className="label">
+					<span className="label-text">Name</span>
 				</label>
 				<input
-					id="emailInput"
-					type="email"
-					placeholder="name@example.com"
+					id="nameInput"
+					type="text"
+					placeholder="Type your name"
 					className="input input-bordered input-primary w-full"
 				/>
 			</div>
 			<div className="form-control w-full">
-				<label htmlFor="passwordInput" className="label">
-					<span className="label-text">Password</span>
+				<label htmlFor="lastnameInput" className="label">
+					<span className="label-text">Last name</span>
 				</label>
 				<input
-					id="passwordInput"
-					type="password"
-					placeholder="Type your password"
+					id="lastnameInput"
+					type="text"
+					placeholder="Type your last name"
 					className="input input-bordered input-primary w-full"
 				/>
-			</div>
-			<div className="form-control w-full">
-				<label htmlFor="confirmPasswordInput" className="label">
-					<span className="label-text">Confirm password</span>
-				</label>
-				<input
-					id="confirmPasswordInput"
-					type="password"
-					placeholder="Confirm your password"
-					className="input input-bordered input-primary w-full"
-				/>
-			</div>
-			<Link href="/catalog" className="btn btn-primary w-full mt-4">Register</Link>
-			<div className="mt-2">
-				<p>Do you already have an account?</p>
-				<span
-					className="text-primary cursor-pointer"
-					tabIndex={0}
-					onClick={() => changeRegister(false)}
-				>
-					Log in
-				</span>
 			</div>
 		</div>
-	</>
+		<div className="form-control w-full">
+			<label htmlFor="emailInput" className="label">
+				<span className="label-text">Email</span>
+			</label>
+			<input
+				id="emailInput"
+				type="email"
+				placeholder="name@example.com"
+				className="input input-bordered input-primary w-full"
+			/>
+		</div>
+		<div className="form-control w-full">
+			<label htmlFor="passwordInput" className="label">
+				<span className="label-text">Password</span>
+			</label>
+			<input
+				id="passwordInput"
+				type="password"
+				placeholder="Type your password"
+				className="input input-bordered input-primary w-full"
+			/>
+		</div>
+		<div className="form-control w-full">
+			<label htmlFor="confirmPasswordInput" className="label">
+				<span className="label-text">Confirm password</span>
+			</label>
+			<input
+				id="confirmPasswordInput"
+				type="password"
+				placeholder="Confirm your password"
+				className="input input-bordered input-primary w-full"
+			/>
+		</div>
+		<Link href="/catalog" className="btn btn-primary w-full mt-4">
+			Register
+		</Link>
+		<div className="mt-2">
+			<p>Do you already have an account?</p>
+			<span
+				className="text-primary cursor-pointer"
+				tabIndex={0}
+				onClick={() => changeRegister(false)}
+			>
+				Log in
+			</span>
+		</div>
+	</div>
 );
 
 const LoginRegisterModal = ({
@@ -171,6 +169,9 @@ const LoginRegisterModal = ({
 				>
 					✕
 				</label>
+				<h3 className="font-bold text-lg mb-2">
+					{isRegistering ? "Create an account" : "Login"}
+				</h3>
 				{isRegistering ? (
 					<RegisterForm changeRegister={changeRegister} />
 				) : (
@@ -206,12 +207,9 @@ export default function Home() {
 						can enjoy different foods &#127828;, drinks &#127867; and
 						games &#127918;
 					</p>
-					<label
-						htmlFor="loginModal"
-						className="btn btn-primary md:btn-wide"
-					>
-						Start
-					</label>
+					<Link href="/catalog" className="btn btn-primary md:btn-wide">
+						Go to catalog
+					</Link>
 					<LoginRegisterModal
 						isRegistering={isRegistering}
 						changeRegister={setIsRegistering}

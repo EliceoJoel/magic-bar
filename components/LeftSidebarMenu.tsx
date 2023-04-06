@@ -11,12 +11,15 @@ function LeftSidebarMenu() {
 	return (
 		<ul className="menu p-4 w-60 ssm:w-80 bg-base-200">
 			<div className="mb-4 flex items-center justify-between lg:hidden">
-				<div className="flex items-center text-xl">
+				<Link
+					href="/catalog"
+					className="btn btn-ghost text-xl p-0"
+				>
 					<span className="text-primary p-2">
 						<FaCocktail />
 					</span>
-					<span className="uppercase font-semibold">Magic Bar</span>
-				</div>
+					<span className="uppercase">Magic Bar</span>
+				</Link>
 				<label htmlFor="theDrawer" className="btn btn-outline btn-circle">
 					<IoCloseOutline className="h-6 w-6" />
 				</label>
