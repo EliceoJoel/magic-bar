@@ -34,7 +34,7 @@ function Combos() {
 						key={combo.name}
 					>
 						<figure>
-							<Image alt="coca cola" src={combo.image} />
+							<Image alt={combo.name} src={combo.image} />
 							<button className="btn btn-circle btn-primary absolute top-2 right-2">
 								<AiOutlinePlus className="w-6 h-6" />
 							</button>
