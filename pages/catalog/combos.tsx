@@ -2,8 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Layout from "@/components/Layout";
 import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
-import { productsForCombos } from 'data/test';
-import ComboImage from 'public/combo.jpg';
+import { combos } from 'data/test';
 
 function Combos() {
 	return (
@@ -18,7 +17,7 @@ function Combos() {
 				<div className="form-control w-[28rem]">
 					<div className="input-group input-group-sm md:input-group-md">
 						<input
-							type="text"
+							type="search"
 							placeholder="Search in combos..."
 							className="input input-bordered input-sm input-primary w-full max-w-md md:input-md"
 						/>
@@ -29,13 +28,13 @@ function Combos() {
 				</div>
 			</div>
 			<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
-				{productsForCombos.map((combo) => (
+				{combos.map((combo) => (
 					<div
 						className="card card-compact bg-base-100 shadow-xl"
 						key={combo.name}
 					>
 						<figure>
-							<Image alt="coca cola" src={ComboImage} />
+							<Image alt="coca cola" src={combo.image} />
 							<button className="btn btn-circle btn-primary absolute top-2 right-2">
 								<AiOutlinePlus className="w-6 h-6" />
 							</button>

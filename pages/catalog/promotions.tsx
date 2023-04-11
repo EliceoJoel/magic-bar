@@ -1,9 +1,8 @@
 import Layout from "@/components/Layout";
 import React from "react";
-import CocaColaImage from "@/public/cocacola.jpg";
 import Image from "next/image";
 import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
-import { productsForPromotions } from "data/test";
+import { promotions } from "data/test";
 
 function Promotions() {
 	return (
@@ -18,7 +17,7 @@ function Promotions() {
 				<div className="form-control w-[28rem]">
 					<div className="input-group input-group-sm md:input-group-md">
 						<input
-							type="text"
+							type="search"
 							placeholder="Search in promotions..."
 							className="input input-bordered input-sm input-primary w-full max-w-md md:input-md"
 						/>
@@ -29,33 +28,33 @@ function Promotions() {
 				</div>
 			</div>
 			<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
-				{productsForPromotions.map((product) => (
+				{promotions.map((promotion) => (
 					<div
 						className="card card-compact bg-base-100 shadow-xl"
-						key={product.name}
+						key={promotion.name}
 					>
 						<figure className="relative">
-							<Image alt="coca cola" src={CocaColaImage} />
+							<Image alt={promotion.name} src={promotion.image} />
 							<button className="btn btn-circle btn-primary absolute top-2 right-2">
 								<AiOutlinePlus className="w-6 h-6" />
 							</button>
 							<div className="badge badge-sm absolute bottom-2 right-2">
-								{product.additional}
+								{promotion.additional}
 							</div>
 						</figure>
 						<div className="card-body">
-							<h2 className="card-title text-base">{product.name}</h2>
+							<h2 className="card-title text-base">{promotion.name}</h2>
 							<p className="font-semibold text-primary">
-								{product.promotialPrice
-									? product.promotialPrice + " Bs."
-									: product.price + " Bs."}{" "}
+								{promotion.promotialPrice
+									? promotion.promotialPrice + " Bs."
+									: promotion.price + " Bs."}{" "}
 								<del className="text-black">
-									{product.promotialPrice
-										? product.price + " Bs."
+									{promotion.promotialPrice
+										? promotion.price + " Bs."
 										: ""}
 								</del>
 							</p>
-							<p>{product.brand}</p>
+							<p>{promotion.brand}</p>
 						</div>
 					</div>
 				))}
