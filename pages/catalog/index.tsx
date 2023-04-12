@@ -2,8 +2,8 @@ import Layout from "@/components/Layout";
 import React from "react";
 import Image from "next/image";
 import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
-import CocaColaImage from "@/public/cocacola.jpg";
-import { promotions, combos, games } from "data/test";
+import CocaColaImage from "@/public/cocacola.webp";
+import { promotions, combos, games, categories } from "data/test";
 import Link from "next/link";
 
 function All() {
@@ -36,7 +36,7 @@ function All() {
 						See all
 					</Link>
 				</div>
-				<div className="carousel carousel-end gap-4">
+				<div className="carousel relative gap-4">
 					{promotions.map((promotion, index) => (
 						<div
 							className="carousel-item card card-compact bg-base-100 w-1/2 md:w-1/3 xl:w-1/4 2xl:w-1/6"
@@ -78,7 +78,7 @@ function All() {
 						See all
 					</Link>
 				</div>
-				<div className="carousel carousel-end gap-4">
+				<div className="carousel gap-4">
 					{combos.map((combo, index) => (
 						<div
 							className="carousel-item card card-compact bg-base-100 w-1/2 md:w-1/3 xl:w-1/4 2xl:w-1/6"
@@ -115,7 +115,7 @@ function All() {
 						See all
 					</Link>
 				</div>
-				<div className="carousel carousel-end gap-4">
+				<div className="carousel gap-4">
 					{games.map((game, index) => (
 						<div
 							className="carousel-item card card-compact bg-base-100 w-1/2 md:w-1/3 xl:w-1/4 2xl:w-1/6"
@@ -141,71 +141,23 @@ function All() {
 						See all
 					</Link>
 				</div>
-				<div className="carousel carousel-end gap-4">
-					<div className="carousel-item card card-compact bg-base-100 w-1/2 md:w-1/3 xl:w-1/4 2xl:w-1/6">
-						<figure className="relative">
-							<Image alt="coca cola" src={CocaColaImage} />
-							<button className="btn btn-circle btn-primary absolute top-2 right-2">
-								<AiOutlinePlus className="w-6 h-6" />
-							</button>
-							<div className="badge badge-sm absolute bottom-2 right-2">
-								700 ml
+				<div className="carousel gap-4">
+					{categories.map((category, index) => (
+						<div
+							className="carousel-item card card-compact bg-base-100 w-1/2 md:w-1/3 xl:w-1/4 2xl:w-1/6 focus:border-black focus:border-2 focus:outline-none"
+							key={index}
+							tabIndex={0}
+						>
+							<figure className="relative">
+								<Image alt={category.name} src={category.image} />
+							</figure>
+							<div className="card-body">
+								<h2 className="card-title text-base">
+									{category.name}
+								</h2>
 							</div>
-						</figure>
-						<div className="card-body">
-							<h2 className="card-title text-base">Coca cola</h2>
-							<p className="font-semibold text-primary">12 Bs.</p>
-							<p>The Coca Cola company</p>
 						</div>
-					</div>
-					<div className="carousel-item card card-compact bg-base-100 w-1/2 md:w-1/3 xl:w-1/4 2xl:w-1/6">
-						<figure className="relative">
-							<Image alt="coca cola" src={CocaColaImage} />
-							<button className="btn btn-circle btn-primary absolute top-2 right-2">
-								<AiOutlinePlus className="w-6 h-6" />
-							</button>
-							<div className="badge badge-sm absolute bottom-2 right-2">
-								700 ml
-							</div>
-						</figure>
-						<div className="card-body">
-							<h2 className="card-title text-base">Coca cola</h2>
-							<p className="font-semibold text-primary">12 Bs.</p>
-							<p>The Coca Cola company</p>
-						</div>
-					</div>
-					<div className="carousel-item card card-compact bg-base-100 w-1/2 md:w-1/3 xl:w-1/4 2xl:w-1/6">
-						<figure className="relative">
-							<Image alt="coca cola" src={CocaColaImage} />
-							<button className="btn btn-circle btn-primary absolute top-2 right-2">
-								<AiOutlinePlus className="w-6 h-6" />
-							</button>
-							<div className="badge badge-sm absolute bottom-2 right-2">
-								700 ml
-							</div>
-						</figure>
-						<div className="card-body">
-							<h2 className="card-title text-base">Coca cola</h2>
-							<p className="font-semibold text-primary">12 Bs.</p>
-							<p>The Coca Cola company</p>
-						</div>
-					</div>
-					<div className="carousel-item card card-compact bg-base-100 w-1/2 md:w-1/3 xl:w-1/4 2xl:w-1/6">
-						<figure className="relative">
-							<Image alt="coca cola" src={CocaColaImage} />
-							<button className="btn btn-circle btn-primary absolute top-2 right-2">
-								<AiOutlinePlus className="w-6 h-6" />
-							</button>
-							<div className="badge badge-sm absolute bottom-2 right-2">
-								700 ml
-							</div>
-						</figure>
-						<div className="card-body">
-							<h2 className="card-title text-base">Coca cola</h2>
-							<p className="font-semibold text-primary">12 Bs.</p>
-							<p>The Coca Cola company</p>
-						</div>
-					</div>
+					))}
 				</div>
 			</div>
 			<div className="mb-4">
@@ -215,7 +167,7 @@ function All() {
 						See all
 					</Link>
 				</div>
-				<div className="carousel carousel-end gap-4">
+				<div className="carousel gap-4">
 					<div className="carousel-item card card-compact bg-base-100 w-1/2 md:w-1/3 xl:w-1/4 2xl:w-1/6">
 						<figure className="relative">
 							<Image alt="coca cola" src={CocaColaImage} />
