@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import { IoCloseOutline } from "react-icons/io5";
-import CocaColaImage from "@/public/cocacola.jpg";
+import CocaColaImage from "@/public/cocacola.webp";
 import { HiMinus, HiPlus } from "react-icons/hi";
 import { FiTrash } from "react-icons/fi";
 
