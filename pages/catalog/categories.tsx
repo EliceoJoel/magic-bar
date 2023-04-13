@@ -31,7 +31,7 @@ function Categories() {
 			<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
 				{categories.map((category) => (
 					<div
-						className="card card-compact bg-base-100 shadow-xl"
+						className="card card-compact bg-base-100 shadow-xl cursor-pointer hover:border-primary hover:border-2"
 						key={category.name}
 						tabIndex={0}
 					>
