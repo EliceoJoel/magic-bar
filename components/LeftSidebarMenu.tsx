@@ -52,12 +52,6 @@ function LeftSidebarMenu() {
 					Categories
 				</Link>
 			</li>
-			<li className="bg-white rounded-btn mb-4 shadow-lg">
-				<Link href="/catalog/brands">
-					<TbTriangleSquareCircle className="h-6 w-6" />
-					Brands
-				</Link>
-			</li>
 		</ul>
 	);
 }

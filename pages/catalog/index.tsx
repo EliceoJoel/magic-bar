@@ -6,14 +6,123 @@ import CocaColaImage from "@/public/cocacola.webp";
 import { promotions, combos, games, categories } from "data/test";
 import Link from "next/link";
 
+const NewProductModal = () => (
+	<>
+		<input type="checkbox" id="newProductModal" className="modal-toggle" />
+		<div className="modal">
+			<div className="modal-box relative max-w-md">
+				<label
+					htmlFor="newProductModal"
+					className="btn btn-sm btn-circle absolute right-2 top-2"
+					tabIndex={0}
+				>
+					✕
+				</label>
+				<h3 className="font-bold text-lg mb-2">New Product</h3>
+				<div className="flex flex-col gap-2">
+					<div>
+						<p>Fields that have the symbol <span className="text-red-500">[*]</span> need to be filled because they are required</p>
+					</div>
+					<div className="form-control w-full">
+						<label htmlFor="productNameInput" className="label justify-start">
+							<span className="label-text">Name</span>
+							<span className="label-text text-red-500">&nbsp;[*]</span>
+						</label>
+						<input
+							id="productNameInput"
+							type="text"
+							placeholder="Type the name of the new product"
+							className="input input-bordered input-primary w-full"
+						/>
+					</div>
+					<div className="form-control w-full">
+						<label htmlFor="productBrandInput" className="label justify-start">
+							<span className="label-text">Brand</span>
+							<span className="label-text text-red-500">&nbsp;[*]</span>
+						</label>
+						<input
+							id="productBrandInput"
+							type="text"
+							placeholder="Type the brand of the new product"
+							className="input input-bordered input-primary w-full"
+						/>
+					</div>
+					<div className="form-control w-full">
+						<label htmlFor="productCategorySelect" className="label justify-start">
+							<span className="label-text">Category</span>
+							<span className="label-text text-red-500">&nbsp;[*]</span>
+						</label>
+						<select
+							id="productCategorySelect"
+							className="select select-primary w-full"
+						>
+							<option disabled selected>
+								Pick a category for this product
+							</option>
+							{categories.map((category, index) => (
+								<option value={category.name} key={index}>
+									{category.name}
+								</option>
+							))}
+						</select>
+					</div>
+					<div className="form-control w-full">
+						<label htmlFor="productPriceInput" className="label justify-start">
+							<span className="label-text">Price</span>
+							<span className="label-text text-red-500">&nbsp;[*]</span>
+						</label>
+						<input
+							id="productPriceInput"
+							type="text"
+							placeholder="Type the base price of the new product"
+							className="input input-bordered input-primary w-full"
+						/>
+					</div>
+					<div className="form-control w-full">
+						<label htmlFor="productImageFile" className="label justify-start">
+							<span className="label-text">Image</span>
+							<span className="label-text text-red-500">&nbsp;[*]</span>
+						</label>
+						<input
+							id="productImageFile"
+							type="file"
+							className="file-input file-input-bordered file-input-primary w-full"
+						/>
+					</div>
+					<div className="form-control w-full">
+						<label htmlFor="productAdditionalInput" className="label">
+							<span className="label-text">Additional</span>
+						</label>
+						<input
+							id="productAdditionalInput"
+							type="text"
+							placeholder="Amount in mililiters, alcohol percentage, etc.."
+							className="input input-bordered input-primary w-full"
+						/>
+					</div>
+				</div>
+				<div className="modal-action">
+					<label htmlFor="newProductModal" className="btn capitalize">
+						Cancel
+					</label>
+					<button className="btn btn-primary capitalize">Save</button>
+				</div>
+			</div>
+		</div>
+	</>
+);
+
 function All() {
 	return (
 		<Layout>
 			<div className="flex justify-between items-center mb-4">
 				<h1 className="text-xl md:text-2xl">All Catalog</h1>
-				<button className="btn btn-primary btn-sm md:btn-md normal-case">
+				<label
+					htmlFor="newProductModal"
+					className="btn btn-primary btn-sm md:btn-md normal-case"
+				>
 					New product
-				</button>
+				</label>
 			</div>
 			<div className="flex justify-end mb-4">
 				<div className="form-control w-[28rem]">
@@ -144,7 +253,7 @@ function All() {
 				<div className="carousel gap-4">
 					{categories.map((category, index) => (
 						<div
-							className="carousel-item card card-compact bg-base-100 w-1/2 md:w-1/3 xl:w-1/4 2xl:w-1/6 focus:border-black focus:border-2 focus:outline-none"
+							className="carousel-item card card-compact bg-base-100 w-1/2 md:w-1/3 xl:w-1/4 2xl:w-1/6 focus:border-primary focus:border-2 focus:outline-none cursor-pointer hover:border-primary hover:border-2"
 							key={index}
 							tabIndex={0}
 						>
@@ -160,80 +269,7 @@ function All() {
 					))}
 				</div>
 			</div>
-			<div className="mb-4">
-				<div className="flex items-center justify-between mb-2">
-					<h2 className="text-xl lg:text-2xl">Brands</h2>
-					<Link className="text-primary" href="/catalog/brands">
-						See all
-					</Link>
-				</div>
-				<div className="carousel gap-4">
-					<div className="carousel-item card card-compact bg-base-100 w-1/2 md:w-1/3 xl:w-1/4 2xl:w-1/6">
-						<figure className="relative">
-							<Image alt="coca cola" src={CocaColaImage} />
-							<button className="btn btn-circle btn-primary absolute top-2 right-2">
-								<AiOutlinePlus className="w-6 h-6" />
-							</button>
-							<div className="badge badge-sm absolute bottom-2 right-2">
-								700 ml
-							</div>
-						</figure>
-						<div className="card-body">
-							<h2 className="card-title text-base">Coca cola</h2>
-							<p className="font-semibold text-primary">12 Bs.</p>
-							<p>The Coca Cola company</p>
-						</div>
-					</div>
-					<div className="carousel-item card card-compact bg-base-100 w-1/2 md:w-1/3 xl:w-1/4 2xl:w-1/6">
-						<figure className="relative">
-							<Image alt="coca cola" src={CocaColaImage} />
-							<button className="btn btn-circle btn-primary absolute top-2 right-2">
-								<AiOutlinePlus className="w-6 h-6" />
-							</button>
-							<div className="badge badge-sm absolute bottom-2 right-2">
-								700 ml
-							</div>
-						</figure>
-						<div className="card-body">
-							<h2 className="card-title text-base">Coca cola</h2>
-							<p className="font-semibold text-primary">12 Bs.</p>
-							<p>The Coca Cola company</p>
-						</div>
-					</div>
-					<div className="carousel-item card card-compact bg-base-100 w-1/2 md:w-1/3 xl:w-1/4 2xl:w-1/6">
-						<figure className="relative">
-							<Image alt="coca cola" src={CocaColaImage} />
-							<button className="btn btn-circle btn-primary absolute top-2 right-2">
-								<AiOutlinePlus className="w-6 h-6" />
-							</button>
-							<div className="badge badge-sm absolute bottom-2 right-2">
-								700 ml
-							</div>
-						</figure>
-						<div className="card-body">
-							<h2 className="card-title text-base">Coca cola</h2>
-							<p className="font-semibold text-primary">12 Bs.</p>
-							<p>The Coca Cola company</p>
-						</div>
-					</div>
-					<div className="carousel-item card card-compact bg-base-100 w-1/2 md:w-1/3 xl:w-1/4 2xl:w-1/6">
-						<figure className="relative">
-							<Image alt="coca cola" src={CocaColaImage} />
-							<button className="btn btn-circle btn-primary absolute top-2 right-2">
-								<AiOutlinePlus className="w-6 h-6" />
-							</button>
-							<div className="badge badge-sm absolute bottom-2 right-2">
-								700 ml
-							</div>
-						</figure>
-						<div className="card-body">
-							<h2 className="card-title text-base">Coca cola</h2>
-							<p className="font-semibold text-primary">12 Bs.</p>
-							<p>The Coca Cola company</p>
-						</div>
-					</div>
-				</div>
-			</div>
+			<NewProductModal />
 		</Layout>
 	);
 }
