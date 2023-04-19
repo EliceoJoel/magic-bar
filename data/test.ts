@@ -13,7 +13,6 @@ import DrinksWithoutAlcoholImage from "public/drinksWithoutAlcohol.webp";
 import CigarettesImage from "public/cigarettes.webp";
 import FoodsAndSnacksImage from "public/foodsAndSnacks.webp";
 import OthersImage from "public/others.webp";
-import { GiCootieCatcher } from "react-icons/gi";
 
 export const promotions = [
 	{
@@ -24,7 +23,6 @@ export const promotions = [
 		additional: "2 Liters",
 		image: PromotionImage,
 	},
-
 	{
 		name: "Coca cola zero",
 		price: 12,
