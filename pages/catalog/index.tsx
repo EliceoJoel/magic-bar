@@ -5,6 +5,11 @@ import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 import CocaColaImage from "@/public/cocacola.webp";
 import { promotions, combos, games, categories } from "data/test";
 import Link from "next/link";
+import { HiOutlineSparkles } from "react-icons/hi";
+import { IconType } from "react-icons/lib";
+import { GiWineBottle } from "react-icons/gi";
+import { IoDiceOutline } from "react-icons/io5";
+import { RxDashboard } from "react-icons/rx";
 
 const NewProductModal = () => (
 	<>
@@ -21,10 +26,17 @@ const NewProductModal = () => (
 				<h3 className="font-bold text-lg mb-2">New Product</h3>
 				<div className="flex flex-col gap-2">
 					<div>
-						<p>Fields that have the symbol <span className="text-red-500">[*]</span> need to be filled because they are required</p>
+						<p>
+							Fields that have the symbol{" "}
+							<span className="text-red-500">[*]</span> need to be filled
+							because they are required
+						</p>
 					</div>
 					<div className="form-control w-full">
-						<label htmlFor="productNameInput" className="label justify-start">
+						<label
+							htmlFor="productNameInput"
+							className="label justify-start"
+						>
 							<span className="label-text">Name</span>
 							<span className="label-text text-red-500">&nbsp;[*]</span>
 						</label>
@@ -36,7 +48,10 @@ const NewProductModal = () => (
 						/>
 					</div>
 					<div className="form-control w-full">
-						<label htmlFor="productBrandInput" className="label justify-start">
+						<label
+							htmlFor="productBrandInput"
+							className="label justify-start"
+						>
 							<span className="label-text">Brand</span>
 							<span className="label-text text-red-500">&nbsp;[*]</span>
 						</label>
@@ -48,7 +63,10 @@ const NewProductModal = () => (
 						/>
 					</div>
 					<div className="form-control w-full">
-						<label htmlFor="productCategorySelect" className="label justify-start">
+						<label
+							htmlFor="productCategorySelect"
+							className="label justify-start"
+						>
 							<span className="label-text">Category</span>
 							<span className="label-text text-red-500">&nbsp;[*]</span>
 						</label>
@@ -67,7 +85,10 @@ const NewProductModal = () => (
 						</select>
 					</div>
 					<div className="form-control w-full">
-						<label htmlFor="productPriceInput" className="label justify-start">
+						<label
+							htmlFor="productPriceInput"
+							className="label justify-start"
+						>
 							<span className="label-text">Price</span>
 							<span className="label-text text-red-500">&nbsp;[*]</span>
 						</label>
@@ -79,7 +100,10 @@ const NewProductModal = () => (
 						/>
 					</div>
 					<div className="form-control w-full">
-						<label htmlFor="productImageFile" className="label justify-start">
+						<label
+							htmlFor="productImageFile"
+							className="label justify-start"
+						>
 							<span className="label-text">Image</span>
 							<span className="label-text text-red-500">&nbsp;[*]</span>
 						</label>
@@ -112,7 +136,17 @@ const NewProductModal = () => (
 	</>
 );
 
-function All() {
+const SeeAll = ({ title, icon }: { title: string; icon: JSX.Element }) => (
+	<Link
+		href={"/catalog/" + title.toLowerCase()}
+		className="card bg-base-100 card-compact shadow-xl text-primary items-center justify-center gap-4"
+	>
+		{icon}
+		<span className="text-center">See all {title}</span>
+	</Link>
+);
+
+function AllCatalog() {
 	return (
 		<Layout>
 			<div className="flex justify-between items-center mb-4">
@@ -141,15 +175,12 @@ function All() {
 			<div className="mb-4">
 				<div className="flex items-center justify-between mb-2">
 					<h2 className="text-xl lg:text-2xl">Promotions</h2>
-					<Link className="text-primary" href="/catalog/promotions">
-						See all
-					</Link>
 				</div>
-				<div className="carousel relative gap-4">
-					{promotions.map((promotion, index) => (
+				<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
+					{promotions.slice(0, 5).map((promotion) => (
 						<div
-							className="carousel-item card card-compact bg-base-100 w-1/2 md:w-1/3 xl:w-1/4 2xl:w-1/6"
-							key={index}
+							className="card card-compact bg-base-100 shadow-xl"
+							key={promotion.name}
 						>
 							<figure className="relative">
 								<Image alt={promotion.name} src={promotion.image} />
@@ -174,33 +205,33 @@ function All() {
 											: ""}
 									</del>
 								</p>
-								<p>The Coca Cola company</p>
+								<p>{promotion.brand}</p>
 							</div>
 						</div>
 					))}
+					{promotions.length > 5 && (
+						<SeeAll
+							title="promotions"
+							icon={<HiOutlineSparkles className="h-16 w-16" />}
+						/>
+					)}
 				</div>
 			</div>
 			<div className="mb-4">
 				<div className="flex items-center justify-between mb-2">
 					<h2 className="text-xl lg:text-2xl">Combos</h2>
-					<Link className="text-primary" href="/catalog/combos">
-						See all
-					</Link>
 				</div>
-				<div className="carousel gap-4">
-					{combos.map((combo, index) => (
+				<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
+					{combos.slice(0, 5).map((combo) => (
 						<div
-							className="carousel-item card card-compact bg-base-100 w-1/2 md:w-1/3 xl:w-1/4 2xl:w-1/6"
-							key={index}
+							className="card card-compact bg-base-100 shadow-xl"
+							key={combo.name}
 						>
-							<figure className="relative">
+							<figure>
 								<Image alt={combo.name} src={combo.image} />
 								<button className="btn btn-circle btn-primary absolute top-2 right-2">
 									<AiOutlinePlus className="w-6 h-6" />
 								</button>
-								<div className="badge badge-sm absolute bottom-2 right-2">
-									700 ml
-								</div>
 							</figure>
 							<div className="card-body">
 								<h2 className="card-title text-base">{combo.name}</h2>
@@ -215,19 +246,22 @@ function All() {
 							</div>
 						</div>
 					))}
+					{combos.length > 5 && (
+						<SeeAll
+							title="combos"
+							icon={<GiWineBottle className="h-16 w-16" />}
+						/>
+					)}
 				</div>
 			</div>
 			<div className="mb-4">
 				<div className="flex items-center justify-between mb-2">
 					<h2 className="text-xl lg:text-2xl">Games</h2>
-					<Link className="text-primary" href="/catalog/games">
-						See all
-					</Link>
 				</div>
-				<div className="carousel gap-4">
-					{games.map((game, index) => (
+				<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
+					{games.slice(0, 5).map((game, index) => (
 						<div
-							className="carousel-item card card-compact bg-base-100 w-1/2 md:w-1/3 xl:w-1/4 2xl:w-1/6"
+							className="card card-compact bg-base-100 shadow-xl"
 							key={index}
 						>
 							<figure className="relative">
@@ -241,20 +275,23 @@ function All() {
 							</div>
 						</div>
 					))}
+					{games.length > 5 && (
+						<SeeAll
+							title="games"
+							icon={<IoDiceOutline className="h-16 w-16" />}
+						/>
+					)}
 				</div>
 			</div>
 			<div className="mb-4">
 				<div className="flex items-center justify-between mb-2">
 					<h2 className="text-xl lg:text-2xl">Categories</h2>
-					<Link className="text-primary" href="/catalog/categories">
-						See all
-					</Link>
 				</div>
-				<div className="carousel gap-4">
-					{categories.map((category, index) => (
+				<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
+					{categories.slice(0, 5).map((category) => (
 						<div
-							className="carousel-item card card-compact bg-base-100 w-1/2 md:w-1/3 xl:w-1/4 2xl:w-1/6 focus:border-primary focus:border-2 focus:outline-none cursor-pointer hover:border-primary hover:border-2"
-							key={index}
+							className="card card-compact bg-base-100 shadow-xl cursor-pointer hover:border-primary hover:border-2"
+							key={category.name}
 							tabIndex={0}
 						>
 							<figure className="relative">
@@ -267,6 +304,12 @@ function All() {
 							</div>
 						</div>
 					))}
+					{categories.length > 5 && (
+						<SeeAll
+							title="categories"
+							icon={<RxDashboard className="h-16 w-16" />}
+						/>
+					)}
 				</div>
 			</div>
 			<NewProductModal />
@@ -274,4 +317,4 @@ function All() {
 	);
 }
 
-export default All;
+export default AllCatalog;
