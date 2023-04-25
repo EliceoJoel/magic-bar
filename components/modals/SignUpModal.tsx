@@ -1,5 +1,4 @@
 import Link from "next/link";
-import React from "react";
 
 function SignUpModal() {
 	return (
@@ -14,7 +13,7 @@ function SignUpModal() {
 					>
 						✕
 					</label>
-					<h3 className="font-bold text-lg mb-2">Sign up</h3>
+					<h3 className="font-bold text-lg mb-2 mr-4">Sign up</h3>
 					<div className="flex flex-col gap-2">
 						<div className="flex gap-2">
 							<div className="form-control w-full">

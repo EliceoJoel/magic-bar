@@ -1,5 +1,4 @@
 import Link from "next/link";
-import React from "react";
 
 function SignInModal() {
 	return (
@@ -14,7 +13,7 @@ function SignInModal() {
 					>
 						✕
 					</label>
-					<h3 className="font-bold text-lg mb-2">Sign in</h3>
+					<h3 className="font-bold text-lg mb-2 mr-4">Sign in</h3>
 					<div className="flex flex-col gap-2">
 						<div className="form-control w-full">
 							<label htmlFor="emailInput" className="label">

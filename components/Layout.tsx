@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Navbar from "./Navbar";
 import LeftSidebarMenu from "./LeftSidebarMenu";
-import SignInModal from "./SignInModal";
-import SignUpModal from "./SignUpModal";
+import SignInModal from "./modals/SignInModal";
+import SignUpModal from "./modals/SignUpModal";
 
 interface DrawerInfo {
 	position: "" | "drawer-end";
