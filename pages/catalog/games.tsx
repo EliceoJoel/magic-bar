@@ -1,17 +1,28 @@
+import { useState } from "react";
 import Layout from "@/components/Layout";
-import React from "react";
+import NewGameModal from "@/components/modals/NewGameModal";
 import Image from "next/image";
-import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 import { games } from "data/test";
+import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
+import GameHowToPlayModal from "@/components/modals/GameHowToPlayModal";
 
 function Games() {
+	const [selectedGame, setSelectedGame] = useState({
+		name: "",
+		howToPlayYoutubeVideoLink: "",
+		howToPlayPageLink: "",
+	});
+	const [showVideo, setShowVideo] = useState(false);
 	return (
 		<Layout>
 			<div className="flex justify-between items-center mb-4">
 				<h1 className="text-xl md:text-2xl">Games</h1>
-				<button className="btn btn-primary btn-sm md:btn-md normal-case">
+				<label
+					htmlFor="newGameModal"
+					className="btn btn-primary btn-sm md:btn-md normal-case"
+				>
 					New game
-				</button>
+				</label>
 			</div>
 			<div className="flex justify-end mb-4">
 				<div className="form-control w-[28rem]">
@@ -34,17 +45,34 @@ function Games() {
 						key={index}
 					>
 						<figure className="relative">
-								<Image alt={game.name} src={game.image} />
-								<button className="btn btn-circle btn-primary absolute top-2 right-2">
-									<AiOutlinePlus className="w-6 h-6" />
-								</button>
-							</figure>
+							<Image alt={game.name} src={game.image} />
+							<button className="btn btn-circle btn-primary absolute top-2 right-2">
+								<AiOutlinePlus className="w-6 h-6" />
+							</button>
+						</figure>
 						<div className="card-body">
-							<h2 className="card-title text-base">{game.name}</h2>
+							<label
+								className="card-title text-base cursor-pointer hover:text-primary"
+								htmlFor="howToPlayModal"
+								onClick={() => {
+									setSelectedGame(game);
+									setShowVideo(true);
+								}}
+							>
+								{game.name}
+							</label>
 						</div>
 					</div>
 				))}
 			</div>
+			<NewGameModal />
+			<GameHowToPlayModal
+				gameName={selectedGame.name}
+				videoLink={selectedGame.howToPlayYoutubeVideoLink}
+				pageLink={selectedGame.howToPlayPageLink}
+				showVideo={showVideo}
+				setShowVideo={setShowVideo}
+			/>
 		</Layout>
 	);
 }

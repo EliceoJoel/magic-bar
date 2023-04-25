@@ -176,34 +176,58 @@ export const games = [
 	{
 		name: "Classic card game UNO",
 		image: GameImage,
+		howToPlayYoutubeVideoLink: "https://www.youtube.com/watch?v=sWoSZmHsCls",
+		howToPlayPageLink: "https://www.wikihow.com/Play-UNO"
+		
 	},
 	{
 		name: "Classic card game UNO",
 		image: GameImage,
+		howToPlayYoutubeVideoLink: "https://www.youtube.com/watch?v=sWoSZmHsCls",
+		howToPlayPageLink: "https://www.wikihow.com/Play-UNO"
+		
 	},
 	{
 		name: "Classic card game UNO",
 		image: GameImage,
+		howToPlayYoutubeVideoLink: "https://www.youtube.com/watch?v=sWoSZmHsCls",
+		howToPlayPageLink: "https://www.wikihow.com/Play-UNO"
+		
 	},
 	{
 		name: "Classic card game UNO",
 		image: GameImage,
+		howToPlayYoutubeVideoLink: "https://www.youtube.com/watch?v=sWoSZmHsCls",
+		howToPlayPageLink: "https://www.wikihow.com/Play-UNO"
+		
 	},
 	{
 		name: "Classic card game UNO",
 		image: GameImage,
+		howToPlayYoutubeVideoLink: "https://www.youtube.com/watch?v=sWoSZmHsCls",
+		howToPlayPageLink: "https://www.wikihow.com/Play-UNO"
+		
 	},
 	{
 		name: "Classic card game UNO",
 		image: GameImage,
+		howToPlayYoutubeVideoLink: "https://www.youtube.com/watch?v=sWoSZmHsCls",
+		howToPlayPageLink: "https://www.wikihow.com/Play-UNO"
+		
 	},
 	{
 		name: "Classic card game UNO",
 		image: GameImage,
+		howToPlayYoutubeVideoLink: "https://www.youtube.com/watch?v=sWoSZmHsCls",
+		howToPlayPageLink: "https://www.wikihow.com/Play-UNO"
+		
 	},
 	{
 		name: "Classic card game UNO",
 		image: GameImage,
+		howToPlayYoutubeVideoLink: "https://www.youtube.com/watch?v=sWoSZmHsCls",
+		howToPlayPageLink: "https://www.wikihow.com/Play-UNO"
+		
 	},
 ];
 
