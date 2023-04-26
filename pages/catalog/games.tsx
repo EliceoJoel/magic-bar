@@ -1,10 +1,13 @@
 import { useState } from "react";
+import Image from "next/image";
+
+import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
+
 import Layout from "@/components/Layout";
 import NewGameModal from "@/components/modals/NewGameModal";
-import Image from "next/image";
-import { games } from "data/test";
-import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 import GameHowToPlayModal from "@/components/modals/GameHowToPlayModal";
+
+import { games } from "data/test";
 
 function Games() {
 	const [selectedGame, setSelectedGame] = useState({

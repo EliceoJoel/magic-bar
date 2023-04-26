@@ -1,13 +1,16 @@
-import Layout from "@/components/Layout";
-import NewProductModal from "@/components/modals/NewProductModal";
 import Image from "next/image";
 import Link from "next/link";
-import { promotions, combos, games, categories } from "data/test";
+
 import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 import { HiOutlineSparkles } from "react-icons/hi";
 import { GiWineBottle } from "react-icons/gi";
 import { IoDiceOutline } from "react-icons/io5";
 import { RxDashboard } from "react-icons/rx";
+
+import Layout from "@/components/Layout";
+import NewProductModal from "@/components/modals/NewProductModal";
+
+import { promotions, combos, games, categories } from "data/test";
 
 const SeeAll = ({ title, icon }: { title: string; icon: JSX.Element }) => (
 	<Link
@@ -50,10 +53,10 @@ function AllCatalog() {
 					<h2 className="text-xl lg:text-2xl">Promotions</h2>
 				</div>
 				<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
-					{promotions.slice(0, 5).map((promotion) => (
+					{promotions.slice(0, 5).map((promotion, index) => (
 						<div
 							className="card card-compact bg-base-100 shadow-xl"
-							key={promotion.name}
+							key={index}
 						>
 							<figure className="relative">
 								<Image alt={promotion.name} src={promotion.image} />
@@ -95,10 +98,10 @@ function AllCatalog() {
 					<h2 className="text-xl lg:text-2xl">Combos</h2>
 				</div>
 				<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
-					{combos.slice(0, 5).map((combo) => (
+					{combos.slice(0, 5).map((combo, index) => (
 						<div
 							className="card card-compact bg-base-100 shadow-xl"
-							key={combo.name}
+							key={index}
 						>
 							<figure>
 								<Image alt={combo.name} src={combo.image} />
@@ -161,10 +164,10 @@ function AllCatalog() {
 					<h2 className="text-xl lg:text-2xl">Categories</h2>
 				</div>
 				<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
-					{categories.slice(0, 5).map((category) => (
+					{categories.slice(0, 5).map((category, index) => (
 						<div
 							className="card card-compact bg-base-100 shadow-xl cursor-pointer hover:border-primary hover:border-2"
-							key={category.name}
+							key={index}
 							tabIndex={0}
 						>
 							<figure className="relative">

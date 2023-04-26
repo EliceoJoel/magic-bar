@@ -1,10 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
+
 import { FaCocktail } from "react-icons/fa";
-import { HiOutlineMenu } from "react-icons/hi";
-import homeImageSrc from "public/home.svg";
 import { AiFillFacebook, AiOutlineInstagram } from "react-icons/ai";
-import { Dispatch, SetStateAction, useState } from "react";
+
+import homeImageSrc from "public/home.svg";
 
 const Footer = () => (
 	<footer className="flex flex-col gap-4 p-4 bg-base-200 items-center">
@@ -24,8 +24,6 @@ const Footer = () => (
 );
 
 export default function Home() {
-	const [isRegistering, setIsRegistering] = useState(false);
-
 	return (
 		<div className="h-screen bg-base-200">
 			<main className="p-4 flex flex-col items-center lg:flex-row lg:h-[calc(100%-96px)]">

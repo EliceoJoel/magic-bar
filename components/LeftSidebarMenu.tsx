@@ -1,11 +1,10 @@
 import Link from "next/link";
-import React from "react";
+
 import { FaCocktail } from "react-icons/fa";
 import { GiWineBottle } from "react-icons/gi";
 import { HiOutlineSparkles } from "react-icons/hi";
 import { IoCloseOutline, IoDiceOutline } from "react-icons/io5";
 import { RxDashboard } from "react-icons/rx";
-import { TbTriangleSquareCircle } from "react-icons/tb";
 import { BsListStars } from 'react-icons/bs';
 
 function LeftSidebarMenu() {

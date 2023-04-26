@@ -1,7 +1,9 @@
-import React from "react";
 import Image from "next/image";
-import Layout from "@/components/Layout";
+
 import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
+
+import Layout from "@/components/Layout";
+
 import { combos } from 'data/test';
 
 function Combos() {
@@ -28,10 +30,10 @@ function Combos() {
 				</div>
 			</div>
 			<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
-				{combos.map((combo) => (
+				{combos.map((combo, index) => (
 					<div
 						className="card card-compact bg-base-100 shadow-xl"
-						key={combo.name}
+						key={index}
 					>
 						<figure>
 							<Image alt={combo.name} src={combo.image} />

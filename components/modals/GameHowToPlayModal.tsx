@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
 import Link from "next/link";
+
 import { FiExternalLink } from "react-icons/fi";
+
 import YoutubeVideo from "../YoutubeVideo";
+
 import { isNotEmpty } from "@/utils/StringUtils";
 
 interface selectedGame {

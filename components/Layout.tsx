@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
+
 import Navbar from "./Navbar";
 import LeftSidebarMenu from "./LeftSidebarMenu";
-import SignInModal from "./modals/SignInModal";
-import SignUpModal from "./modals/SignUpModal";
 
 interface DrawerInfo {
 	position: "" | "drawer-end";
@@ -30,8 +29,6 @@ function Layout({ children }: { children: React.ReactNode }) {
 							<LeftSidebarMenu />
 						</aside>
 						<main className="p-4 w-full overflow-y-auto">{children}</main>
-						<SignInModal />
-						<SignUpModal />
 					</div>
 				</div>
 				<div className="drawer-side">
