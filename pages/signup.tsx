@@ -12,7 +12,7 @@ function SignUp() {
 	});
 	return (
 		<div className="h-screen flex items-center justify-center">
-			<main className="w-full p-4 md:w-1/4">
+			<main className="w-full max-w-fit ssm:max-w-xs sm:max-w-sm">
 				<span className="flex justify-center mb-4 text-primary">
 					<FaCocktail className="h-8 w-8" />
 				</span>
