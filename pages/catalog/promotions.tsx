@@ -1,7 +1,9 @@
-import Layout from "@/components/Layout";
-import React from "react";
 import Image from "next/image";
+
 import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
+
+import Layout from "@/components/Layout";
+
 import { promotions } from "data/test";
 
 function Promotions() {
@@ -9,7 +11,7 @@ function Promotions() {
 		<Layout>
 			<div className="flex justify-between items-center mb-4">
 				<h1 className="text-xl md:text-2xl">Promotions</h1>
-				<button className="btn btn-primary btn-sm md:btn-md normal-case">
+				<button className="btn btn-primary btn-sm normal-case md:btn-md">
 					New promotion
 				</button>
 			</div>
@@ -28,10 +30,10 @@ function Promotions() {
 				</div>
 			</div>
 			<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
-				{promotions.map((promotion) => (
+				{promotions.map((promotion, index) => (
 					<div
 						className="card card-compact bg-base-100 shadow-xl"
-						key={promotion.name}
+						key={index}
 					>
 						<figure className="relative">
 							<Image alt={promotion.name} src={promotion.image} />

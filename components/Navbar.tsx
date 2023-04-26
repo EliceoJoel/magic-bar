@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { useState } from "react";
+
 import { FaCocktail } from "react-icons/fa";
 import { FiLogOut, FiSettings } from "react-icons/fi";
 import {
@@ -8,6 +8,7 @@ import {
 	HiOutlineShoppingBag,
 	HiOutlineMoon,
 } from "react-icons/hi";
+
 import LeftSidebarMenu from "./LeftSidebarMenu";
 import Cart from "./Cart";
 
@@ -94,18 +95,18 @@ function Navbar({ openDrawer }: OpenDrawer) {
 					</>
 				) : (
 					<div className="flex gap-2">
-						<label
-							htmlFor="signInModal"
-							className="btn btn-primary btn-outline btn-sm capitalize"
+						<Link
+							href="/signin"
+							className="btn btn-primary btn-outline btn-sm normal-case"
 						>
 							Sign in
-						</label>
-						<label
-							htmlFor="signUpModal"
-							className="btn btn-outline btn-sm capitalize"
+						</Link>
+						<Link
+							href="/signup"
+							className="btn btn-outline btn-sm normal-case"
 						>
 							Sign up
-						</label>
+						</Link>
 					</div>
 				)}
 			</div>

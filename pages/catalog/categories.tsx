@@ -1,8 +1,9 @@
-import Layout from "@/components/Layout";
-import React from "react";
 import Image from 'next/image';
-import Link from 'next/link';
+
 import { AiOutlineSearch } from "react-icons/ai";
+
+import Layout from "@/components/Layout";
+
 import { categories } from "data/test";
 
 function Categories() {
@@ -29,10 +30,10 @@ function Categories() {
 				</div>
 			</div>
 			<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
-				{categories.map((category) => (
+				{categories.map((category, index) => (
 					<div
 						className="card card-compact bg-base-100 shadow-xl cursor-pointer hover:border-primary hover:border-2"
-						key={category.name}
+						key={index}
 						tabIndex={0}
 					>
 						<figure className="relative">

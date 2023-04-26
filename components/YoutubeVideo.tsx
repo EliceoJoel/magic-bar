@@ -1,5 +1,3 @@
-import React from "react";
-
 function YoutubeVideo({ videoId }: { videoId: string }) {
 	return (
 		<div className="overflow-hidden relative h-0 pb-[56.25%]">
