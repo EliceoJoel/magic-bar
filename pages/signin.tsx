@@ -6,7 +6,7 @@ import { FaCocktail } from "react-icons/fa";
 import GoogleButton from "@/components/GoogleButton";
 
 function SignIn() {
-	const signIn = useGoogleLogin({
+	const signInByGoogleMethod = useGoogleLogin({
 		onSuccess: (tokenResponse) => console.log(tokenResponse),
 		onError: (tokenResponse) => console.log(tokenResponse),
 	});
@@ -50,7 +50,7 @@ function SignIn() {
 						</Link>
 					</p>
 					<div className="divider">OR</div>
-					<GoogleButton onClick={signIn} text="Sign in with Google" />
+					<GoogleButton onClick={signInByGoogleMethod} text="Sign in with Google" />
 				</div>
 			</main>
 		</div>
