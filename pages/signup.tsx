@@ -5,7 +5,10 @@ import { useForm } from "react-hook-form";
 import { FaCocktail } from "react-icons/fa";
 
 import GoogleButton from "@/components/GoogleButton";
-import { emailRegExp } from "@/constants/all";
+import { getYupSchema, signUpFormSchema } from "@/yup/schemas";
+import { signUpUser } from "@/firebase/authentication";
+import { UserType } from "@/constants/userType";
+import { useRouter } from "next/router";
 
 type Inputs = {
 	name: string;
@@ -16,14 +19,19 @@ type Inputs = {
 };
 
 function SignUp() {
+	const router = useRouter();
+
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<Inputs>();
-	const onSubmit = handleSubmit((data) => {
-		console.log(data);
+	} = useForm<Inputs>(getYupSchema(signUpFormSchema));
+
+	const onSubmit = handleSubmit(async (data) => {
+		await signUpUser({...data, rol: UserType.CLIENT});
+		router.push("/catalog");
 	});
+
 	const signUpByGoogleMethod = useGoogleLogin({
 		onSuccess: async (tokenResponse) => {
 			const userInfo = await getUserInfoFromGoogle(
@@ -32,6 +40,25 @@ function SignUp() {
 		},
 		onError: (tokenResponse) => console.log(tokenResponse),
 	});
+
+	async function getUserInfoFromGoogle(userToken: string) {
+		try {
+			const response = await fetch(
+				`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${userToken}`,
+				{
+					method: "GET",
+					headers: {
+						Authorization: `Bearer ${userToken}`,
+						"Content-Type": "application/json",
+					},
+				}
+			);
+			const jsonData = await response.json();
+			return jsonData;
+		} catch (error) {
+			console.log(error);
+		}
+	}
 	return (
 		<div className="h-screen flex items-center justify-center">
 			<main className="w-full max-w-fit ssm:max-w-xs sm:max-w-sm">
@@ -55,9 +82,7 @@ function SignUp() {
 								className={`input input-bordered input-primary w-full ${
 									errors.name && "input-error"
 								}`}
-								{...register("name", {
-									required: "This is required field",
-								})}
+								{...register("name")}
 							/>
 							{errors.name && (
 								<span className="text-sm text-error mt-1">
@@ -77,9 +102,7 @@ function SignUp() {
 								className={`input input-bordered input-primary w-full ${
 									errors.lastName && "input-error"
 								}`}
-								{...register("lastName", {
-									required: "This is required field",
-								})}
+								{...register("lastName")}
 							/>
 							{errors.lastName && (
 								<span className="text-sm text-error mt-1">
@@ -100,13 +123,7 @@ function SignUp() {
 							className={`input input-bordered input-primary w-full ${
 								errors.email && "input-error"
 							}`}
-							{...register("email", {
-								required: "This is required field",
-								pattern: {
-									value: emailRegExp,
-									message: "Invalid email address"
-								},
-							})}
+							{...register("email")}
 						/>
 						{errors.email && (
 							<span className="text-sm text-error mt-1">
@@ -122,14 +139,11 @@ function SignUp() {
 							autoComplete="off"
 							id="password"
 							type="password"
-							placeholder="Type your password"
+							placeholder="Type your password, 6+ characters"
 							className={`input input-bordered input-primary w-full ${
 								errors.password && "input-error"
 							}`}
-							{...register("password", {
-								required: "This is required field",
-								min: 6,
-							})}
+							{...register("password")}
 						/>
 						{errors.password && (
 							<span className="text-sm text-error mt-1">
@@ -149,9 +163,7 @@ function SignUp() {
 							className={`input input-bordered input-primary w-full ${
 								errors.confirmPassword && "input-error"
 							}`}
-							{...register("confirmPassword", {
-								required: "This is required field",
-							})}
+							{...register("confirmPassword")}
 						/>
 						{errors.confirmPassword && (
 							<span className="text-sm text-error mt-1">
@@ -180,25 +192,6 @@ function SignUp() {
 			</main>
 		</div>
 	);
-}
-
-async function getUserInfoFromGoogle(userToken: string) {
-	try {
-		const response = await fetch(
-			`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${userToken}`,
-			{
-				method: "GET",
-				headers: {
-					Authorization: `Bearer ${userToken}`,
-					"Content-Type": "application/json",
-				},
-			}
-		);
-		const jsonData = await response.json();
-		return jsonData;
-	} catch (error) {
-		console.log(error);
-	}
 }
 
 export default SignUp;

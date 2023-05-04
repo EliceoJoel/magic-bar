@@ -1,16 +1,44 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "./config";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "./config";
 
-export function signUp(email: string, password: string) {
-	createUserWithEmailAndPassword(auth, email, password)
-		.then((userCredential) => {
-			// Signed in
-			const user = userCredential.user;
-			console.log(user);
-		})
-		.catch((error) => {
-			const errorCode = error.code;
-			const errorMessage = error.message;
-			console.log(errorCode, errorMessage);
+interface userData {
+	name: string;
+	lastName: string;
+	email: string;
+	password: string;
+	rol: string;
+}
+
+export async function signUpUser({
+	name,
+	lastName,
+	email,
+	password,
+	rol,
+}: userData) {
+	try {
+		// Create user in firebase
+		const userCredential = await createUserWithEmailAndPassword(
+			auth,
+			email,
+			password
+		);
+
+		// Save user information in firestore
+		const docRef = doc(db, `users/${userCredential.user.uid}`);
+		setDoc(docRef, {
+			name,
+			lastName,
+			email,
+			rol,
 		});
+		console.log("User created and saved successfully!");
+	} catch (error) {
+		if (error instanceof Error) {
+			console.error("Error creating user: ", error.message);
+		 } else {
+			console.log('Unexpected error creating user: ', error);
+		 }
+	}
 }
