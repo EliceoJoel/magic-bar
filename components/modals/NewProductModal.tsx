@@ -68,9 +68,10 @@ function NewProductModal() {
 							</label>
 							<select
 								id="productCategorySelect"
-								className="select select-primary w-full"
+								className="select select-primary text-base font-normal w-full"
+								defaultValue="default"
 							>
-								<option disabled selected>
+								<option value="default" disabled>
 									Pick a category for this product
 								</option>
 								{categories.map((category, index) => (
