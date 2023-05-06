@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useForm } from "react-hook-form";
 
@@ -8,7 +9,6 @@ import GoogleButton from "@/components/GoogleButton";
 import { getYupSchema, signUpFormSchema } from "@/yup/schemas";
 import { signUpUser } from "@/firebase/authentication";
 import { UserType } from "@/constants/userType";
-import { useRouter } from "next/router";
 
 type Inputs = {
 	name: string;
@@ -28,46 +28,41 @@ function SignUp() {
 	} = useForm<Inputs>(getYupSchema(signUpFormSchema));
 
 	const onSubmit = handleSubmit(async (data) => {
-		await signUpUser({...data, rol: UserType.CLIENT});
+		const userLogged = await signUpUser({ ...data, rol: UserType.CLIENT });
+		console.log(userLogged);
 		router.push("/catalog");
 	});
 
 	const signUpByGoogleMethod = useGoogleLogin({
 		onSuccess: async (tokenResponse) => {
-			const userInfo = await getUserInfoFromGoogle(
-				tokenResponse.access_token
-			);
+			const userInfo = await getUserInfoFromGoogle(tokenResponse.access_token);
 		},
 		onError: (tokenResponse) => console.log(tokenResponse),
 	});
 
 	async function getUserInfoFromGoogle(userToken: string) {
 		try {
-			const response = await fetch(
-				`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${userToken}`,
-				{
-					method: "GET",
-					headers: {
-						Authorization: `Bearer ${userToken}`,
-						"Content-Type": "application/json",
-					},
-				}
-			);
+			const response = await fetch(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${userToken}`, {
+				method: "GET",
+				headers: {
+					Authorization: `Bearer ${userToken}`,
+					"Content-Type": "application/json",
+				},
+			});
 			const jsonData = await response.json();
 			return jsonData;
 		} catch (error) {
 			console.log(error);
 		}
 	}
+
 	return (
 		<div className="h-screen flex items-center justify-center">
 			<main className="w-full max-w-fit ssm:max-w-xs sm:max-w-sm">
 				<span className="flex justify-center mb-4 text-primary">
 					<FaCocktail className="h-8 w-8" />
 				</span>
-				<h1 className="font-bold text-3xl text-center mb-2 mr-4">
-					Create an account
-				</h1>
+				<h1 className="font-bold text-3xl text-center mb-2 mr-4">Create an account</h1>
 				<form className="flex flex-col gap-2" onSubmit={onSubmit}>
 					<div className="flex gap-2">
 						<div className="form-control w-full">
@@ -79,13 +74,11 @@ function SignUp() {
 								id="name"
 								type="text"
 								placeholder="Type your name"
-								className={`input input-bordered input-primary w-full ${
-									errors.name && "input-error"
-								}`}
+								className={`input input-bordered input-primary w-full ${errors.name && "input-error"}`}
 								{...register("name")}
 							/>
 							{errors.name && (
-								<span className="text-sm text-error mt-1">
+								<span className="text-sm text-error mt-1" role="alert">
 									{errors.name.message}
 								</span>
 							)}
@@ -99,13 +92,11 @@ function SignUp() {
 								id="lastName"
 								type="text"
 								placeholder="Type your last name"
-								className={`input input-bordered input-primary w-full ${
-									errors.lastName && "input-error"
-								}`}
+								className={`input input-bordered input-primary w-full ${errors.lastName && "input-error"}`}
 								{...register("lastName")}
 							/>
 							{errors.lastName && (
-								<span className="text-sm text-error mt-1">
+								<span className="text-sm text-error mt-1" role="alert">
 									{errors.lastName.message}
 								</span>
 							)}
@@ -120,13 +111,11 @@ function SignUp() {
 							id="email"
 							type="text"
 							placeholder="name@example.com"
-							className={`input input-bordered input-primary w-full ${
-								errors.email && "input-error"
-							}`}
+							className={`input input-bordered input-primary w-full ${errors.email && "input-error"}`}
 							{...register("email")}
 						/>
 						{errors.email && (
-							<span className="text-sm text-error mt-1">
+							<span className="text-sm text-error mt-1" role="alert">
 								{errors.email.message}
 							</span>
 						)}
@@ -140,13 +129,11 @@ function SignUp() {
 							id="password"
 							type="password"
 							placeholder="Type your password, 6+ characters"
-							className={`input input-bordered input-primary w-full ${
-								errors.password && "input-error"
-							}`}
+							className={`input input-bordered input-primary w-full ${errors.password && "input-error"}`}
 							{...register("password")}
 						/>
 						{errors.password && (
-							<span className="text-sm text-error mt-1">
+							<span className="text-sm text-error mt-1" role="alert">
 								{errors.password.message}
 							</span>
 						)}
@@ -160,21 +147,16 @@ function SignUp() {
 							id="confirmPassword"
 							type="password"
 							placeholder="Confirm your password"
-							className={`input input-bordered input-primary w-full ${
-								errors.confirmPassword && "input-error"
-							}`}
+							className={`input input-bordered input-primary w-full ${errors.confirmPassword && "input-error"}`}
 							{...register("confirmPassword")}
 						/>
 						{errors.confirmPassword && (
-							<span className="text-sm text-error mt-1">
+							<span className="text-sm text-error mt-1" role="alert">
 								{errors.confirmPassword.message}
 							</span>
 						)}
 					</div>
-					<button
-						type="submit"
-						className="btn btn-primary w-full mt-4 normal-case text-base"
-					>
+					<button type="submit" className="btn btn-primary w-full mt-4 normal-case text-base">
 						Sign up
 					</button>
 					<p className="mt-2 text-center">
@@ -184,10 +166,7 @@ function SignUp() {
 						</Link>
 					</p>
 					<div className="divider">OR</div>
-					<GoogleButton
-						onClick={signUpByGoogleMethod}
-						text="Sign up with Google"
-					/>
+					<GoogleButton onClick={signUpByGoogleMethod} text="Sign up with Google" />
 				</form>
 			</main>
 		</div>
