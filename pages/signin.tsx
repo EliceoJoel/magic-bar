@@ -8,6 +8,7 @@ import { FaCocktail } from "react-icons/fa";
 import GoogleButton from "@/components/GoogleButton";
 import { signInFormSchema, getYupSchema } from "@/yup/schemas";
 import { signInUser } from "@/firebase/authentication";
+import { useUserStore } from '@/store/userStore';
 
 type Inputs = {
 	email: string;
@@ -16,6 +17,7 @@ type Inputs = {
 
 function SignIn() {
 	const router = useRouter();
+	const registerUserinStore = useUserStore(state => state.registerUser);
 
 	const {
 		register,
@@ -25,7 +27,9 @@ function SignIn() {
 
 	const onSubmit = handleSubmit(async (data) => {
 		const userLoggedIn = await signInUser(data);
-		console.log(userLoggedIn);
+		// Save user logged in store
+		registerUserinStore(userLoggedIn);
+		// Redirect to catalog page
 		router.push("/catalog");
 	});
 

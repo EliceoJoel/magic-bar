@@ -11,14 +11,14 @@ import {
 
 import LeftSidebarMenu from "./LeftSidebarMenu";
 import Cart from "./Cart";
+import { useUserStore } from "@/store/userStore";
 
 interface OpenDrawer {
 	openDrawer: Function;
 }
 
 function Navbar({ openDrawer }: OpenDrawer) {
-	//I will simulate the user login info here for now, it will be replace after.
-	const userInfo = { isLogged: false };
+	const userLogged = useUserStore(state => state.user);
 	return (
 		<div className="navbar bg-base-200 h-16 px-4">
 			<div className="navbar-start w-1/6 md:w-1/4">
@@ -46,7 +46,7 @@ function Navbar({ openDrawer }: OpenDrawer) {
 				<button className="btn btn-circle btn-ghost">
 					<HiOutlineMoon className="w-6 h-6" />
 				</button>
-				{userInfo.isLogged ? (
+				{userLogged !== null ? (
 					<>
 						<label
 							htmlFor="theDrawer"
