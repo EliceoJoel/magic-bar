@@ -9,6 +9,7 @@ import GoogleButton from "@/components/GoogleButton";
 import { getYupSchema, signUpFormSchema } from "@/yup/schemas";
 import { signUpUser } from "@/firebase/authentication";
 import { UserType } from "@/constants/userType";
+import { useUserStore } from "@/store/userStore";
 
 type Inputs = {
 	name: string;
@@ -20,6 +21,7 @@ type Inputs = {
 
 function SignUp() {
 	const router = useRouter();
+	const registerUserinStore = useUserStore(state => state.registerUser);
 
 	const {
 		register,
@@ -29,7 +31,9 @@ function SignUp() {
 
 	const onSubmit = handleSubmit(async (data) => {
 		const userLogged = await signUpUser({ ...data, rol: UserType.CLIENT });
-		console.log(userLogged);
+		// Save user logged in store
+		registerUserinStore(userLogged);
+		// Redirect to catalog page
 		router.push("/catalog");
 	});
 
@@ -109,7 +113,7 @@ function SignUp() {
 						<input
 							autoComplete="off"
 							id="email"
-							type="text"
+							type="email"
 							placeholder="name@example.com"
 							className={`input input-bordered input-primary w-full ${errors.email && "input-error"}`}
 							{...register("email")}
