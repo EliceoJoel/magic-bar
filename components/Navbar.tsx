@@ -12,6 +12,7 @@ import {
 import LeftSidebarMenu from "./LeftSidebarMenu";
 import Cart from "./Cart";
 import { useUserStore } from "@/store/userStore";
+import { useRouter } from "next/router";
 
 interface OpenDrawer {
 	openDrawer: Function;
@@ -19,6 +20,12 @@ interface OpenDrawer {
 
 function Navbar({ openDrawer }: OpenDrawer) {
 	const userLogged = useUserStore(state => state.user);
+	const router = useRouter();
+	const logout =  useUserStore(state => state.logout)
+	const handleLogout = () => {
+		logout();
+		router.push("/catalog");
+	};
 	return (
 		<div className="navbar bg-base-200 h-16 px-4">
 			<div className="navbar-start w-1/6 md:w-1/4">
@@ -85,10 +92,10 @@ function Navbar({ openDrawer }: OpenDrawer) {
 									</a>
 								</li>
 								<li>
-									<a>
+									<button onClick={handleLogout}>
 										<FiLogOut className="w-6 h-6" />
 										Logout
-									</a>
+									</button>
 								</li>
 							</ul>
 						</div>

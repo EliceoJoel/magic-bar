@@ -11,6 +11,7 @@ import Layout from "@/components/Layout";
 import NewProductModal from "@/components/modals/NewProductModal";
 
 import { promotions, combos, games, categories } from "data/test";
+import { useCartStore } from "@/store/cartStore";
 
 const SeeAll = ({ title, icon }: { title: string; icon: JSX.Element }) => (
 	<Link
@@ -23,6 +24,7 @@ const SeeAll = ({ title, icon }: { title: string; icon: JSX.Element }) => (
 );
 
 function AllCatalog() {
+	const addProductToCart = useCartStore(store => store.add);
 	return (
 		<Layout>
 			<div className="flex justify-between items-center mb-4">
@@ -59,8 +61,8 @@ function AllCatalog() {
 							key={index}
 						>
 							<figure className="relative">
-								<Image alt={promotion.name} src={promotion.image} />
-								<button className="btn btn-circle btn-primary absolute top-2 right-2">
+								<Image className="w-[500px]" alt={promotion.name} src={promotion.image} width={1000} height={1000} />
+								<button className="btn btn-circle btn-primary absolute top-2 right-2" onClick={() => addProductToCart(promotion)}>
 									<AiOutlinePlus className="w-6 h-6" />
 								</button>
 								<div className="badge badge-sm absolute bottom-2 right-2">

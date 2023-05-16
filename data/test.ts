@@ -21,7 +21,7 @@ export const promotions = [
 		promotialPrice: 10,
 		brand: "The coca cola company",
 		additional: "2 Liters",
-		image: PromotionImage,
+		image: "https://firebasestorage.googleapis.com/v0/b/magicbar-9a654.appspot.com/o/cocacola.webp?alt=media&token=9fcbc378-dfcd-41ff-9782-45521ac772ae",
 	},
 	{
 		name: "Coca cola zero",
@@ -29,7 +29,7 @@ export const promotions = [
 		promotialPrice: 10,
 		brand: "The coca cola company",
 		additional: "2 Liters",
-		image: PromotionImage,
+		image: "https://firebasestorage.googleapis.com/v0/b/magicbar-9a654.appspot.com/o/cocacola.webp?alt=media&token=9fcbc378-dfcd-41ff-9782-45521ac772ae",
 	},
 	{
 		name: "Coca cola zero",
@@ -37,7 +37,7 @@ export const promotions = [
 		promotialPrice: 10,
 		brand: "The coca cola company",
 		additional: "2 Liters",
-		image: PromotionImage,
+		image: "https://firebasestorage.googleapis.com/v0/b/magicbar-9a654.appspot.com/o/cocacola.webp?alt=media&token=9fcbc378-dfcd-41ff-9782-45521ac772ae",
 	},
 	{
 		name: "Coca cola zero",
@@ -45,7 +45,7 @@ export const promotions = [
 		promotialPrice: 10,
 		brand: "The coca cola company",
 		additional: "2 Liters",
-		image: PromotionImage,
+		image: "https://firebasestorage.googleapis.com/v0/b/magicbar-9a654.appspot.com/o/cocacola.webp?alt=media&token=9fcbc378-dfcd-41ff-9782-45521ac772ae",
 	},
 	{
 		name: "Coca cola zero",
@@ -53,7 +53,7 @@ export const promotions = [
 		promotialPrice: 10,
 		brand: "The coca cola company",
 		additional: "2 Liters",
-		image: PromotionImage,
+		image: "https://firebasestorage.googleapis.com/v0/b/magicbar-9a654.appspot.com/o/cocacola.webp?alt=media&token=9fcbc378-dfcd-41ff-9782-45521ac772ae",
 	},
 	{
 		name: "Coca cola zero",
@@ -61,7 +61,7 @@ export const promotions = [
 		promotialPrice: 10,
 		brand: "The coca cola company",
 		additional: "2 Liters",
-		image: PromotionImage,
+		image: "https://firebasestorage.googleapis.com/v0/b/magicbar-9a654.appspot.com/o/cocacola.webp?alt=media&token=9fcbc378-dfcd-41ff-9782-45521ac772ae",
 	},
 	{
 		name: "Coca cola zero",
@@ -69,7 +69,7 @@ export const promotions = [
 		promotialPrice: 10,
 		brand: "The coca cola company",
 		additional: "2 Liters",
-		image: PromotionImage,
+		image: "https://firebasestorage.googleapis.com/v0/b/magicbar-9a654.appspot.com/o/cocacola.webp?alt=media&token=9fcbc378-dfcd-41ff-9782-45521ac772ae",
 	},
 	{
 		name: "Coca cola zero",
@@ -77,7 +77,7 @@ export const promotions = [
 		promotialPrice: 10,
 		brand: "The coca cola company",
 		additional: "2 Liters",
-		image: PromotionImage,
+		image: "https://firebasestorage.googleapis.com/v0/b/magicbar-9a654.appspot.com/o/cocacola.webp?alt=media&token=9fcbc378-dfcd-41ff-9782-45521ac772ae",
 	},
 ];
 
