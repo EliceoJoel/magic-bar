@@ -17,7 +17,7 @@ type Inputs = {
 
 function SignIn() {
 	const router = useRouter();
-	const registerUserinStore = useUserStore(state => state.registerUser);
+	const registerUserinStore = useUserStore(state => state.register);
 
 	const {
 		register,

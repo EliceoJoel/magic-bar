@@ -6,19 +6,19 @@ interface State {
 }
 
 interface Actions {
-	registerUser: (user: any) => void;
-	logoutUser: () => void;
+	register: (user: any) => void;
+	logout: () => void;
 }
 
 export const useUserStore = create(
 	persist<State & Actions>(
 		(set) => ({
 			user: null,
-			registerUser: (user) => set(() => ({ user: user })),
-			logoutUser: () => set(() => ({ user: null })),
+			register: (user) => set(() => ({ user: user })),
+			logout: () => set(() => ({ user: null })),
 		}),
 		{
-			name: "user",
+			name: "userStorage",
 		}
 	)
 );
