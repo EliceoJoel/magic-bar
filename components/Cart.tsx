@@ -8,7 +8,7 @@ import { useCartStore } from "@/store/cartStore";
 
 function Cart() {
 	const { products, decreaseQuantity, increaseQuantity, clear, remove } = useCartStore((state) => state);
-	const totalPrice = products.reduce((accumulator, currentValue) => accumulator + currentValue.price, 0);
+	const totalPrice = products.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0);
 
 	return (
 		<div className="menu p-4 w-60 ssm:w-80 bg-base-200 md:w-96">
@@ -23,7 +23,7 @@ function Cart() {
 					<Image alt="order 1" src={product.image} className="w-20 h-20 mr-2" width={1000} height={1000} />
 					<div className="flex flex-col justify-between w-full gap-1">
 						<p>{product.name}</p>
-						<span className="font-semibold">{product.price} Bs.</span>
+						<span className="font-semibold">{product.price * product.quantity} Bs.</span>
 						<div className="flex justify-between">
 							<div>
 								<button
@@ -32,7 +32,7 @@ function Cart() {
 								>
 									<HiMinus />
 								</button>
-								<span className="btn btn-xs btn-ghost">{product.quantity}</span>
+								<span className="p-2">{product.quantity}</span>
 								<button
 									className="btn btn-sm btn-circle btn-outline "
 									onClick={() => increaseQuantity(product)}

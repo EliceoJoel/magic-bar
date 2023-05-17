@@ -24,15 +24,12 @@ const SeeAll = ({ title, icon }: { title: string; icon: JSX.Element }) => (
 );
 
 function AllCatalog() {
-	const addProductToCart = useCartStore(store => store.add);
+	const addProductToCart = useCartStore((store) => store.add);
 	return (
 		<Layout>
 			<div className="flex justify-between items-center mb-4">
 				<h1 className="text-xl md:text-2xl">All Catalog</h1>
-				<label
-					htmlFor="newProductModal"
-					className="btn btn-primary btn-sm md:btn-md normal-case"
-				>
+				<label htmlFor="newProductModal" className="btn btn-primary btn-sm md:btn-md normal-case">
 					New product
 				</label>
 			</div>
@@ -56,31 +53,29 @@ function AllCatalog() {
 				</div>
 				<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
 					{promotions.slice(0, 5).map((promotion, index) => (
-						<div
-							className="card card-compact bg-base-100 shadow-xl"
-							key={index}
-						>
+						<div className="card card-compact bg-base-100 shadow-xl" key={index}>
 							<figure className="relative">
-								<Image className="w-[500px]" alt={promotion.name} src={promotion.image} width={1000} height={1000} />
-								<button className="btn btn-circle btn-primary absolute top-2 right-2" onClick={() => addProductToCart(promotion)}>
+								<Image
+									className="w-[500px]"
+									alt={promotion.name}
+									src={promotion.image}
+									width={1000}
+									height={1000}
+								/>
+								<button
+									className="btn btn-circle btn-primary absolute top-2 right-2"
+									onClick={() => addProductToCart(promotion)}
+								>
 									<AiOutlinePlus className="w-6 h-6" />
 								</button>
-								<div className="badge badge-sm absolute bottom-2 right-2">
-									{promotion.additional}
-								</div>
+								<div className="badge badge-sm absolute bottom-2 right-2">{promotion.additional}</div>
 							</figure>
-							<div className="card-body">
-								<h2 className="card-title text-base">
-									{promotion.name}
-								</h2>
-								<p className="font-semibold text-primary">
-									{promotion.promotialPrice
-										? promotion.promotialPrice + " Bs."
-										: promotion.price + " Bs."}{" "}
-									<del className="text-black">
-										{promotion.promotialPrice
-											? promotion.price + " Bs."
-											: ""}
+							<div className="card-body gap-0">
+								<h3 className="card-title text-base">{promotion.name}</h3>
+								<p className="font-bold text-primary">
+									Bs {promotion.price.toFixed(2)}&nbsp;
+									<del className="text-gray-500 font-semibold text-xs">
+										Bs {promotion.normalPrice.toFixed(2)}
 									</del>
 								</p>
 								<p>{promotion.brand}</p>
@@ -88,10 +83,7 @@ function AllCatalog() {
 						</div>
 					))}
 					{promotions.length > 5 && (
-						<SeeAll
-							title="promotions"
-							icon={<HiOutlineSparkles className="h-16 w-16" />}
-						/>
+						<SeeAll title="promotions" icon={<HiOutlineSparkles className="h-16 w-16" />} />
 					)}
 				</div>
 			</div>
@@ -101,35 +93,26 @@ function AllCatalog() {
 				</div>
 				<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
 					{combos.slice(0, 5).map((combo, index) => (
-						<div
-							className="card card-compact bg-base-100 shadow-xl"
-							key={index}
-						>
+						<div className="card card-compact bg-base-100 shadow-xl" key={index}>
 							<figure>
-								<Image alt={combo.name} src={combo.image} />
-								<button className="btn btn-circle btn-primary absolute top-2 right-2">
+								<Image className="w-[500px]" alt={combo.name} src={combo.image} width={1000} height={1000} />
+								<button
+									className="btn btn-circle btn-primary absolute top-2 right-2"
+									onClick={() => addProductToCart(combo)}
+								>
 									<AiOutlinePlus className="w-6 h-6" />
 								</button>
 							</figure>
-							<div className="card-body">
-								<h2 className="card-title text-base">{combo.name}</h2>
-								<p className="font-semibold text-primary">
-									{combo.promotialPrice
-										? combo.promotialPrice + " Bs."
-										: combo.price + " Bs."}{" "}
-									<del className="text-black">
-										{combo.promotialPrice ? combo.price + " Bs." : ""}
-									</del>
+							<div className="card-body gap-0">
+								<h3 className="card-title text-base">{combo.name}</h3>
+								<p className="font-bold text-primary">
+									Bs {combo.price.toFixed(2)}&nbsp;
+									<del className="text-gray-500 font-semibold text-xs">Bs {combo.normalPrice.toFixed(2)}</del>
 								</p>
 							</div>
 						</div>
 					))}
-					{combos.length > 5 && (
-						<SeeAll
-							title="combos"
-							icon={<GiWineBottle className="h-16 w-16" />}
-						/>
-					)}
+					{combos.length > 5 && <SeeAll title="combos" icon={<GiWineBottle className="h-16 w-16" />} />}
 				</div>
 			</div>
 			<div className="mb-4">
@@ -138,27 +121,25 @@ function AllCatalog() {
 				</div>
 				<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
 					{games.slice(0, 5).map((game, index) => (
-						<div
-							className="card card-compact bg-base-100 shadow-xl"
-							key={index}
-						>
+						<div className="card card-compact bg-base-100 shadow-xl" key={index}>
 							<figure className="relative">
-								<Image alt={game.name} src={game.image} />
-								<button className="btn btn-circle btn-primary absolute top-2 right-2">
+								<Image className="w-[500px]" alt={game.name} src={game.image} width={1000} height={1000} />
+								<button
+									className="btn btn-circle btn-primary absolute top-2 right-2"
+									onClick={() => addProductToCart(game)}
+								>
 									<AiOutlinePlus className="w-6 h-6" />
 								</button>
 							</figure>
-							<div className="card-body">
-								<h2 className="card-title text-base">{game.name}</h2>
+							<div className="card-body gap-0">
+								<h3 className="card-title text-base">{game.name}</h3>
+								<p className="font-bold text-primary">
+									Bs {game.price.toFixed(2)}
+								</p>
 							</div>
 						</div>
 					))}
-					{games.length > 5 && (
-						<SeeAll
-							title="games"
-							icon={<IoDiceOutline className="h-16 w-16" />}
-						/>
-					)}
+					{games.length > 5 && <SeeAll title="games" icon={<IoDiceOutline className="h-16 w-16" />} />}
 				</div>
 			</div>
 			<div className="mb-4">
@@ -175,19 +156,12 @@ function AllCatalog() {
 							<figure className="relative">
 								<Image alt={category.name} src={category.image} />
 							</figure>
-							<div className="card-body">
-								<h2 className="card-title text-base">
-									{category.name}
-								</h2>
+							<div className="card-body gap-0">
+								<h3 className="card-title text-base">{category.name}</h3>
 							</div>
 						</div>
 					))}
-					{categories.length > 5 && (
-						<SeeAll
-							title="categories"
-							icon={<RxDashboard className="h-16 w-16" />}
-						/>
-					)}
+					{categories.length > 5 && <SeeAll title="categories" icon={<RxDashboard className="h-16 w-16" />} />}
 				</div>
 			</div>
 			<NewProductModal />

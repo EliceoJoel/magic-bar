@@ -8,7 +8,7 @@ import { promotions } from "data/test";
 import { useCartStore } from "@/store/cartStore";
 
 function Promotions() {
-	const addProductToCart = useCartStore((store) => store.add);
+	const addPromotionToCart = useCartStore((store) => store.add);
 
 	return (
 		<Layout>
@@ -35,6 +35,7 @@ function Promotions() {
 					<div className="card card-compact bg-base-100 shadow-xl" key={index}>
 						<figure className="relative">
 							<Image
+								className="w-[500px]"
 								alt={promotion.name}
 								src={promotion.image}
 								width={1000}
@@ -42,17 +43,19 @@ function Promotions() {
 							/>
 							<button
 								className="btn btn-circle btn-primary absolute top-2 right-2"
-								onClick={() => addProductToCart(promotion)}
+								onClick={() => addPromotionToCart(promotion)}
 							>
 								<AiOutlinePlus className="w-6 h-6" />
 							</button>
 							<div className="badge badge-sm absolute bottom-2 right-2">{promotion.additional}</div>
 						</figure>
-						<div className="card-body">
+						<div className="card-body gap-0">
 							<h2 className="card-title text-base">{promotion.name}</h2>
-							<p className="font-semibold text-primary">
-								{promotion.promotialPrice ? promotion.promotialPrice + " Bs." : promotion.price + " Bs."}{" "}
-								<del className="text-black">{promotion.promotialPrice ? promotion.price + " Bs." : ""}</del>
+							<p className="font-bold text-primary">
+								{promotion.price.toFixed(2)} Bs.&nbsp;
+								<del className="text-gray-500 font-semibold text-xs">
+									{promotion.normalPrice.toFixed(2)} Bs.
+								</del>
 							</p>
 							<p>{promotion.brand}</p>
 						</div>

@@ -8,8 +8,10 @@ import NewGameModal from "@/components/modals/NewGameModal";
 import GameHowToPlayModal from "@/components/modals/GameHowToPlayModal";
 
 import { games } from "data/test";
+import { useCartStore } from "@/store/cartStore";
 
 function Games() {
+	const addGameToCart = useCartStore((store) => store.add);
 	const [selectedGame, setSelectedGame] = useState({
 		name: "",
 		howToPlayYoutubeVideoLink: "",
@@ -20,10 +22,7 @@ function Games() {
 		<Layout>
 			<div className="flex justify-between items-center mb-4">
 				<h1 className="text-xl md:text-2xl">Games</h1>
-				<label
-					htmlFor="newGameModal"
-					className="btn btn-primary btn-sm md:btn-md normal-case"
-				>
+				<label htmlFor="newGameModal" className="btn btn-primary btn-sm md:btn-md normal-case">
 					New game
 				</label>
 			</div>
@@ -43,17 +42,17 @@ function Games() {
 			</div>
 			<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
 				{games.map((game, index) => (
-					<div
-						className="card card-compact bg-base-100 shadow-xl"
-						key={index}
-					>
+					<div className="card card-compact bg-base-100 shadow-xl" key={index}>
 						<figure className="relative">
-							<Image alt={game.name} src={game.image} />
-							<button className="btn btn-circle btn-primary absolute top-2 right-2">
+							<Image className="w-[500px]" alt={game.name} src={game.image} width={1000} height={1000} />
+							<button
+								className="btn btn-circle btn-primary absolute top-2 right-2"
+								onClick={() => addGameToCart(game)}
+							>
 								<AiOutlinePlus className="w-6 h-6" />
 							</button>
 						</figure>
-						<div className="card-body">
+						<div className="card-body gap-0">
 							<label
 								className="card-title text-base cursor-pointer hover:text-primary"
 								htmlFor="howToPlayModal"
@@ -64,6 +63,7 @@ function Games() {
 							>
 								{game.name}
 							</label>
+							<p className="font-bold text-primary">Bs {game.price.toFixed(2)}</p>
 						</div>
 					</div>
 				))}
