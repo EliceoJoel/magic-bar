@@ -39,7 +39,7 @@ function Categories() {
 						<figure className="relative">
 							<Image alt={category.name} src={category.image} />
 						</figure>
-						<div className="card-body">
+						<div className="card-body gap-0">
 							<h2 className="card-title text-base">{category.name}</h2>
 						</div>
 					</div>

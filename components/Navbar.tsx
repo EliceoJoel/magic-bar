@@ -1,31 +1,30 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 import { FaCocktail } from "react-icons/fa";
 import { FiLogOut, FiSettings } from "react-icons/fi";
-import {
-	HiOutlineMenu,
-	HiOutlineUserCircle,
-	HiOutlineShoppingBag,
-	HiOutlineMoon,
-} from "react-icons/hi";
+import { HiOutlineMenu, HiOutlineUserCircle, HiOutlineShoppingBag, HiOutlineMoon } from "react-icons/hi";
 
 import LeftSidebarMenu from "./LeftSidebarMenu";
 import Cart from "./Cart";
 import { useUserStore } from "@/store/userStore";
-import { useRouter } from "next/router";
+import { useCartStore } from "@/store/cartStore";
 
 interface OpenDrawer {
 	openDrawer: Function;
 }
 
 function Navbar({ openDrawer }: OpenDrawer) {
-	const userLogged = useUserStore(state => state.user);
+	const userLogged = useUserStore((state) => state.user);
+	const logout = useUserStore((state) => state.logout);
+	const productsInCart = useCartStore((state) => state.products);
 	const router = useRouter();
-	const logout =  useUserStore(state => state.logout)
+
 	const handleLogout = () => {
 		logout();
 		router.push("/catalog");
 	};
+
 	return (
 		<div className="navbar bg-base-200 h-16 px-4">
 			<div className="navbar-start w-1/6 md:w-1/4">
@@ -33,16 +32,11 @@ function Navbar({ openDrawer }: OpenDrawer) {
 					htmlFor="theDrawer"
 					tabIndex={0}
 					className="btn btn-ghost btn-circle lg:hidden"
-					onClick={() =>
-						openDrawer({ position: "", content: <LeftSidebarMenu /> })
-					}
+					onClick={() => openDrawer({ position: "", content: <LeftSidebarMenu /> })}
 				>
 					<HiOutlineMenu className="w-6 h-6" />
 				</label>
-				<Link
-					href="/"
-					className="btn btn-ghost text-xl hidden lg:inline-flex"
-				>
+				<Link href="/" className="btn btn-ghost text-xl hidden lg:inline-flex">
 					<span className="text-primary p-2">
 						<FaCocktail />
 					</span>
@@ -67,7 +61,11 @@ function Navbar({ openDrawer }: OpenDrawer) {
 							}
 						>
 							<HiOutlineShoppingBag className="w-6 h-6" />
-							<div className="badge badge-primary absolute badge-xs top-2 right-1"></div>
+							{productsInCart.length > 0 && (
+								<div className="badge badge-primary absolute badge-xs top-2 -right-1">
+									{productsInCart.length}
+								</div>
+							)}
 						</label>
 						<div className="dropdown dropdown-end dropdown-hover">
 							<label tabIndex={0} className="btn btn-ghost btn-circle">
@@ -75,10 +73,7 @@ function Navbar({ openDrawer }: OpenDrawer) {
 									<HiOutlineUserCircle className="h-6 w-6" />
 								</div>
 							</label>
-							<ul
-								tabIndex={0}
-								className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
-							>
+							<ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
 								<li>
 									<a>
 										<HiOutlineUserCircle className="w-6 h-6" />
@@ -102,16 +97,10 @@ function Navbar({ openDrawer }: OpenDrawer) {
 					</>
 				) : (
 					<div className="flex gap-2">
-						<Link
-							href="/signin"
-							className="btn btn-primary btn-outline btn-sm normal-case"
-						>
+						<Link href="/signin" className="btn btn-primary btn-outline btn-sm normal-case">
 							Sign in
 						</Link>
-						<Link
-							href="/signup"
-							className="btn btn-outline btn-sm normal-case"
-						>
+						<Link href="/signup" className="btn btn-outline btn-sm normal-case">
 							Sign up
 						</Link>
 					</div>

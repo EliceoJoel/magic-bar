@@ -4,16 +4,17 @@ import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 
 import Layout from "@/components/Layout";
 
-import { combos } from 'data/test';
+import { combos } from "data/test";
+import { useCartStore } from "@/store/cartStore";
 
 function Combos() {
+	const addComboToCart = useCartStore((store) => store.add);
+
 	return (
 		<Layout>
 			<div className="flex justify-between items-center mb-4">
 				<h1 className="text-xl">Combos</h1>
-				<button className="btn btn-primary btn-sm normal-case">
-					New combo
-				</button>
+				<button className="btn btn-primary btn-sm normal-case">New combo</button>
 			</div>
 			<div className="flex justify-end mb-4">
 				<div className="form-control w-[28rem]">
@@ -31,27 +32,21 @@ function Combos() {
 			</div>
 			<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
 				{combos.map((combo, index) => (
-					<div
-						className="card card-compact bg-base-100 shadow-xl"
-						key={index}
-					>
+					<div className="card card-compact bg-base-100 shadow-xl" key={index}>
 						<figure>
-							<Image alt={combo.name} src={combo.image} />
-							<button className="btn btn-circle btn-primary absolute top-2 right-2">
+							<Image className="w-[500px]" alt={combo.name} src={combo.image} width={1000} height={1000} />
+							<button
+								className="btn btn-circle btn-primary absolute top-2 right-2"
+								onClick={() => addComboToCart(combo)}
+							>
 								<AiOutlinePlus className="w-6 h-6" />
 							</button>
 						</figure>
-						<div className="card-body">
+						<div className="card-body gap-0">
 							<h2 className="card-title text-base">{combo.name}</h2>
-							<p className="font-semibold text-primary">
-								{combo.promotialPrice
-									? combo.promotialPrice + " Bs."
-									: combo.price + " Bs."}{" "}
-								<del className="text-black">
-									{combo.promotialPrice
-										? combo.price + " Bs."
-										: ""}
-								</del>
+							<p className="font-bold text-primary">
+								Bs {combo.price.toFixed(2)}&nbsp;
+								<del className="text-gray-500 font-semibold text-xs">Bs {combo.normalPrice.toFixed(2)}</del>
 							</p>
 						</div>
 					</div>
