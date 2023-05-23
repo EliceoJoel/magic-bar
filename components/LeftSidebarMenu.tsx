@@ -5,7 +5,7 @@ import { GiWineBottle } from "react-icons/gi";
 import { HiOutlineSparkles } from "react-icons/hi";
 import { IoCloseOutline, IoDiceOutline } from "react-icons/io5";
 import { RxDashboard } from "react-icons/rx";
-import { BsListStars } from 'react-icons/bs';
+import { BsListStars } from "react-icons/bs";
 
 function LeftSidebarMenu() {
 	return (
@@ -28,6 +28,12 @@ function LeftSidebarMenu() {
 				</Link>
 			</li>
 			<li className="bg-white rounded-btn mb-4 shadow-lg">
+				<Link href="/catalog/categories">
+					<RxDashboard className="h-6 w-6" />
+					Categories
+				</Link>
+			</li>
+			<li className="bg-white rounded-btn mb-4 shadow-lg">
 				<Link href="/catalog/promotions">
 					<HiOutlineSparkles className="h-6 w-6" />
 					Promotions
@@ -43,12 +49,6 @@ function LeftSidebarMenu() {
 				<Link href="/catalog/games">
 					<IoDiceOutline className="h-6 w-6" />
 					Games
-				</Link>
-			</li>
-			<li className="bg-white rounded-btn mb-4 shadow-lg">
-				<Link href="/catalog/categories">
-					<RxDashboard className="h-6 w-6" />
-					Categories
 				</Link>
 			</li>
 		</ul>

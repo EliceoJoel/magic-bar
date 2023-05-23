@@ -49,6 +49,28 @@ function AllCatalog() {
 			</div>
 			<div className="mb-4">
 				<div className="flex items-center justify-between mb-2">
+					<h2 className="text-xl lg:text-2xl">Categories</h2>
+				</div>
+				<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
+					{categories.slice(0, 5).map((category, index) => (
+						<div
+							className="card card-compact bg-base-100 shadow-xl cursor-pointer hover:border-primary hover:border-2"
+							key={index}
+							tabIndex={0}
+						>
+							<figure className="relative">
+								<Image alt={category.name} src={category.image} />
+							</figure>
+							<div className="card-body gap-0">
+								<h3 className="card-title text-base">{category.name}</h3>
+							</div>
+						</div>
+					))}
+					{categories.length > 5 && <SeeAll title="categories" icon={<RxDashboard className="h-16 w-16" />} />}
+				</div>
+			</div>
+			<div className="mb-4">
+				<div className="flex items-center justify-between mb-2">
 					<h2 className="text-xl lg:text-2xl">Promotions</h2>
 				</div>
 				<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
@@ -133,35 +155,11 @@ function AllCatalog() {
 							</figure>
 							<div className="card-body gap-0">
 								<h3 className="card-title text-base">{game.name}</h3>
-								<p className="font-bold text-primary">
-									Bs {game.price.toFixed(2)}
-								</p>
+								<p className="font-bold text-primary">Bs {game.price.toFixed(2)}</p>
 							</div>
 						</div>
 					))}
 					{games.length > 5 && <SeeAll title="games" icon={<IoDiceOutline className="h-16 w-16" />} />}
-				</div>
-			</div>
-			<div className="mb-4">
-				<div className="flex items-center justify-between mb-2">
-					<h2 className="text-xl lg:text-2xl">Categories</h2>
-				</div>
-				<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
-					{categories.slice(0, 5).map((category, index) => (
-						<div
-							className="card card-compact bg-base-100 shadow-xl cursor-pointer hover:border-primary hover:border-2"
-							key={index}
-							tabIndex={0}
-						>
-							<figure className="relative">
-								<Image alt={category.name} src={category.image} />
-							</figure>
-							<div className="card-body gap-0">
-								<h3 className="card-title text-base">{category.name}</h3>
-							</div>
-						</div>
-					))}
-					{categories.length > 5 && <SeeAll title="categories" icon={<RxDashboard className="h-16 w-16" />} />}
 				</div>
 			</div>
 			<NewProductModal />
