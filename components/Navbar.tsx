@@ -62,7 +62,7 @@ function Navbar({ openDrawer }: OpenDrawer) {
 						>
 							<HiOutlineShoppingBag className="w-6 h-6" />
 							{productsInCart.length > 0 && (
-								<div className="badge badge-primary absolute badge-xs top-2 -right-1">
+								<div className="absolute bg-primary rounded-badge top-2 right-1 h-4 w-4 text-white text-xs">
 									{productsInCart.length}
 								</div>
 							)}
