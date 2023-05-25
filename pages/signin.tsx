@@ -1,14 +1,16 @@
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useForm } from "react-hook-form";
+import { FirebaseError } from "firebase/app";
 
 import { FaCocktail } from "react-icons/fa";
 
 import GoogleButton from "@/components/GoogleButton";
 import { signInFormSchema, getYupSchema } from "@/yup/schemas";
 import { signInUser } from "@/firebase/authentication";
-import { useUserStore } from '@/store/userStore';
+import { useUserStore } from "@/store/userStore";
 
 type Inputs = {
 	email: string;
@@ -17,20 +19,36 @@ type Inputs = {
 
 function SignIn() {
 	const router = useRouter();
-	const registerUserinStore = useUserStore(state => state.register);
+	const registerUserinStore = useUserStore((state) => state.register);
+	const [isSigningIn, setIsSigningIn] = useState(false);
 
 	const {
 		register,
 		handleSubmit,
+		setError,
 		formState: { errors },
 	} = useForm<Inputs>(getYupSchema(signInFormSchema));
 
 	const onSubmit = handleSubmit(async (data) => {
+		// Set loading as started
+		setIsSigningIn(true);
+
+		// Sign in on firebase
 		const userLoggedIn = await signInUser(data);
-		// Save user logged in store
-		registerUserinStore(userLoggedIn);
-		// Redirect to catalog page
-		router.push("/catalog");
+
+		// Checking is exist errors
+		if (userLoggedIn instanceof FirebaseError) {
+			setError("email", { type: "value", message: "Incorrect email or password" });
+			setError("password", { type: "value", message: "Incorrect email or password" });
+		} else {
+			// Save user logged in store
+			registerUserinStore(userLoggedIn);
+			// Redirect to catalog page
+			router.push("/catalog");
+		}
+
+		//Set loading as finished
+		setIsSigningIn(false);
 	});
 
 	const signInByGoogleMethod = useGoogleLogin({
@@ -82,8 +100,11 @@ function SignIn() {
 							</span>
 						)}
 					</div>
-					<button type="submit" className="btn btn-primary w-full mt-4 normal-case text-base">
-						Sign in
+					<button
+						type="submit"
+						className={`btn btn-primary w-full mt-4 normal-case text-base ${isSigningIn && "loading"}`}
+					>
+						{isSigningIn ? "Signing in" : "Sign in"}
 					</button>
 					<p className="mt-2 text-center">
 						New at magic bar?{" "}

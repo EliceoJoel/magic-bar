@@ -18,10 +18,12 @@ function Navbar({ openDrawer }: OpenDrawer) {
 	const userLogged = useUserStore((state) => state.user);
 	const logout = useUserStore((state) => state.logout);
 	const productsInCart = useCartStore((state) => state.products);
+	const clearCart = useCartStore((state) => state.clear);
 	const router = useRouter();
 
 	const handleLogout = () => {
 		logout();
+		clearCart();
 		router.push("/catalog");
 	};
 
