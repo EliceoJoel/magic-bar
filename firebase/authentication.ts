@@ -51,6 +51,7 @@ export async function signInUser({ email, password }: signIpUserData) {
 	} catch (error) {
 		if (error instanceof Error) {
 			console.error("Failed to login user: ", error.message);
+			return error;
 		} else {
 			console.log("Unexpected error to login user: ", error);
 		}

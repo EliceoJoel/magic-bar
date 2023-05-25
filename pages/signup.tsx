@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useGoogleLogin } from "@react-oauth/google";
@@ -21,7 +22,8 @@ type Inputs = {
 
 function SignUp() {
 	const router = useRouter();
-	const registerUserinStore = useUserStore(state => state.register);
+	const registerUserinStore = useUserStore((state) => state.register);
+	const [isSingingUp, setIsSingingUp] = useState(false);
 
 	const {
 		register,
@@ -30,11 +32,19 @@ function SignUp() {
 	} = useForm<Inputs>(getYupSchema(signUpFormSchema));
 
 	const onSubmit = handleSubmit(async (data) => {
+		// Set loading as started
+		setIsSingingUp(true);
+
+		// Sing up on firebase
 		const userLogged = await signUpUser({ ...data, rol: UserType.CLIENT });
+
 		// Save user logged in store
 		registerUserinStore(userLogged);
 		// Redirect to catalog page
 		router.push("/catalog");
+
+		// Set loading as finished
+		setIsSingingUp(false);
 	});
 
 	const signUpByGoogleMethod = useGoogleLogin({
@@ -160,8 +170,11 @@ function SignUp() {
 							</span>
 						)}
 					</div>
-					<button type="submit" className="btn btn-primary w-full mt-4 normal-case text-base">
-						Sign up
+					<button
+						type="submit"
+						className={`btn btn-primary w-full mt-4 normal-case text-base ${isSingingUp && "loading"}`}
+					>
+						{isSingingUp ? "Signing up" : "Sign up"}
 					</button>
 					<p className="mt-2 text-center">
 						Do you already have an account?{" "}
