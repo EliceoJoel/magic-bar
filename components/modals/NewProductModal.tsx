@@ -1,32 +1,36 @@
 import { useForm } from "react-hook-form";
 
-import { categories } from "@/data/test";
+import { productCategories } from "@/data/product";
 import { newProductSchema, getYupSchema } from "@/yup/schemas";
-
-type Inputs = {
-	name: string;
-	brand: string;
-	category: string;
-	price: number;
-	image: string;
-};
+import { createNewProduct } from "@/firebase/product";
+import { INewProductInputs } from "@/interfaces/forms";
 
 function NewProductModal() {
 	const {
-		register,
 		handleSubmit,
+		register,
+		reset,
 		formState: { errors },
-	} = useForm<Inputs>(getYupSchema(newProductSchema));
+	} = useForm<INewProductInputs>(getYupSchema(newProductSchema));
 
-	const createNewProduct = handleSubmit((data) => {
-		console.log(data);
+	const handleCreateNewProduct = handleSubmit(async (data) => {
+		await createNewProduct({
+			...data,
+			image: data.image[0],
+			createdAt: new Date(),
+		});
+		// Close modal and reset inputs
+		document.getElementById("newProductModal")?.click();
+		reset();
+
+		// Show a success alert message
 	});
 
 	return (
 		<>
 			<input type="checkbox" id="newProductModal" className="modal-toggle" />
 			<div className="modal">
-				<form className="modal-box relative max-w-md" onSubmit={createNewProduct}>
+				<form className="modal-box relative max-w-md" onSubmit={handleCreateNewProduct}>
 					<label htmlFor="newProductModal" className="btn btn-sm btn-circle absolute right-2 top-2" tabIndex={0}>
 						✕
 					</label>
@@ -90,8 +94,8 @@ function NewProductModal() {
 								<option value="" disabled>
 									Pick a category for this product
 								</option>
-								{categories.map((category, index) => (
-									<option value={category.name} key={index}>
+								{productCategories.map((category, index) => (
+									<option value={category.id} key={index}>
 										{category.name}
 									</option>
 								))}
@@ -150,6 +154,7 @@ function NewProductModal() {
 								type="text"
 								placeholder="Amount in mililiters, alcohol percentage, etc.."
 								className="input input-bordered input-primary w-full"
+								{...register("additional")}
 							/>
 						</div>
 					</div>

@@ -10,7 +10,8 @@ import { RxDashboard } from "react-icons/rx";
 import Layout from "@/components/Layout";
 import NewProductModal from "@/components/modals/NewProductModal";
 
-import { promotions, combos, games, categories } from "data/test";
+import { promotions, combos, games } from "data/test";
+import { productCategories } from "data/product";
 import { useCartStore } from "@/store/cartStore";
 
 const SeeAll = ({ title, icon }: { title: string; icon: JSX.Element }) => (
@@ -47,26 +48,27 @@ function AllCatalog() {
 					</div>
 				</div>
 			</div>
-			<div className="mb-4">
+			{/* Display categories only for devices with width display higher than 768px */}
+			<div className="mb-4 hidden md:block">
 				<div className="flex items-center justify-between mb-2">
 					<h2 className="text-xl lg:text-2xl">Categories</h2>
 				</div>
-				<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
-					{categories.slice(0, 5).map((category, index) => (
-						<div
-							className="card card-compact bg-base-100 shadow-xl cursor-pointer hover:border-primary hover:border-2"
+				<div className="grid gap-4 md:grid-cols-6 xl:grid-cols-6 2xl:grid-cols-12">
+					{productCategories.map((category, index) => (
+						<Link
+							className="card card-compact bg-base-100 shadow-xl"
 							key={index}
+							href={`/catalog/categories/${category.id}`}
 							tabIndex={0}
 						>
 							<figure className="relative">
 								<Image alt={category.name} src={category.image} />
 							</figure>
-							<div className="card-body gap-0">
+							<div className="card-body gap-0 items-center">
 								<h3 className="card-title text-base">{category.name}</h3>
 							</div>
-						</div>
+						</Link>
 					))}
-					{categories.length > 5 && <SeeAll title="categories" icon={<RxDashboard className="h-16 w-16" />} />}
 				</div>
 			</div>
 			<div className="mb-4">

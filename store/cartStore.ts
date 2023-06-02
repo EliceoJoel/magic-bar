@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 interface Product {
 	id: string;
@@ -27,32 +28,39 @@ interface Actions {
 	increaseQuantity: (product: CartProduct) => void;
 }
 
-export const useCartStore = create<State & Actions>((set) => ({
-	products: [],
-	add: (product) =>
-		set((state) => ({
-			products: state.products.some((item) => item.id === product.id)
-				? state.products
-				: [...state.products, { ...product, quantity: 1 }],
-		})),
-	remove: (product) => set((state) => ({ products: state.products.filter((item) => item.id !== product.id) })),
-	clear: () => set(() => ({ products: [] })),
-	decreaseQuantity: (product) =>
-		set((state) => ({
-			products: state.products.filter(function (item) {
-				if (item.id === product.id && item.quantity > 1) {
-					item.quantity -= 1;
-				}
-				return item;
-			}),
-		})),
-	increaseQuantity: (product) =>
-		set((state) => ({
-			products: state.products.filter(function (item) {
-				if (item.id === product.id) {
-					item.quantity += 1;
-				}
-				return item;
-			}),
-		})),
-}));
+export const useCartStore = create(
+	persist<State & Actions>(
+		(set) => ({
+			products: [],
+			add: (product) =>
+				set((state) => ({
+					products: state.products.some((item) => item.id === product.id)
+						? state.products
+						: [...state.products, { ...product, quantity: 1 }],
+				})),
+			remove: (product) => set((state) => ({ products: state.products.filter((item) => item.id !== product.id) })),
+			clear: () => set(() => ({ products: [] })),
+			decreaseQuantity: (product) =>
+				set((state) => ({
+					products: state.products.filter(function (item) {
+						if (item.id === product.id && item.quantity > 1) {
+							item.quantity -= 1;
+						}
+						return item;
+					}),
+				})),
+			increaseQuantity: (product) =>
+				set((state) => ({
+					products: state.products.filter(function (item) {
+						if (item.id === product.id) {
+							item.quantity += 1;
+						}
+						return item;
+					}),
+				})),
+		}),
+		{
+			name: "cartStorage"
+		}
+	)
+);
