@@ -11,14 +11,7 @@ import { getYupSchema, signUpFormSchema } from "@/yup/schemas";
 import { signUpUser } from "@/firebase/authentication";
 import { UserType } from "@/constants/userType";
 import { useUserStore } from "@/store/userStore";
-
-type Inputs = {
-	name: string;
-	lastName: string;
-	email: string;
-	password: string;
-	confirmPassword: string;
-};
+import { ISignUpInputs } from "@/interfaces/forms";
 
 function SignUp() {
 	const router = useRouter();
@@ -29,7 +22,7 @@ function SignUp() {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<Inputs>(getYupSchema(signUpFormSchema));
+	} = useForm<ISignUpInputs>(getYupSchema(signUpFormSchema));
 
 	const onSubmit = handleSubmit(async (data) => {
 		// Set loading as started

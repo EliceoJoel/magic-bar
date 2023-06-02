@@ -11,11 +11,7 @@ import GoogleButton from "@/components/GoogleButton";
 import { signInFormSchema, getYupSchema } from "@/yup/schemas";
 import { signInUser } from "@/firebase/authentication";
 import { useUserStore } from "@/store/userStore";
-
-type Inputs = {
-	email: string;
-	password: string;
-};
+import { ISignInInputs } from "@/interfaces/forms";
 
 function SignIn() {
 	const router = useRouter();
@@ -27,7 +23,7 @@ function SignIn() {
 		handleSubmit,
 		setError,
 		formState: { errors },
-	} = useForm<Inputs>(getYupSchema(signInFormSchema));
+	} = useForm<ISignInInputs>(getYupSchema(signInFormSchema));
 
 	const onSubmit = handleSubmit(async (data) => {
 		// Set loading as started
