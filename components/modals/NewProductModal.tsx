@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { productCategories } from "@/data/product";
@@ -13,17 +14,28 @@ function NewProductModal() {
 		formState: { errors },
 	} = useForm<INewProductInputs>(getYupSchema(newProductSchema));
 
+	const [isCreatingNewProduct, setIsCreatingNewProduct] = useState(false);
+
 	const handleCreateNewProduct = handleSubmit(async (data) => {
+		// Set loading as started
+		setIsCreatingNewProduct(true);
+
+		// Creates new product in firebase
 		await createNewProduct({
 			...data,
 			image: data.image[0],
 			createdAt: new Date(),
 		});
+
 		// Close modal and reset inputs
 		document.getElementById("newProductModal")?.click();
 		reset();
 
+		//Set loading as finished
+		setIsCreatingNewProduct(false);
+
 		// Show a success alert message
+
 	});
 
 	return (
@@ -162,8 +174,8 @@ function NewProductModal() {
 						<label htmlFor="newProductModal" className="btn capitalize">
 							Cancel
 						</label>
-						<button type="submit" className="btn btn-primary capitalize">
-							Save
+						<button type="submit" className={`btn btn-primary capitalize ${isCreatingNewProduct && "loading"}`}>
+							{isCreatingNewProduct ? "Saving" : "Save"}
 						</button>
 					</div>
 				</form>
