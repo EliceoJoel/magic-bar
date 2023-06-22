@@ -17,11 +17,11 @@ export async function createNewProduct(newProduct: IProductForFirebase) {
 						...newProduct,
 						image: imageUrl,
 					}).catch((error) => {
-						console.log("Error creating product in firebase: " + error.message);
+						console.error("Error creating product in firebase: " + error.message);
 					});
 				})
 				.catch((error) => {
-					console.log("Error generating image url: " + error.massage);
+					console.error("Error generating image url: " + error.massage);
 				});
 		})
 		.catch((error) => {
@@ -49,6 +49,6 @@ export async function getProductsBycategory(categoryId: string) {
 		});
 		return resultData;
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 	}
 }

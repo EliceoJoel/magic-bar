@@ -20,6 +20,23 @@ export interface IProductFromFirebase {
 	createdAt: Date;
 }
 
+export interface IComboForFirebase {
+	name: string;
+	price: number;
+	normalPrice: number;
+	image: File;
+	createdAt: Date;
+}
+
+export interface IComboFromFirebase {
+	id: string;
+	name: string;
+	price: number;
+	normalPrice: number;
+	image: string;
+	createdAt: Date;
+}
+
 export interface IPath {
 	id: string;
 };

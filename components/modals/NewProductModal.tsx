@@ -7,6 +7,8 @@ import { createNewProduct } from "@/firebase/product";
 import { INewProductInputs } from "@/interfaces/forms";
 
 function NewProductModal() {
+	const [isCreatingNewProduct, setIsCreatingNewProduct] = useState(false);
+
 	const {
 		handleSubmit,
 		register,
@@ -14,13 +16,11 @@ function NewProductModal() {
 		formState: { errors },
 	} = useForm<INewProductInputs>(getYupSchema(newProductSchema));
 
-	const [isCreatingNewProduct, setIsCreatingNewProduct] = useState(false);
-
 	const handleCreateNewProduct = handleSubmit(async (data) => {
 		// Set loading as started
 		setIsCreatingNewProduct(true);
 
-		// Creates new product in firebase
+		// Create new product in firebase
 		await createNewProduct({
 			...data,
 			image: data.image[0],
