@@ -1,20 +1,34 @@
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 
 import Layout from "@/components/Layout";
+import NewComboModal from "@/components/modals/NewComboModal";
 
-import { combos } from "data/test";
 import { useCartStore } from "@/store/cartStore";
+import { getAllCombos } from "@/firebase/combos";
+import { IComboFromFirebase } from "@/interfaces/objects";
 
 function Combos() {
+	const [combos, setCombos] = useState<IComboFromFirebase[]>([]);
 	const addComboToCart = useCartStore((store) => store.add);
+
+	useEffect(() => {
+		const getAllCombosFromFirebase = async () => {
+			const data = await getAllCombos();
+			setCombos(data);
+		};
+		getAllCombosFromFirebase();
+	}, []);
 
 	return (
 		<Layout>
 			<div className="flex justify-between items-center mb-4">
-				<h1 className="text-xl">Combos</h1>
-				<button className="btn btn-primary btn-sm normal-case">New combo</button>
+				<h1 className="text-xl md:text-2xl">Combos</h1>
+				<label htmlFor="newComboModal" className="btn btn-primary btn-sm normal-case md:btn-md">
+					New combo
+				</label>
 			</div>
 			<div className="flex justify-end mb-4">
 				<div className="form-control w-[28rem]">
@@ -52,6 +66,7 @@ function Combos() {
 					</div>
 				))}
 			</div>
+			<NewComboModal updateCombos={setCombos}/>
 		</Layout>
 	);
 }

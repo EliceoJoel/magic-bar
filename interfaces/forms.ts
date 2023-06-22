@@ -20,3 +20,10 @@ export interface INewProductInputs {
 	image: FileList;
 	additional: string;
 }
+
+export interface INewComboInputs {
+	name: string;
+	price: number;
+	normalPrice: number;
+	image: FileList;
+}
