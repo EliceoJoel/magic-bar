@@ -27,3 +27,9 @@ export interface INewComboInputs {
 	normalPrice: number;
 	image: FileList;
 }
+
+export interface INewGameInputs {
+	name: string;
+	price: number;
+	image: FileList;
+}

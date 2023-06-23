@@ -1,23 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 
 import Layout from "@/components/Layout";
 import NewGameModal from "@/components/modals/NewGameModal";
-import GameHowToPlayModal from "@/components/modals/GameHowToPlayModal";
 
-import { games } from "data/test";
 import { useCartStore } from "@/store/cartStore";
+import { IGameFromFirebase } from "@/interfaces/objects";
+import { getAllGames } from "@/firebase/games";
 
 function Games() {
+	const [games, setGames] = useState<IGameFromFirebase[]>([]);
+
 	const addGameToCart = useCartStore((store) => store.add);
-	const [selectedGame, setSelectedGame] = useState({
-		name: "",
-		howToPlayYoutubeVideoLink: "",
-		howToPlayPageLink: "",
-	});
-	const [showVideo, setShowVideo] = useState(false);
+
+	useEffect(() => {
+		const getAllGamesFromFirebase = async () => {
+			const data = await getAllGames();
+			setGames(data);
+		};
+		getAllGamesFromFirebase();
+	}, []);
+
 	return (
 		<Layout>
 			<div className="flex justify-between items-center mb-4">
@@ -53,29 +58,13 @@ function Games() {
 							</button>
 						</figure>
 						<div className="card-body gap-0">
-							<label
-								className="card-title text-base cursor-pointer hover:text-primary"
-								htmlFor="howToPlayModal"
-								onClick={() => {
-									setSelectedGame(game);
-									setShowVideo(true);
-								}}
-							>
-								{game.name}
-							</label>
+							<h2 className="card-title text-base">{game.name}</h2>
 							<p className="font-bold text-primary">Bs {game.price.toFixed(2)}</p>
 						</div>
 					</div>
 				))}
 			</div>
-			<NewGameModal />
-			<GameHowToPlayModal
-				gameName={selectedGame.name}
-				videoLink={selectedGame.howToPlayYoutubeVideoLink}
-				pageLink={selectedGame.howToPlayPageLink}
-				showVideo={showVideo}
-				setShowVideo={setShowVideo}
-			/>
+			<NewGameModal updateGames={setGames} />
 		</Layout>
 	);
 }
