@@ -52,9 +52,9 @@ function Promotions() {
 						<div className="card-body gap-0">
 							<h2 className="card-title text-base">{promotion.name}</h2>
 							<p className="font-bold text-primary">
-								{promotion.price.toFixed(2)} Bs.&nbsp;
+								Bs {promotion.price.toFixed(2)}&nbsp;
 								<del className="text-gray-500 font-semibold text-xs">
-									{promotion.normalPrice.toFixed(2)} Bs.
+									Bs {promotion.normalPrice.toFixed(2)}
 								</del>
 							</p>
 							<p>{promotion.brand}</p>

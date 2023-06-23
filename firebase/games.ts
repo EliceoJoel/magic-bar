@@ -2,22 +2,22 @@ import { addDoc, collection, getDocs } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "./config";
 import { v4 as uuidv4 } from "uuid";
-import { IComboForFirebase, IComboFromFirebase } from "@/interfaces/objects";
+import { IGameForFirebase, IGameFromFirebase } from "@/interfaces/objects";
 
-export async function createNewCombo(newCombo: IComboForFirebase) {
+export async function createNewGame(newGame: IGameForFirebase) {
 	// Image ref in store
-	const storageRef = ref(storage, `combos/${newCombo.image.name.split(".")[0] + uuidv4()}`);
+	const storageRef = ref(storage, `games/${newGame.image.name.split(".")[0] + uuidv4()}`);
 	// Upload image to firebase store
-	await uploadBytes(storageRef, newCombo.image)
+	await uploadBytes(storageRef, newGame.image)
 		.then(async (snapshot) => {
 			await getDownloadURL(snapshot.ref)
 				.then(async (imageUrl) => {
-					// Creating combo in firestore including generated image url
-					await addDoc(collection(db, "combos"), {
-						...newCombo,
+					// Creating game in firestore including generated image url
+					await addDoc(collection(db, "games"), {
+						...newGame,
 						image: imageUrl,
 					}).catch((error) => {
-						console.error("Error creating combo in firebase: " + error.message);
+						console.error("Error creating game in firebase: " + error.message);
 					});
 				})
 				.catch((error) => {
@@ -29,18 +29,17 @@ export async function createNewCombo(newCombo: IComboForFirebase) {
 		});
 }
 
-export async function getAllCombos() {
-	const combos: IComboFromFirebase[] = [];
-	const querySnapshot = await getDocs(collection(db, "combos"));
+export async function getAllGames() {
+	const games: IGameFromFirebase[] = [];
+	const querySnapshot = await getDocs(collection(db, "games"));
 	querySnapshot.forEach((doc) => {
-		combos.push({
+		games.push({
 			id: doc.id,
 			name: doc.data().name,
 			price: doc.data().price,
-			normalPrice: doc.data().normalPrice,
 			image: doc.data().image,
 			createdAt: doc.data().createdAt,
 		});
 	});
-   return combos;
+   return games;
 }

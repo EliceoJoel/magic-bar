@@ -35,7 +35,6 @@ function NewProductModal() {
 		setIsCreatingNewProduct(false);
 
 		// Show a success alert message
-
 	});
 
 	return (
@@ -43,7 +42,12 @@ function NewProductModal() {
 			<input type="checkbox" id="newProductModal" className="modal-toggle" />
 			<div className="modal">
 				<form className="modal-box relative max-w-md" onSubmit={handleCreateNewProduct}>
-					<label htmlFor="newProductModal" className="btn btn-sm btn-circle absolute right-2 top-2" tabIndex={0}>
+					<label
+						htmlFor="newProductModal"
+						className="btn btn-sm btn-circle absolute right-2 top-2"
+						tabIndex={0}
+						onClick={() => reset()}
+					>
 						✕
 					</label>
 					<h3 className="font-bold text-lg mb-2 mr-4">New Product</h3>
@@ -171,7 +175,7 @@ function NewProductModal() {
 						</div>
 					</div>
 					<div className="modal-action">
-						<label htmlFor="newProductModal" className="btn capitalize">
+						<label htmlFor="newProductModal" className="btn capitalize" onClick={() => reset()}>
 							Cancel
 						</label>
 						<button type="submit" className={`btn btn-primary capitalize ${isCreatingNewProduct && "loading"}`}>

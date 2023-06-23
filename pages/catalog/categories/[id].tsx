@@ -70,7 +70,7 @@ function Category({ categoryId }: { categoryId: string }) {
 						</figure>
 						<div className="card-body gap-0">
 							<h2 className="card-title text-base">{product.name}</h2>
-							<p className="font-bold text-primary">{product.price.toFixed(2)} Bs.</p>
+							<p className="font-bold text-primary">Bs {product.price.toFixed(2)}</p>
 							<p>{product.brand}</p>
 						</div>
 					</div>

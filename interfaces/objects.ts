@@ -37,6 +37,21 @@ export interface IComboFromFirebase {
 	createdAt: Date;
 }
 
+export interface IGameForFirebase {
+	name: string;
+	price: number;
+	image: File;
+	createdAt: Date;
+}
+
+export interface IGameFromFirebase {
+	id: string;
+	name: string;
+	price: number;
+	image: string;
+	createdAt: Date;
+}
+
 export interface IPath {
 	id: string;
 };

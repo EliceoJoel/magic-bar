@@ -12,6 +12,7 @@ import { IComboFromFirebase } from "@/interfaces/objects";
 
 function Combos() {
 	const [combos, setCombos] = useState<IComboFromFirebase[]>([]);
+
 	const addComboToCart = useCartStore((store) => store.add);
 
 	useEffect(() => {

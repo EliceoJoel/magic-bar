@@ -46,7 +46,12 @@ function NewComboModal({ updateCombos }: { updateCombos: Dispatch<SetStateAction
 			<input type="checkbox" id="newComboModal" className="modal-toggle" />
 			<div className="modal">
 				<form className="modal-box relative max-w-md" onSubmit={handleCreateNewCombo}>
-					<label htmlFor="newComboModal" className="btn btn-sm btn-circle absolute right-2 top-2" tabIndex={0}>
+					<label
+						htmlFor="newComboModal"
+						className="btn btn-sm btn-circle absolute right-2 top-2"
+						tabIndex={0}
+						onClick={() => reset()}
+					>
 						✕
 					</label>
 					<h3 className="font-bold text-lg mb-2 mr-4">New Combo</h3>
@@ -58,13 +63,13 @@ function NewComboModal({ updateCombos }: { updateCombos: Dispatch<SetStateAction
 							</p>
 						</div>
 						<div className="form-control w-full">
-							<label htmlFor="combotNameInput" className="label justify-start">
+							<label htmlFor="comboNameInput" className="label justify-start">
 								<span className="label-text">Name</span>
 								<span className="label-text text-red-500">&nbsp;[*]</span>
 							</label>
 							<input
 								autoComplete="off"
-								id="combotNameInput"
+								id="comboNameInput"
 								type="text"
 								placeholder="Type the name of the new combo"
 								className="input input-bordered input-primary w-full"
@@ -136,7 +141,7 @@ function NewComboModal({ updateCombos }: { updateCombos: Dispatch<SetStateAction
 						</div>
 					</div>
 					<div className="modal-action">
-						<label htmlFor="newComboModal" className="btn capitalize">
+						<label htmlFor="newComboModal" className="btn capitalize" onClick={() => reset()}>
 							Cancel
 						</label>
 						<button type="submit" className={`btn btn-primary capitalize ${isCreatingNewCombo && "loading"}`}>
