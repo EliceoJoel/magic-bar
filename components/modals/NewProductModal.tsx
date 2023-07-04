@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { FiInfo } from "react-icons/fi";
+
 import { productCategories } from "@/data/product";
 import { newProductSchema, getYupSchema } from "@/yup/schemas";
 import { createNewProduct } from "@/firebase/product";
@@ -23,6 +25,7 @@ function NewProductModal() {
 		// Create new product in firebase
 		await createNewProduct({
 			...data,
+			promotionPrice: data.promotionPrice !== undefined ? data.promotionPrice : 0,
 			image: data.image[0],
 			createdAt: new Date(),
 		});
@@ -31,7 +34,7 @@ function NewProductModal() {
 		document.getElementById("newProductModal")?.click();
 		reset();
 
-		//Set loading as finished
+		// Set loading as finished
 		setIsCreatingNewProduct(false);
 
 		// Show a success alert message
@@ -67,7 +70,7 @@ function NewProductModal() {
 								autoComplete="off"
 								id="productNameInput"
 								type="text"
-								placeholder="Type the name of the new product"
+								placeholder="Type the name of the product"
 								className="input input-bordered input-primary w-full"
 								{...register("name")}
 							/>
@@ -86,7 +89,7 @@ function NewProductModal() {
 								autoComplete="off"
 								id="productBrandInput"
 								type="text"
-								placeholder="Type the brand of the new product"
+								placeholder="Type the brand of the product"
 								className="input input-bordered input-primary w-full"
 								{...register("brand")}
 							/>
@@ -132,7 +135,7 @@ function NewProductModal() {
 								id="productPriceInput"
 								type="number"
 								step={0.01}
-								placeholder="Type the base price of the new product"
+								placeholder="Type the base price of the product"
 								className="input input-bordered input-primary w-full"
 								{...register("price")}
 							/>
@@ -172,6 +175,29 @@ function NewProductModal() {
 								className="input input-bordered input-primary w-full"
 								{...register("additional")}
 							/>
+						</div>
+						<div className="bg-primary p-2 rounded-lg text-white flex mt-4 items-center gap-2">
+							<FiInfo className="h-8 w-8" />
+							<span>If you want to make this product as promotion fill the input below.</span>
+						</div>
+						<div className="form-control w-full">
+							<label htmlFor="productPromotionPriceInput" className="label justify-start">
+								<span className="label-text">Promotion price</span>
+							</label>
+							<input
+								autoComplete="off"
+								id="productPromotionPriceInput"
+								type="number"
+								step={0.01}
+								placeholder="Type the promotion price of the product"
+								className="input input-bordered input-primary w-full"
+								{...register("promotionPrice")}
+							/>
+							{errors.promotionPrice && (
+								<span className="text-sm text-error mt-1" role="alert">
+									{errors.promotionPrice.message}
+								</span>
+							)}
 						</div>
 					</div>
 					<div className="modal-action">

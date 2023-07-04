@@ -44,6 +44,7 @@ export async function getProductsBycategory(categoryId: string) {
 				category: doc.data().category,
 				image: doc.data().image,
 				additional: doc.data().additional,
+				promotionPrice: doc.data().promotionPrice,
 				createdAt: doc.data().createdAt,
 			});
 		});
