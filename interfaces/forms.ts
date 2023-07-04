@@ -1,4 +1,3 @@
-
 export interface ISignInInputs {
 	email: string;
 	password: string;
@@ -19,6 +18,7 @@ export interface INewProductInputs {
 	price: number;
 	image: FileList;
 	additional: string;
+	promotionPrice: number;
 }
 
 export interface INewComboInputs {

@@ -6,6 +6,7 @@ export interface IProductForFirebase {
 	category: string;
 	image: File;
 	additional: string;
+	promotionPrice: number;
 	createdAt: Date;
 }
 
@@ -17,6 +18,7 @@ export interface IProductFromFirebase {
 	category: string;
 	image: string;
 	additional: string;
+	promotionPrice: number;
 	createdAt: Date;
 }
 

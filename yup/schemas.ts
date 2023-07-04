@@ -31,6 +31,10 @@ export const newProductSchema = Yup.object().shape({
 	image: Yup.mixed()
 		.test("is-there-file", "Image not uploaded", (value: any) => !!value[0])
 		.test("is-valid-image", "Image uploaded is not valid", (value) => isValidImageType(value)),
+	promotionPrice: Yup.number()
+		.transform((value) => (isNaN(value) ? undefined : value))
+		.typeError("Promotion price must be a number")
+		.positive("Price can't be negative"),
 });
 
 export const newComboSchema = Yup.object().shape({
