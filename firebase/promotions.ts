@@ -4,8 +4,8 @@ import { IProductFromFirebase } from "@/interfaces/objects";
 
 export async function getAllPromotions() {
 	try {
-		const productsRef = collection(db, "products");
-		const promotionQuery = query(productsRef, where("promotionPrice", ">", 0));
+		const promotionsRef = collection(db, "products");
+		const promotionQuery = query(promotionsRef, where("promotionPrice", ">", 0));
 		const querySnapshot = await getDocs(promotionQuery);
 		const resultData: IProductFromFirebase[] = [];
 		querySnapshot.forEach((doc) => {
@@ -25,4 +25,22 @@ export async function getAllPromotions() {
 	} catch (error) {
 		console.error(error);
 	}
+}
+
+export async function getLastNPromotions(n: number) {
+	try {
+		const allPromotions = await getAllPromotions();
+		if (allPromotions !== undefined) {
+			const sortedPromotions = sortPromotionsByDate(allPromotions);
+			return sortedPromotions.slice(0, n);
+		}
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+function sortPromotionsByDate(promotions: IProductFromFirebase[]) {
+	return promotions.sort(function (a, b) {
+		return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+	});
 }

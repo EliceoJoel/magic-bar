@@ -1,6 +1,6 @@
-import { addDoc, collection, getDocs } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "./config";
+import { addDoc, collection, getDocs, limit, orderBy, query } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import { IGameForFirebase, IGameFromFirebase } from "@/interfaces/objects";
 
@@ -41,5 +41,26 @@ export async function getAllGames() {
 			createdAt: doc.data().createdAt,
 		});
 	});
-   return games;
+	return games;
+}
+
+export async function getLastNGames(n: number) {
+	try {
+		const gamesRef = collection(db, "games");
+		const lastNGamesQuery = query(gamesRef, orderBy("createdAt", "desc"), limit(n));
+		const querySnapshot = await getDocs(lastNGamesQuery);
+		const resultData: IGameFromFirebase[] = [];
+		querySnapshot.forEach((doc) => {
+			resultData.push({
+				id: doc.id,
+				name: doc.data().name,
+				price: doc.data().price,
+				image: doc.data().image,
+				createdAt: doc.data().createdAt,
+			});
+		});
+		return resultData;
+	} catch (error) {
+		console.error(error);
+	}
 }

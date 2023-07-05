@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -5,7 +6,6 @@ import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 import { HiOutlineSparkles } from "react-icons/hi";
 import { GiWineBottle } from "react-icons/gi";
 import { IoDiceOutline } from "react-icons/io5";
-import { RxDashboard } from "react-icons/rx";
 
 import Layout from "@/components/Layout";
 import NewProductModal from "@/components/modals/NewProductModal";
@@ -13,6 +13,10 @@ import NewProductModal from "@/components/modals/NewProductModal";
 import { promotions, combos, games } from "data/test";
 import { productCategories } from "data/product";
 import { useCartStore } from "@/store/cartStore";
+import { getLastNPromotions } from "@/firebase/promotions";
+import { getLastNCombos } from "@/firebase/combos";
+import { getLastNGames } from "@/firebase/games";
+import { ICatalog } from "@/interfaces/objects";
 
 const SeeAll = ({ title, icon }: { title: string; icon: JSX.Element }) => (
 	<Link
@@ -25,7 +29,27 @@ const SeeAll = ({ title, icon }: { title: string; icon: JSX.Element }) => (
 );
 
 function AllCatalog() {
+	const [catalog, setCatalog] = useState<ICatalog>();
+
+	useEffect(() => {
+		async function getLastFiveProductsFromFirestore() {
+			const lastFivePromotions = await getLastNPromotions(5);
+			const lastFiveCombos = await getLastNCombos(5);
+			const lastFiveGames = await getLastNGames(5);
+			if (lastFivePromotions !== undefined && lastFiveCombos !== undefined && lastFiveGames !== undefined) {
+				setCatalog({
+					promotions: lastFivePromotions,
+					combos: lastFiveCombos,
+					games: lastFiveGames,
+				});
+			}
+		}
+
+		getLastFiveProductsFromFirestore();
+	}, []);
+
 	const addProductToCart = useCartStore((store) => store.add);
+
 	return (
 		<Layout>
 			<div className="flex justify-between items-center mb-4">
@@ -76,7 +100,7 @@ function AllCatalog() {
 					<h2 className="text-xl lg:text-2xl">Promotions</h2>
 				</div>
 				<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
-					{promotions.slice(0, 5).map((promotion, index) => (
+					{catalog?.promotions.map((promotion, index) => (
 						<div className="card card-compact bg-base-100 shadow-xl" key={index}>
 							<figure className="relative">
 								<Image
@@ -97,16 +121,16 @@ function AllCatalog() {
 							<div className="card-body gap-0">
 								<h3 className="card-title text-base">{promotion.name}</h3>
 								<p className="font-bold text-primary">
-									Bs {promotion.price.toFixed(2)}&nbsp;
+									Bs {promotion.promotionPrice.toFixed(2)}&nbsp;
 									<del className="text-gray-500 font-semibold text-xs">
-										Bs {promotion.normalPrice.toFixed(2)}
+										Bs {promotion.price.toFixed(2)}
 									</del>
 								</p>
 								<p>{promotion.brand}</p>
 							</div>
 						</div>
 					))}
-					{promotions.length > 5 && (
+					{promotions.length === 5 && (
 						<SeeAll title="promotions" icon={<HiOutlineSparkles className="h-16 w-16" />} />
 					)}
 				</div>
@@ -116,7 +140,7 @@ function AllCatalog() {
 					<h2 className="text-xl lg:text-2xl">Combos</h2>
 				</div>
 				<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
-					{combos.slice(0, 5).map((combo, index) => (
+					{catalog?.combos.map((combo, index) => (
 						<div className="card card-compact bg-base-100 shadow-xl" key={index}>
 							<figure>
 								<Image className="w-[500px]" alt={combo.name} src={combo.image} width={1000} height={1000} />
@@ -136,7 +160,7 @@ function AllCatalog() {
 							</div>
 						</div>
 					))}
-					{combos.length > 5 && <SeeAll title="combos" icon={<GiWineBottle className="h-16 w-16" />} />}
+					{combos.length === 5 && <SeeAll title="combos" icon={<GiWineBottle className="h-16 w-16" />} />}
 				</div>
 			</div>
 			<div className="mb-4">
@@ -144,7 +168,7 @@ function AllCatalog() {
 					<h2 className="text-xl lg:text-2xl">Games</h2>
 				</div>
 				<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
-					{games.slice(0, 5).map((game, index) => (
+					{catalog?.games.map((game, index) => (
 						<div className="card card-compact bg-base-100 shadow-xl" key={index}>
 							<figure className="relative">
 								<Image className="w-[500px]" alt={game.name} src={game.image} width={1000} height={1000} />
@@ -161,7 +185,7 @@ function AllCatalog() {
 							</div>
 						</div>
 					))}
-					{games.length > 5 && <SeeAll title="games" icon={<IoDiceOutline className="h-16 w-16" />} />}
+					{games.length === 5 && <SeeAll title="games" icon={<IoDiceOutline className="h-16 w-16" />} />}
 				</div>
 			</div>
 			<NewProductModal />

@@ -1,3 +1,8 @@
+export interface ICatalog {
+	promotions: IProductFromFirebase[];
+	combos: IComboFromFirebase[];
+	games: IGameFromFirebase[];
+}
 
 export interface IProductForFirebase {
 	name: string;
@@ -56,4 +61,4 @@ export interface IGameFromFirebase {
 
 export interface IPath {
 	id: string;
-};
+}
