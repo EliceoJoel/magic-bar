@@ -5,6 +5,7 @@ import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 
 import Layout from "@/components/Layout";
 import NewComboModal from "@/components/modals/NewComboModal";
+import NoData from "@/components/NoData";
 
 import { useCartStore } from "@/store/cartStore";
 import { getAllCombos } from "@/firebase/combos";
@@ -45,29 +46,33 @@ function Combos() {
 					</div>
 				</div>
 			</div>
-			<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
-				{combos.map((combo, index) => (
-					<div className="card card-compact bg-base-100 shadow-xl" key={index}>
-						<figure>
-							<Image className="w-[500px]" alt={combo.name} src={combo.image} width={1000} height={1000} />
-							<button
-								className="btn btn-circle btn-primary absolute top-2 right-2"
-								onClick={() => addComboToCart(combo)}
-							>
-								<AiOutlinePlus className="w-6 h-6" />
-							</button>
-						</figure>
-						<div className="card-body gap-0">
-							<h2 className="card-title text-base">{combo.name}</h2>
-							<p className="font-bold text-primary">
-								Bs {combo.price.toFixed(2)}&nbsp;
-								<del className="text-gray-500 font-semibold text-xs">Bs {combo.normalPrice.toFixed(2)}</del>
-							</p>
+			{combos.length > 0 ? (
+				<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
+					{combos.map((combo, index) => (
+						<div className="card card-compact bg-base-100 shadow-xl" key={index}>
+							<figure>
+								<Image className="w-[500px]" alt={combo.name} src={combo.image} width={1000} height={1000} />
+								<button
+									className="btn btn-circle btn-primary absolute top-2 right-2"
+									onClick={() => addComboToCart(combo)}
+								>
+									<AiOutlinePlus className="w-6 h-6" />
+								</button>
+							</figure>
+							<div className="card-body gap-0">
+								<h2 className="card-title text-base">{combo.name}</h2>
+								<p className="font-bold text-primary">
+									Bs {combo.price.toFixed(2)}&nbsp;
+									<del className="text-gray-500 font-semibold text-xs">Bs {combo.normalPrice.toFixed(2)}</del>
+								</p>
+							</div>
 						</div>
-					</div>
-				))}
-			</div>
-			<NewComboModal updateCombos={setCombos}/>
+					))}
+				</div>
+			) : (
+				<NoData />
+			)}
+			<NewComboModal updateCombos={setCombos} />
 		</Layout>
 	);
 }
