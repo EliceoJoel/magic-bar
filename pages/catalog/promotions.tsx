@@ -25,9 +25,9 @@ function Promotions() {
 			} else {
 				setPromotions([]);
 			}
+			setIsContentLoading(false);
 		};
 		getAllPromotionsFromFirebase();
-		setIsContentLoading(false);
 	}, []);
 
 	return (
