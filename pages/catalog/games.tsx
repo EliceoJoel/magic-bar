@@ -22,9 +22,9 @@ function Games() {
 		const getAllGamesFromFirebase = async () => {
 			const data = await getAllGames();
 			setGames(data);
+			setIsContentLoading(false);
 		};
 		getAllGamesFromFirebase();
-		setIsContentLoading(false);
 	}, []);
 
 	return (

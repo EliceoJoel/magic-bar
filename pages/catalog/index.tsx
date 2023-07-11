@@ -38,9 +38,9 @@ function AllCatalog() {
 					games: lastFiveGames,
 				});
 			}
+			setIsContentLoading(false);
 		}
 		getLastFiveProductsFromFirestore();
-		setIsContentLoading(false);
 	}, []);
 
 	const addProductToCart = useCartStore((store) => store.add);

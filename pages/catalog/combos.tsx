@@ -22,9 +22,9 @@ function Combos() {
 		const getAllCombosFromFirebase = async () => {
 			const data = await getAllCombos();
 			setCombos(data);
+			setIsContentLoading(false);
 		};
 		getAllCombosFromFirebase();
-		setIsContentLoading(false);
 	}, []);
 
 	return (
