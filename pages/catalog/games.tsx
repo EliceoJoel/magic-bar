@@ -6,12 +6,14 @@ import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 import Layout from "@/components/Layout";
 import NewGameModal from "@/components/modals/NewGameModal";
 import NoData from "@/components/NoData";
+import Loading from "@/components/Loading";
 
 import { useCartStore } from "@/store/cartStore";
 import { IGameFromFirebase } from "@/interfaces/objects";
 import { getAllGames } from "@/firebase/games";
 
 function Games() {
+	const [isContentLoading, setIsContentLoading] = useState(true);
 	const [games, setGames] = useState<IGameFromFirebase[]>([]);
 
 	const addGameToCart = useCartStore((store) => store.add);
@@ -22,6 +24,7 @@ function Games() {
 			setGames(data);
 		};
 		getAllGamesFromFirebase();
+		setIsContentLoading(false);
 	}, []);
 
 	return (
@@ -46,28 +49,40 @@ function Games() {
 					</div>
 				</div>
 			</div>
-			{games.length > 0 ? (
-				<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
-					{games.map((game, index) => (
-						<div className="card card-compact bg-base-100 shadow-xl" key={index}>
-							<figure className="relative">
-								<Image className="w-[500px]" alt={game.name} src={game.image} width={1000} height={1000} />
-								<button
-									className="btn btn-circle btn-primary absolute top-2 right-2"
-									onClick={() => addGameToCart(game)}
-								>
-									<AiOutlinePlus className="w-6 h-6" />
-								</button>
-							</figure>
-							<div className="card-body gap-0">
-								<h2 className="card-title text-base">{game.name}</h2>
-								<p className="font-bold text-primary">Bs {game.price.toFixed(2)}</p>
-							</div>
-						</div>
-					))}
-				</div>
+			{isContentLoading ? (
+				<Loading />
 			) : (
-				<NoData />
+				<>
+					{games.length > 0 ? (
+						<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
+							{games.map((game, index) => (
+								<div className="card card-compact bg-base-100 shadow-xl" key={index}>
+									<figure className="relative">
+										<Image
+											className="w-[500px]"
+											alt={game.name}
+											src={game.image}
+											width={1000}
+											height={1000}
+										/>
+										<button
+											className="btn btn-circle btn-primary absolute top-2 right-2"
+											onClick={() => addGameToCart(game)}
+										>
+											<AiOutlinePlus className="w-6 h-6" />
+										</button>
+									</figure>
+									<div className="card-body gap-0">
+										<h2 className="card-title text-base">{game.name}</h2>
+										<p className="font-bold text-primary">Bs {game.price.toFixed(2)}</p>
+									</div>
+								</div>
+							))}
+						</div>
+					) : (
+						<NoData />
+					)}
+				</>
 			)}
 			<NewGameModal updateGames={setGames} />
 		</Layout>
