@@ -5,12 +5,14 @@ import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 
 import Layout from "@/components/Layout";
 import NoData from "@/components/NoData";
+import Loading from "@/components/Loading";
 
 import { useCartStore } from "@/store/cartStore";
 import { IProductFromFirebase } from "@/interfaces/objects";
 import { getAllPromotions } from "@/firebase/promotions";
 
 function Promotions() {
+	const [isContentLoading, setIsContentLoading] = useState(true);
 	const [promotions, setPromotions] = useState<IProductFromFirebase[]>([]);
 
 	const addPromotionToCart = useCartStore((store) => store.add);
@@ -25,6 +27,7 @@ function Promotions() {
 			}
 		};
 		getAllPromotionsFromFirebase();
+		setIsContentLoading(false);
 	}, []);
 
 	return (
@@ -46,41 +49,49 @@ function Promotions() {
 					</div>
 				</div>
 			</div>
-			{promotions.length > 0 ? (
-				<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
-					{promotions.map((promotion, index) => (
-						<div className="card card-compact bg-base-100 shadow-xl" key={index}>
-							<figure className="relative">
-								<Image
-									className="w-[500px]"
-									alt={promotion.name}
-									src={promotion.image}
-									width={1000}
-									height={1000}
-								/>
-								<button
-									className="btn btn-circle btn-primary absolute top-2 right-2"
-									onClick={() => addPromotionToCart(promotion)}
-								>
-									<AiOutlinePlus className="w-6 h-6" />
-								</button>
-								{promotion.additional && (
-									<div className="badge badge-sm absolute bottom-2 right-2">{promotion.additional}</div>
-								)}
-							</figure>
-							<div className="card-body gap-0">
-								<h2 className="card-title text-base">{promotion.name}</h2>
-								<p className="font-bold text-primary">
-									Bs {promotion.promotionPrice.toFixed(2)}&nbsp;
-									<del className="text-gray-500 font-semibold text-xs">Bs {promotion.price.toFixed(2)}</del>
-								</p>
-								<p>{promotion.brand}</p>
-							</div>
-						</div>
-					))}
-				</div>
+			{isContentLoading ? (
+				<Loading />
 			) : (
-				<NoData />
+				<>
+					{promotions.length > 0 ? (
+						<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
+							{promotions.map((promotion, index) => (
+								<div className="card card-compact bg-base-100 shadow-xl" key={index}>
+									<figure className="relative">
+										<Image
+											className="w-[500px]"
+											alt={promotion.name}
+											src={promotion.image}
+											width={1000}
+											height={1000}
+										/>
+										<button
+											className="btn btn-circle btn-primary absolute top-2 right-2"
+											onClick={() => addPromotionToCart(promotion)}
+										>
+											<AiOutlinePlus className="w-6 h-6" />
+										</button>
+										{promotion.additional && (
+											<div className="badge badge-sm absolute bottom-2 right-2">{promotion.additional}</div>
+										)}
+									</figure>
+									<div className="card-body gap-0">
+										<h2 className="card-title text-base">{promotion.name}</h2>
+										<p className="font-bold text-primary">
+											Bs {promotion.promotionPrice.toFixed(2)}&nbsp;
+											<del className="text-gray-500 font-semibold text-xs">
+												Bs {promotion.price.toFixed(2)}
+											</del>
+										</p>
+										<p>{promotion.brand}</p>
+									</div>
+								</div>
+							))}
+						</div>
+					) : (
+						<NoData />
+					)}
+				</>
 			)}
 		</Layout>
 	);
