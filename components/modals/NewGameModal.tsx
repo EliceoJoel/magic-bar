@@ -27,7 +27,7 @@ function NewGameModal({ updateGames }: { updateGames: Dispatch<SetStateAction<IG
 			createdAt: new Date(),
 		});
 
-		// Update combos displayed with the new created
+		// Update games displayed with the new created
 		const gamesUpdated = await getAllGames();
 		updateGames(gamesUpdated);
 

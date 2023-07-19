@@ -8,13 +8,16 @@ import NoData from "@/components/NoData";
 import Loading from "@/components/Loading";
 
 import { useCartStore } from "@/store/cartStore";
+import { useUserStore } from "@/store/userStore";
 import { IProductFromFirebase } from "@/interfaces/objects";
 import { getAllPromotions } from "@/firebase/promotions";
+import { userRolHasPermissions } from "@/utils/validation";
 
 function Promotions() {
 	const [isContentLoading, setIsContentLoading] = useState(true);
 	const [promotions, setPromotions] = useState<IProductFromFirebase[]>([]);
 
+	const userLogged = useUserStore((state) => state.user);
 	const addPromotionToCart = useCartStore((store) => store.add);
 
 	useEffect(() => {
@@ -65,12 +68,14 @@ function Promotions() {
 											width={1000}
 											height={1000}
 										/>
-										<button
-											className="btn btn-circle btn-primary absolute top-2 right-2"
-											onClick={() => addPromotionToCart(promotion)}
-										>
-											<AiOutlinePlus className="w-6 h-6" />
-										</button>
+										{userRolHasPermissions(userLogged) && (
+											<button
+												className="btn btn-circle btn-primary absolute top-2 right-2"
+												onClick={() => addPromotionToCart(promotion)}
+											>
+												<AiOutlinePlus className="w-6 h-6" />
+											</button>
+										)}
 										{promotion.additional && (
 											<div className="badge badge-sm absolute bottom-2 right-2">{promotion.additional}</div>
 										)}

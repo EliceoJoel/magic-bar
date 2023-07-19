@@ -13,6 +13,19 @@ export interface IProductForFirebase {
 	additional: string;
 	promotionPrice: number;
 	createdAt: Date;
+	updatedAt: Date;
+}
+
+export interface IProductToEditForFirebase {
+	id: string;
+	name: string;
+	brand: string;
+	price: number;
+	category: string;
+	image: File;
+	additional: string;
+	promotionPrice: number;
+	createdAt: Date;
 }
 
 export interface IProductFromFirebase {
@@ -25,6 +38,7 @@ export interface IProductFromFirebase {
 	additional: string;
 	promotionPrice: number;
 	createdAt: Date;
+	updatedAt: Date;
 }
 
 export interface IComboForFirebase {

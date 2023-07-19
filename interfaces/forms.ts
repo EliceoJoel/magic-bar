@@ -18,7 +18,7 @@ export interface INewProductInputs {
 	price: number;
 	image: FileList;
 	additional: string;
-	promotionPrice: number;
+	promotionPrice: number | undefined;
 }
 
 export interface INewComboInputs {

@@ -31,25 +31,30 @@ export async function createNewGame(newGame: IGameForFirebase) {
 
 export async function getAllGames() {
 	const games: IGameFromFirebase[] = [];
-	const querySnapshot = await getDocs(collection(db, "games"));
-	querySnapshot.forEach((doc) => {
-		games.push({
-			id: doc.id,
-			name: doc.data().name,
-			price: doc.data().price,
-			image: doc.data().image,
-			createdAt: doc.data().createdAt,
+	try {
+		const querySnapshot = await getDocs(collection(db, "games"));
+		querySnapshot.forEach((doc) => {
+			games.push({
+				id: doc.id,
+				name: doc.data().name,
+				price: doc.data().price,
+				image: doc.data().image,
+				createdAt: doc.data().createdAt,
+			});
 		});
-	});
-	return games;
+	} catch (error) {
+		console.error(error);
+	} finally {
+		return games;
+	}
 }
 
 export async function getLastNGames(n: number) {
+	const resultData: IGameFromFirebase[] = [];
 	try {
 		const gamesRef = collection(db, "games");
 		const lastNGamesQuery = query(gamesRef, orderBy("createdAt", "desc"), limit(n));
 		const querySnapshot = await getDocs(lastNGamesQuery);
-		const resultData: IGameFromFirebase[] = [];
 		querySnapshot.forEach((doc) => {
 			resultData.push({
 				id: doc.id,
@@ -59,8 +64,9 @@ export async function getLastNGames(n: number) {
 				createdAt: doc.data().createdAt,
 			});
 		});
-		return resultData;
 	} catch (error) {
 		console.error(error);
+	} finally {
+		return resultData;
 	}
 }

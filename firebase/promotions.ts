@@ -3,11 +3,11 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { IProductFromFirebase } from "@/interfaces/objects";
 
 export async function getAllPromotions() {
+	const resultData: IProductFromFirebase[] = [];
 	try {
 		const promotionsRef = collection(db, "products");
 		const promotionQuery = query(promotionsRef, where("promotionPrice", ">", 0));
 		const querySnapshot = await getDocs(promotionQuery);
-		const resultData: IProductFromFirebase[] = [];
 		querySnapshot.forEach((doc) => {
 			resultData.push({
 				id: doc.id,
@@ -19,23 +19,25 @@ export async function getAllPromotions() {
 				additional: doc.data().additional,
 				promotionPrice: doc.data().promotionPrice,
 				createdAt: doc.data().createdAt,
+				updatedAt: doc.data().updatedAt,
 			});
 		});
-		return resultData;
 	} catch (error) {
 		console.error(error);
+	} finally {
+		return resultData;
 	}
 }
 
 export async function getLastNPromotions(n: number) {
+	const allPromotions = await getAllPromotions();
 	try {
-		const allPromotions = await getAllPromotions();
-		if (allPromotions !== undefined) {
-			const sortedPromotions = sortPromotionsByDate(allPromotions);
-			return sortedPromotions.slice(0, n);
-		}
+		const sortedPromotions = sortPromotionsByDate(allPromotions);
+		return sortedPromotions.slice(0, n);
 	} catch (error) {
 		console.error(error);
+	} finally {
+		return allPromotions;
 	}
 }
 

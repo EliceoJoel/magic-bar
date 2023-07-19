@@ -31,26 +31,31 @@ export async function createNewCombo(newCombo: IComboForFirebase) {
 
 export async function getAllCombos() {
 	const combos: IComboFromFirebase[] = [];
-	const querySnapshot = await getDocs(collection(db, "combos"));
-	querySnapshot.forEach((doc) => {
-		combos.push({
-			id: doc.id,
-			name: doc.data().name,
-			price: doc.data().price,
-			normalPrice: doc.data().normalPrice,
-			image: doc.data().image,
-			createdAt: doc.data().createdAt,
+	try {
+		const querySnapshot = await getDocs(collection(db, "combos"));
+		querySnapshot.forEach((doc) => {
+			combos.push({
+				id: doc.id,
+				name: doc.data().name,
+				price: doc.data().price,
+				normalPrice: doc.data().normalPrice,
+				image: doc.data().image,
+				createdAt: doc.data().createdAt,
+			});
 		});
-	});
-	return combos;
+	} catch (error) {
+		console.error(error);
+	} finally {
+		return combos;
+	}
 }
 
 export async function getLastNCombos(n: number) {
+	const resultData: IComboFromFirebase[] = [];
 	try {
 		const combosRef = collection(db, "combos");
 		const lastNCombosQuery = query(combosRef, orderBy("createdAt", "desc"), limit(n));
 		const querySnapshot = await getDocs(lastNCombosQuery);
-		const resultData: IComboFromFirebase[] = [];
 		querySnapshot.forEach((doc) => {
 			resultData.push({
 				id: doc.id,
@@ -61,8 +66,9 @@ export async function getLastNCombos(n: number) {
 				createdAt: doc.data().createdAt,
 			});
 		});
-		return resultData;
 	} catch (error) {
 		console.error(error);
+	} finally {
+		return resultData;
 	}
 }

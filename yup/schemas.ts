@@ -2,7 +2,7 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import { emailRegExp } from "@/constants/all";
-import { isValidImageType } from "@/utils/validation";
+import { isValidEditedImageType, isValidImageType } from "@/utils/validation";
 
 export const signUpFormSchema = Yup.object().shape({
 	name: Yup.string().required("Name is required field"),
@@ -31,6 +31,23 @@ export const newProductSchema = Yup.object().shape({
 	image: Yup.mixed()
 		.test("is-there-file", "Image not uploaded", (value: any) => !!value[0])
 		.test("is-valid-image", "Image uploaded is not valid", (value) => isValidImageType(value)),
+	promotionPrice: Yup.number()
+		.transform((value) => (isNaN(value) ? undefined : value))
+		.typeError("Promotion price must be a number")
+		.positive("Price can't be negative"),
+});
+
+export const editProductSchema = Yup.object().shape({
+	name: Yup.string().required("Name is required field"),
+	brand: Yup.string().required("Brand is required field"),
+	category: Yup.string().required("Category is required field"),
+	price: Yup.number()
+		.transform((value) => (isNaN(value) ? undefined : value))
+		.typeError("Price must be a number")
+		.positive("Price can't be negative")
+		.required("Price is required field"),
+	image: Yup.mixed()
+		.test("is-valid-image", "Image uploaded is not valid", (value) => isValidEditedImageType(value)),
 	promotionPrice: Yup.number()
 		.transform((value) => (isNaN(value) ? undefined : value))
 		.typeError("Promotion price must be a number")
