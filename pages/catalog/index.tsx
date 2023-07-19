@@ -8,7 +8,7 @@ import { GiWineBottle } from "react-icons/gi";
 import { IoDiceOutline } from "react-icons/io5";
 
 import Layout from "@/components/Layout";
-import NewProductModal from "@/components/modals/NewProductModal";
+import ProductModal from "@/components/modals/ProductModal";
 import NoData from "@/components/NoData";
 import SeeAllItems from "@/components/SeeAllItems";
 import Loading from "@/components/Loading";
@@ -16,15 +16,20 @@ import Loading from "@/components/Loading";
 import { promotions, combos, games } from "data/test";
 import { productCategories } from "data/product";
 import { useCartStore } from "@/store/cartStore";
+import { useUserStore } from "@/store/userStore";
 import { getLastNPromotions } from "@/firebase/promotions";
 import { getLastNCombos } from "@/firebase/combos";
 import { getLastNGames } from "@/firebase/games";
-import { ICatalog } from "@/interfaces/objects";
-import { isCatalogEmpty } from "@/utils/validation";
+import { ICatalog, IProductFromFirebase } from "@/interfaces/objects";
+import { isCatalogEmpty, userRolHasPermissions } from "@/utils/validation";
+import { emptyProduct } from "@/constants/all";
 
 function AllCatalog() {
 	const [isContentLoading, setIsContentLoading] = useState(true);
 	const [catalog, setCatalog] = useState<ICatalog>({ promotions: [], combos: [], games: [] });
+	const [selectedProductToEdit, setSelectedProductToEdit] = useState<IProductFromFirebase>(emptyProduct);
+
+	const userLogged = useUserStore((state) => state.user);
 
 	useEffect(() => {
 		async function getLastFiveProductsFromFirestore() {
@@ -49,9 +54,11 @@ function AllCatalog() {
 		<Layout>
 			<div className="flex justify-between items-center mb-4">
 				<h1 className="text-xl md:text-2xl">All Catalog</h1>
-				<label htmlFor="newProductModal" className="btn btn-primary btn-sm md:btn-md normal-case">
-					New product
-				</label>
+				{userRolHasPermissions(userLogged) && (
+					<label htmlFor="productModal" className="btn btn-primary btn-sm md:btn-md normal-case">
+						New product
+					</label>
+				)}
 			</div>
 			<div className="flex justify-end mb-4">
 				<div className="form-control w-[28rem]">
@@ -114,18 +121,31 @@ function AllCatalog() {
 														width={1000}
 														height={1000}
 													/>
-													<button
-														className="btn btn-circle btn-primary absolute top-2 right-2"
-														onClick={() => addProductToCart(promotion)}
-													>
-														<AiOutlinePlus className="w-6 h-6" />
-													</button>
+													{userRolHasPermissions(userLogged) && (
+														<button
+															className="btn btn-circle btn-primary absolute top-2 right-2"
+															onClick={() => addProductToCart(promotion)}
+														>
+															<AiOutlinePlus className="w-6 h-6" />
+														</button>
+													)}
 													<div className="badge badge-sm absolute bottom-2 right-2">
 														{promotion.additional}
 													</div>
 												</figure>
 												<div className="card-body gap-0">
-													<h3 className="card-title text-base">{promotion.name}</h3>
+													{userRolHasPermissions(userLogged) ? (
+														<label
+															htmlFor="productModal"
+															className="card-title text-base cursor-pointer"
+															tabIndex={0}
+															onClick={() => setSelectedProductToEdit(promotion)}
+														>
+															&#9998; {promotion.name}
+														</label>
+													) : (
+														<h3 className="card-title text-base">{promotion.name}</h3>
+													)}
 													<p className="font-bold text-primary">
 														Bs {promotion.promotionPrice.toFixed(2)}&nbsp;
 														<del className="text-gray-500 font-semibold text-xs">
@@ -158,12 +178,14 @@ function AllCatalog() {
 														width={1000}
 														height={1000}
 													/>
-													<button
-														className="btn btn-circle btn-primary absolute top-2 right-2"
-														onClick={() => addProductToCart(combo)}
-													>
-														<AiOutlinePlus className="w-6 h-6" />
-													</button>
+													{userRolHasPermissions(userLogged) && (
+														<button
+															className="btn btn-circle btn-primary absolute top-2 right-2"
+															onClick={() => addProductToCart(combo)}
+														>
+															<AiOutlinePlus className="w-6 h-6" />
+														</button>
+													)}
 												</figure>
 												<div className="card-body gap-0">
 													<h3 className="card-title text-base">{combo.name}</h3>
@@ -198,12 +220,14 @@ function AllCatalog() {
 														width={1000}
 														height={1000}
 													/>
-													<button
-														className="btn btn-circle btn-primary absolute top-2 right-2"
-														onClick={() => addProductToCart(game)}
-													>
-														<AiOutlinePlus className="w-6 h-6" />
-													</button>
+													{userRolHasPermissions(userLogged) && (
+														<button
+															className="btn btn-circle btn-primary absolute top-2 right-2"
+															onClick={() => addProductToCart(game)}
+														>
+															<AiOutlinePlus className="w-6 h-6" />
+														</button>
+													)}
 												</figure>
 												<div className="card-body gap-0">
 													<h3 className="card-title text-base">{game.name}</h3>
@@ -221,7 +245,13 @@ function AllCatalog() {
 					)}
 				</>
 			)}
-			<NewProductModal />
+			<ProductModal
+				productToEdit={selectedProductToEdit}
+				changeProductToEdit={setSelectedProductToEdit}
+				updateProducts={null}
+				updateCatalogPromotions={setCatalog}
+				catalogData={catalog}
+			/>
 		</Layout>
 	);
 }

@@ -9,13 +9,16 @@ import NoData from "@/components/NoData";
 import Loading from "@/components/Loading";
 
 import { useCartStore } from "@/store/cartStore";
+import { useUserStore } from "@/store/userStore";
 import { getAllCombos } from "@/firebase/combos";
 import { IComboFromFirebase } from "@/interfaces/objects";
+import { userRolHasPermissions } from "@/utils/validation";
 
 function Combos() {
 	const [isContentLoading, setIsContentLoading] = useState(true);
 	const [combos, setCombos] = useState<IComboFromFirebase[]>([]);
 
+	const userLogged = useUserStore((state) => state.user);
 	const addComboToCart = useCartStore((store) => store.add);
 
 	useEffect(() => {
@@ -31,9 +34,11 @@ function Combos() {
 		<Layout>
 			<div className="flex justify-between items-center mb-4">
 				<h1 className="text-xl md:text-2xl">Combos</h1>
-				<label htmlFor="newComboModal" className="btn btn-primary btn-sm normal-case md:btn-md">
-					New combo
-				</label>
+				{userRolHasPermissions(userLogged) && (
+					<label htmlFor="newComboModal" className="btn btn-primary btn-sm normal-case md:btn-md">
+						New combo
+					</label>
+				)}
 			</div>
 			<div className="flex justify-end mb-4">
 				<div className="form-control w-[28rem]">
@@ -65,12 +70,14 @@ function Combos() {
 											width={1000}
 											height={1000}
 										/>
-										<button
-											className="btn btn-circle btn-primary absolute top-2 right-2"
-											onClick={() => addComboToCart(combo)}
-										>
-											<AiOutlinePlus className="w-6 h-6" />
-										</button>
+										{userRolHasPermissions(userLogged) && (
+											<button
+												className="btn btn-circle btn-primary absolute top-2 right-2"
+												onClick={() => addComboToCart(combo)}
+											>
+												<AiOutlinePlus className="w-6 h-6" />
+											</button>
+										)}
 									</figure>
 									<div className="card-body gap-0">
 										<h2 className="card-title text-base">{combo.name}</h2>

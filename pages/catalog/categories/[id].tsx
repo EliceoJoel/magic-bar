@@ -3,14 +3,18 @@ import Image from "next/image";
 
 import Layout from "@/components/Layout";
 import Loading from "@/components/Loading";
+import ProductModal from "@/components/modals/ProductModal";
+import NoData from "@/components/NoData";
 
 import { AiOutlinePlus } from "react-icons/ai";
 
+import { useCartStore } from "@/store/cartStore";
+import { useUserStore } from "@/store/userStore";
 import { productCategories } from "@/data/product";
 import { getProductsBycategory } from "@/firebase/product";
-import { useCartStore } from "@/store/cartStore";
 import { IPath, IProductFromFirebase } from "@/interfaces/objects";
-import NoData from "@/components/NoData";
+import { userRolHasPermissions } from "@/utils/validation";
+import { emptyProduct } from "@/constants/all";
 
 export async function getStaticPaths() {
 	const categoriesPaths = productCategories.map((productCategory) => {
@@ -33,7 +37,11 @@ export async function getStaticProps({ params }: { params: IPath }) {
 function Category({ categoryId }: { categoryId: string }) {
 	const [isContentLoading, setIsContentLoading] = useState(true);
 	const [products, setProducts] = useState<IProductFromFirebase[]>([]);
+	const [selectedProductToEdit, setSelectedProductToEdit] = useState<IProductFromFirebase>(emptyProduct);
+
+	const userLogged = useUserStore((state) => state.user);
 	const addProductToCart = useCartStore((store) => store.add);
+
 	const pageName = productCategories.find((category) => category.id === categoryId)?.name;
 
 	useEffect(() => {
@@ -71,18 +79,31 @@ function Category({ categoryId }: { categoryId: string }) {
 											width={1000}
 											height={1000}
 										/>
-										<button
-											className="btn btn-circle btn-primary absolute top-2 right-2"
-											onClick={() => addProductToCart(product)}
-										>
-											<AiOutlinePlus className="w-6 h-6" />
-										</button>
+										{userRolHasPermissions(userLogged) && (
+											<button
+												className="btn btn-circle btn-primary absolute top-2 right-2"
+												onClick={() => addProductToCart(product)}
+											>
+												<AiOutlinePlus className="w-6 h-6" />
+											</button>
+										)}
 										{product.additional && (
 											<div className="badge badge-sm absolute bottom-2 right-2">{product.additional}</div>
 										)}
 									</figure>
 									<div className="card-body gap-0">
-										<h2 className="card-title text-base">{product.name}</h2>
+										{userRolHasPermissions(userLogged) ? (
+											<label
+												htmlFor="productModal"
+												className="card-title text-base cursor-pointer"
+												tabIndex={0}
+												onClick={() => setSelectedProductToEdit(product)}
+											>
+												&#9998; {product.name}
+											</label>
+										) : (
+											<h2 className="card-title text-base">{product.name}</h2>
+										)}
 										<p className="font-bold text-primary">Bs {product.price.toFixed(2)}</p>
 										<p>{product.brand}</p>
 									</div>
@@ -94,6 +115,13 @@ function Category({ categoryId }: { categoryId: string }) {
 					)}
 				</>
 			)}
+			<ProductModal
+				productToEdit={selectedProductToEdit}
+				changeProductToEdit={setSelectedProductToEdit}
+				updateProducts={setProducts}
+				updateCatalogPromotions={null}
+				catalogData={null}
+			/>
 		</Layout>
 	);
 }

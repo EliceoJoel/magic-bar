@@ -1,14 +1,16 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 
+import LeftSidebarMenu from "./LeftSidebarMenu";
+import Cart from "./Cart";
+
 import { FaCocktail } from "react-icons/fa";
 import { FiLogOut, FiSettings } from "react-icons/fi";
 import { HiOutlineMenu, HiOutlineUserCircle, HiOutlineShoppingBag, HiOutlineMoon } from "react-icons/hi";
 
-import LeftSidebarMenu from "./LeftSidebarMenu";
-import Cart from "./Cart";
 import { useUserStore } from "@/store/userStore";
 import { useCartStore } from "@/store/cartStore";
+import { UserType } from "@/constants/userType";
 
 interface OpenDrawer {
 	openDrawer: Function;
@@ -51,24 +53,26 @@ function Navbar({ openDrawer }: OpenDrawer) {
 				</button>
 				{userLogged !== null ? (
 					<>
-						<label
-							htmlFor="theDrawer"
-							tabIndex={0}
-							className="btn btn-circle btn-ghost relative"
-							onClick={() =>
-								openDrawer({
-									position: "drawer-end",
-									content: <Cart />,
-								})
-							}
-						>
-							<HiOutlineShoppingBag className="w-6 h-6" />
-							{productsInCart.length > 0 && (
-								<div className="absolute bg-primary rounded-badge top-2 right-1 h-4 w-4 text-white text-xs">
-									{productsInCart.length}
-								</div>
-							)}
-						</label>
+						{userLogged.rol === UserType.EMPLOYEE && (
+							<label
+								htmlFor="theDrawer"
+								tabIndex={0}
+								className="btn btn-circle btn-ghost relative"
+								onClick={() =>
+									openDrawer({
+										position: "drawer-end",
+										content: <Cart />,
+									})
+								}
+							>
+								<HiOutlineShoppingBag className="w-6 h-6" />
+								{productsInCart.length > 0 && (
+									<div className="absolute bg-primary rounded-badge top-2 right-1 h-4 w-4 text-white text-xs">
+										{productsInCart.length}
+									</div>
+								)}
+							</label>
+						)}
 						<div className="dropdown dropdown-end dropdown-hover">
 							<label tabIndex={0} className="btn btn-ghost btn-circle">
 								<div className="indicator">

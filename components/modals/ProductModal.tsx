@@ -1,26 +1,52 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { FiInfo } from "react-icons/fi";
 
-import { productCategories } from "@/data/product";
-import { newProductSchema, getYupSchema } from "@/yup/schemas";
-import { createNewProduct } from "@/firebase/product";
+import { createNewProduct, getProductsBycategory, updateProduct } from "@/firebase/product";
+import { getLastNPromotions } from "@/firebase/promotions";
 import { INewProductInputs } from "@/interfaces/forms";
+import { ICatalog, IProductFromFirebase } from "@/interfaces/objects";
+import { productCategories } from "@/data/product";
+import { newProductSchema, getYupSchema, editProductSchema } from "@/yup/schemas";
+import { productToEditExist } from "@/utils/validation";
+import { emptyProduct } from "@/constants/all";
 
-function NewProductModal() {
-	const [isCreatingNewProduct, setIsCreatingNewProduct] = useState(false);
+interface Props {
+	productToEdit: IProductFromFirebase;
+	changeProductToEdit: Dispatch<SetStateAction<IProductFromFirebase>>;
+	updateProducts: Dispatch<SetStateAction<IProductFromFirebase[]>> | null;
+	updateCatalogPromotions: Dispatch<SetStateAction<ICatalog>> | null;
+	catalogData: ICatalog | null;
+}
+
+function ProductModal({ productToEdit, changeProductToEdit, updateProducts, updateCatalogPromotions, catalogData }: Props) {
+	const [isSavingProduct, setIsSavingProduct] = useState(false);
 
 	const {
 		handleSubmit,
 		register,
 		reset,
+		setValue,
 		formState: { errors },
-	} = useForm<INewProductInputs>(getYupSchema(newProductSchema));
+	} = useForm<INewProductInputs>(
+		productToEditExist(productToEdit) ? getYupSchema(editProductSchema) : getYupSchema(newProductSchema)
+	);
+
+	useEffect(() => {
+		if (productToEditExist(productToEdit)) {
+			setValue("name", productToEdit.name);
+			setValue("brand", productToEdit.brand);
+			setValue("category", productToEdit.category);
+			setValue("price", productToEdit.price);
+			setValue("additional", productToEdit.additional);
+			setValue("promotionPrice", productToEdit.promotionPrice === 0 ? undefined : productToEdit.promotionPrice);
+		}
+	}, [setValue, productToEdit]);
 
 	const handleCreateNewProduct = handleSubmit(async (data) => {
 		// Set loading as started
-		setIsCreatingNewProduct(true);
+		setIsSavingProduct(true);
 
 		// Create new product in firebase
 		await createNewProduct({
@@ -28,32 +54,78 @@ function NewProductModal() {
 			promotionPrice: data.promotionPrice !== undefined ? data.promotionPrice : 0,
 			image: data.image[0],
 			createdAt: new Date(),
+			updatedAt: new Date(),
 		});
 
 		// Close modal and reset inputs
-		document.getElementById("newProductModal")?.click();
+		document.getElementById("productModal")?.click();
 		reset();
 
 		// Set loading as finished
-		setIsCreatingNewProduct(false);
+		setIsSavingProduct(false);
+
+		// Show a success alert message
+	});
+
+	const handleEditProduct = handleSubmit(async (data) => {
+		// Set loading as started
+		setIsSavingProduct(true);
+
+		// Create new product in firebase
+		await updateProduct({
+			...data,
+			id: productToEdit.id,
+			promotionPrice: data.promotionPrice !== undefined ? data.promotionPrice : 0,
+			image: data.image[0],
+			createdAt: new Date(),
+		});
+
+		// Update products displayed with the new created
+		if (updateProducts !== null) {
+			const productsUpdated = await getProductsBycategory(productToEdit.category);
+			updateProducts(productsUpdated);
+		} else if (updateCatalogPromotions !== null && catalogData !== null) {
+			const updatedPromotions = await getLastNPromotions(5);
+			const catalogUpdated = {
+				...catalogData,
+				promotions: updatedPromotions,
+			};
+			updateCatalogPromotions(catalogUpdated);
+		}
+
+		// Close modal and reset inputs
+		document.getElementById("productModal")?.click();
+		reset();
+		changeProductToEdit(emptyProduct);
+
+		// Set loading as finished
+		setIsSavingProduct(false);
 
 		// Show a success alert message
 	});
 
 	return (
 		<>
-			<input type="checkbox" id="newProductModal" className="modal-toggle" />
+			<input type="checkbox" id="productModal" className="modal-toggle" />
 			<div className="modal">
-				<form className="modal-box relative max-w-md" onSubmit={handleCreateNewProduct}>
+				<form
+					className="modal-box relative max-w-md"
+					onSubmit={productToEditExist(productToEdit) ? handleEditProduct : handleCreateNewProduct}
+				>
 					<label
-						htmlFor="newProductModal"
+						htmlFor="productModal"
 						className="btn btn-sm btn-circle absolute right-2 top-2"
 						tabIndex={0}
-						onClick={() => reset()}
+						onClick={() => {
+							reset();
+							changeProductToEdit !== null && changeProductToEdit(emptyProduct);
+						}}
 					>
 						✕
 					</label>
-					<h3 className="font-bold text-lg mb-2 mr-4">New Product</h3>
+					<h3 className="font-bold text-lg mb-2 mr-4">
+						{productToEditExist(productToEdit) ? "Edit Product" : "New Product"}
+					</h3>
 					<div className="flex flex-col gap-2">
 						<div>
 							<p>
@@ -148,7 +220,9 @@ function NewProductModal() {
 						<div className="form-control w-full">
 							<label htmlFor="productImageFile" className="label justify-start">
 								<span className="label-text">Image</span>
-								<span className="label-text text-red-500">&nbsp;[*]</span>
+								{!productToEditExist(productToEdit) && (
+									<span className="label-text text-red-500">&nbsp;[*]</span>
+								)}
 							</label>
 							<input
 								id="productImageFile"
@@ -201,11 +275,18 @@ function NewProductModal() {
 						</div>
 					</div>
 					<div className="modal-action">
-						<label htmlFor="newProductModal" className="btn capitalize" onClick={() => reset()}>
+						<label
+							htmlFor="productModal"
+							className="btn capitalize"
+							onClick={() => {
+								reset();
+								changeProductToEdit !== null && changeProductToEdit(emptyProduct);
+							}}
+						>
 							Cancel
 						</label>
-						<button type="submit" className={`btn btn-primary capitalize ${isCreatingNewProduct && "loading"}`}>
-							{isCreatingNewProduct ? "Saving" : "Save"}
+						<button type="submit" className={`btn btn-primary capitalize ${isSavingProduct && "loading"}`}>
+							{isSavingProduct ? "Saving" : "Save"}
 						</button>
 					</div>
 				</form>
@@ -214,4 +295,4 @@ function NewProductModal() {
 	);
 }
 
-export default NewProductModal;
+export default ProductModal;

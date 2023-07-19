@@ -9,13 +9,16 @@ import NoData from "@/components/NoData";
 import Loading from "@/components/Loading";
 
 import { useCartStore } from "@/store/cartStore";
+import { useUserStore } from "@/store/userStore";
 import { IGameFromFirebase } from "@/interfaces/objects";
 import { getAllGames } from "@/firebase/games";
+import { userRolHasPermissions } from "@/utils/validation";
 
 function Games() {
 	const [isContentLoading, setIsContentLoading] = useState(true);
 	const [games, setGames] = useState<IGameFromFirebase[]>([]);
 
+	const userLogged = useUserStore((state) => state.user);
 	const addGameToCart = useCartStore((store) => store.add);
 
 	useEffect(() => {
@@ -31,9 +34,11 @@ function Games() {
 		<Layout>
 			<div className="flex justify-between items-center mb-4">
 				<h1 className="text-xl md:text-2xl">Games</h1>
-				<label htmlFor="newGameModal" className="btn btn-primary btn-sm md:btn-md normal-case">
-					New game
-				</label>
+				{userRolHasPermissions(userLogged) && (
+					<label htmlFor="newGameModal" className="btn btn-primary btn-sm md:btn-md normal-case">
+						New game
+					</label>
+				)}
 			</div>
 			<div className="flex justify-end mb-4">
 				<div className="form-control w-[28rem]">
@@ -65,12 +70,14 @@ function Games() {
 											width={1000}
 											height={1000}
 										/>
-										<button
-											className="btn btn-circle btn-primary absolute top-2 right-2"
-											onClick={() => addGameToCart(game)}
-										>
-											<AiOutlinePlus className="w-6 h-6" />
-										</button>
+										{userRolHasPermissions(userLogged) && (
+											<button
+												className="btn btn-circle btn-primary absolute top-2 right-2"
+												onClick={() => addGameToCart(game)}
+											>
+												<AiOutlinePlus className="w-6 h-6" />
+											</button>
+										)}
 									</figure>
 									<div className="card-body gap-0">
 										<h2 className="card-title text-base">{game.name}</h2>
