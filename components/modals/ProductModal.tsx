@@ -20,7 +20,13 @@ interface Props {
 	catalogData: ICatalog | null;
 }
 
-function ProductModal({ productToEdit, changeProductToEdit, updateProducts, updateCatalogPromotions, catalogData }: Props) {
+function ProductModal({
+	productToEdit,
+	changeProductToEdit,
+	updateProducts,
+	updateCatalogPromotions,
+	catalogData,
+}: Props) {
 	const [isSavingProduct, setIsSavingProduct] = useState(false);
 
 	const {
@@ -57,6 +63,16 @@ function ProductModal({ productToEdit, changeProductToEdit, updateProducts, upda
 			updatedAt: new Date(),
 		});
 
+		// Update promotions product displayed with the new created
+		if (updateCatalogPromotions !== null && catalogData !== null) {
+			const updatedPromotions = await getLastNPromotions(5);
+			const catalogUpdated = {
+				...catalogData,
+				promotions: updatedPromotions,
+			};
+			updateCatalogPromotions(catalogUpdated);
+		}
+
 		// Close modal and reset inputs
 		document.getElementById("productModal")?.click();
 		reset();
@@ -71,16 +87,17 @@ function ProductModal({ productToEdit, changeProductToEdit, updateProducts, upda
 		// Set loading as started
 		setIsSavingProduct(true);
 
-		// Create new product in firebase
+		// Update product in firebase
 		await updateProduct({
 			...data,
 			id: productToEdit.id,
 			promotionPrice: data.promotionPrice !== undefined ? data.promotionPrice : 0,
 			image: data.image[0],
-			createdAt: new Date(),
+			createdAt: productToEdit.createdAt,
+			updateAt: new Date(),
 		});
 
-		// Update products displayed with the new created
+		// Update products displayed with the new edited
 		if (updateProducts !== null) {
 			const productsUpdated = await getProductsBycategory(productToEdit.category);
 			updateProducts(productsUpdated);

@@ -1,60 +1,129 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { INewComboInputs } from "@/interfaces/forms";
-import { IComboFromFirebase } from "@/interfaces/objects";
-import { newComboSchema, getYupSchema } from "@/yup/schemas";
-import { createNewCombo, getAllCombos } from "@/firebase/combos";
+import { ICatalog, IComboFromFirebase } from "@/interfaces/objects";
+import { newComboSchema, getYupSchema, editComboSchema } from "@/yup/schemas";
+import { createNewCombo, getAllCombos, getLastNCombos, updateCombo } from "@/firebase/combos";
+import { comboToEditExist } from "@/utils/validation";
+import { emptyCombo } from "@/constants/all";
 
-function NewComboModal({ updateCombos }: { updateCombos: Dispatch<SetStateAction<IComboFromFirebase[]>> }) {
-	const [isCreatingNewCombo, setIsCreatingNewCombo] = useState(false);
+interface Props {
+	comboToEdit: IComboFromFirebase;
+	changeComboToEdit: Dispatch<SetStateAction<IComboFromFirebase>>;
+	updateCombos: Dispatch<SetStateAction<IComboFromFirebase[]>> | null;
+	updateCatalogCombos: Dispatch<SetStateAction<ICatalog>> | null;
+	catalogData: ICatalog | null;
+}
+
+function ComboModal({ updateCombos, comboToEdit, changeComboToEdit, updateCatalogCombos, catalogData }: Props) {
+	const [isSavingCombo, setIsSavingCombo] = useState(false);
 
 	const {
 		handleSubmit,
 		register,
 		reset,
+		setValue,
 		formState: { errors },
-	} = useForm<INewComboInputs>(getYupSchema(newComboSchema));
+	} = useForm<INewComboInputs>(
+		comboToEditExist(comboToEdit) ? getYupSchema(editComboSchema) : getYupSchema(newComboSchema)
+	);
+
+	useEffect(() => {
+		if (comboToEditExist(comboToEdit)) {
+			setValue("name", comboToEdit.name);
+			setValue("price", comboToEdit.price);
+			setValue("normalPrice", comboToEdit.normalPrice);
+		}
+	}, [setValue, comboToEdit]);
 
 	const handleCreateNewCombo = handleSubmit(async (data) => {
 		// Set loading as started
-		setIsCreatingNewCombo(true);
+		setIsSavingCombo(true);
 
 		// Create new combo in firebase
 		await createNewCombo({
 			...data,
 			image: data.image[0],
 			createdAt: new Date(),
+			updatedAt: new Date(),
 		});
 
 		// Update combos displayed with the new created
-		const combosUpdated = await getAllCombos();
-		updateCombos(combosUpdated);
+		if (updateCombos !== null) {
+			const combosUpdated = await getAllCombos();
+			updateCombos(combosUpdated);
+		}
 
 		// Close modal and reset inputs
-		document.getElementById("newComboModal")?.click();
+		document.getElementById("comboModal")?.click();
 		reset();
 
 		//Set loading as finished
-		setIsCreatingNewCombo(false);
+		setIsSavingCombo(false);
+
+		// Show a success alert message
+	});
+
+	const handleEditCombo = handleSubmit(async (data) => {
+		// Set loading as started
+		setIsSavingCombo(true);
+
+		// Update combo in firebase
+		await updateCombo({
+			...data,
+			id: comboToEdit.id,
+			image: data.image[0],
+			createdAt: comboToEdit.createdAt,
+			updatedAt: new Date(),
+		});
+
+		// Update combos displayed with the new edited
+		if (updateCombos !== null) {
+			const combosUpdated = await getAllCombos();
+			updateCombos(combosUpdated);
+		} else if (updateCatalogCombos !== null && catalogData !== null) {
+			const updatedCombos = await getLastNCombos(5);
+			const catalogUpdated = {
+				...catalogData,
+				combos: updatedCombos,
+			};
+			updateCatalogCombos(catalogUpdated);
+		}
+
+		// Close modal and reset inputs
+		document.getElementById("comboModal")?.click();
+		reset();
+		changeComboToEdit(emptyCombo);
+
+		//Set loading as finished
+		setIsSavingCombo(false);
 
 		// Show a success alert message
 	});
 
 	return (
 		<>
-			<input type="checkbox" id="newComboModal" className="modal-toggle" />
+			<input type="checkbox" id="comboModal" className="modal-toggle" />
 			<div className="modal">
-				<form className="modal-box relative max-w-md" onSubmit={handleCreateNewCombo}>
+				<form
+					className="modal-box relative max-w-md"
+					onSubmit={comboToEditExist(comboToEdit) ? handleEditCombo : handleCreateNewCombo}
+				>
 					<label
-						htmlFor="newComboModal"
+						htmlFor="comboModal"
 						className="btn btn-sm btn-circle absolute right-2 top-2"
 						tabIndex={0}
-						onClick={() => reset()}
+						onClick={() => {
+							reset();
+							changeComboToEdit(emptyCombo);
+						}}
 					>
 						✕
 					</label>
-					<h3 className="font-bold text-lg mb-2 mr-4">New Combo</h3>
+					<h3 className="font-bold text-lg mb-2 mr-4">
+						{comboToEditExist(comboToEdit) ? "Edit Combo" : "New Combo"}
+					</h3>
 					<div className="flex flex-col gap-2">
 						<div>
 							<p>
@@ -124,7 +193,7 @@ function NewComboModal({ updateCombos }: { updateCombos: Dispatch<SetStateAction
 						<div className="form-control w-full">
 							<label htmlFor="comboImageFile" className="label justify-start">
 								<span className="label-text">Image</span>
-								<span className="label-text text-red-500">&nbsp;[*]</span>
+								{!comboToEditExist(comboToEdit) && <span className="label-text text-red-500">&nbsp;[*]</span>}
 							</label>
 							<input
 								id="comboImageFile"
@@ -141,11 +210,18 @@ function NewComboModal({ updateCombos }: { updateCombos: Dispatch<SetStateAction
 						</div>
 					</div>
 					<div className="modal-action">
-						<label htmlFor="newComboModal" className="btn capitalize" onClick={() => reset()}>
+						<label
+							htmlFor="comboModal"
+							className="btn capitalize"
+							onClick={() => {
+								reset();
+								changeComboToEdit(emptyCombo);
+							}}
+						>
 							Cancel
 						</label>
-						<button type="submit" className={`btn btn-primary capitalize ${isCreatingNewCombo && "loading"}`}>
-							{isCreatingNewCombo ? "Saving" : "Save"}
+						<button type="submit" className={`btn btn-primary capitalize ${isSavingCombo && "loading"}`}>
+							{isSavingCombo ? "Saving" : "Save"}
 						</button>
 					</div>
 				</form>
@@ -154,4 +230,4 @@ function NewComboModal({ updateCombos }: { updateCombos: Dispatch<SetStateAction
 	);
 }
 
-export default NewComboModal;
+export default ComboModal;
