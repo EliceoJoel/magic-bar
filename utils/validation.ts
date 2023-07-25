@@ -1,7 +1,7 @@
 import { validImageExtensions } from "@/constants/all";
 import { UserType } from "@/constants/userType";
 import { INewProductInputs } from "@/interfaces/forms";
-import { ICatalog, IProductFromFirebase } from "@/interfaces/objects";
+import { ICatalog, IComboFromFirebase, IProductFromFirebase } from "@/interfaces/objects";
 import { isNotEmpty } from "./StringUtils";
 
 export function isValidImageType(fileList: any) {
@@ -15,7 +15,7 @@ export function isValidImageType(fileList: any) {
 }
 
 export function isValidEditedImageType(fileList: any) {
-	if (fileList.length === 0) return true; // No matters if image is undefined since there is an image uploaded
+	if (fileList.length === 0) return true; // No matters if image is undefined since there is an image uploaded, editing information
 	const imageType = fileList[0].name.toLowerCase().split(".").pop();
 	if (imageType !== undefined) {
 		return validImageExtensions.includes(imageType);
@@ -41,7 +41,12 @@ export function productToEditExist(productToEdit: IProductFromFirebase) {
 	);
 }
 
-export function productInformatioWasEdited(
-	previousProductData: IProductFromFirebase,
-	editedProductData: INewProductInputs
-) {}
+export function comboToEditExist(comboToEdit: IComboFromFirebase) {
+	return (
+		isNotEmpty(comboToEdit.id) &&
+		isNotEmpty(comboToEdit.name) &&
+		isNotEmpty(comboToEdit.image) &&
+		comboToEdit.price > 0 &&
+		comboToEdit.normalPrice > 0
+	);
+}

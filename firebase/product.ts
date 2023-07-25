@@ -30,6 +30,7 @@ export async function createNewProduct(newProduct: IProductForFirebase) {
 }
 
 export async function updateProduct(productToEdit: IProductToEditForFirebase) {
+	const productRef = doc(db, "products", productToEdit.id);
 	if (productToEdit.image !== undefined) {
 		// Update info with new image
 
@@ -43,7 +44,6 @@ export async function updateProduct(productToEdit: IProductToEditForFirebase) {
 				await getDownloadURL(snapshot.ref)
 					.then(async (imageUrl) => {
 						// Update product in firestore including generated image url
-						const productRef = doc(db, "products", productToEdit.id);
 						await updateDoc(productRef, {
 							name: productToEdit.name,
 							brand: productToEdit.brand,
@@ -52,7 +52,7 @@ export async function updateProduct(productToEdit: IProductToEditForFirebase) {
 							category: productToEdit.category,
 							additional: productToEdit.additional,
 							promotionPrice: productToEdit.promotionPrice,
-							updatedAt: new Date(),
+							updatedAt: productToEdit.updateAt,
 						}).catch((error) => {
 							console.error("Error updating product in firebase: " + error.message);
 						});
@@ -66,7 +66,6 @@ export async function updateProduct(productToEdit: IProductToEditForFirebase) {
 			});
 	} else {
 		// Update info without new image
-		const productRef = doc(db, "products", productToEdit.id);
 		await updateDoc(productRef, {
 			name: productToEdit.name,
 			brand: productToEdit.brand,
@@ -74,7 +73,7 @@ export async function updateProduct(productToEdit: IProductToEditForFirebase) {
 			category: productToEdit.category,
 			additional: productToEdit.additional,
 			promotionPrice: productToEdit.promotionPrice,
-			updatedAt: new Date(),
+			updatedAt: productToEdit.updateAt,
 		}).catch((error) => {
 			console.error("Error updating product in firebase: " + error.message);
 		});
@@ -103,7 +102,7 @@ export async function getProductsBycategory(categoryId: string) {
 		});
 	} catch (error) {
 		console.error(error);
-	}  finally {
+	} finally {
 		return resultData;
 	}
 }

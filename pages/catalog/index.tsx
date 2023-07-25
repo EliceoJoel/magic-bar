@@ -12,6 +12,7 @@ import ProductModal from "@/components/modals/ProductModal";
 import NoData from "@/components/NoData";
 import SeeAllItems from "@/components/SeeAllItems";
 import Loading from "@/components/Loading";
+import ComboModal from "@/components/modals/ComboModal";
 
 import { promotions, combos, games } from "data/test";
 import { productCategories } from "data/product";
@@ -20,14 +21,15 @@ import { useUserStore } from "@/store/userStore";
 import { getLastNPromotions } from "@/firebase/promotions";
 import { getLastNCombos } from "@/firebase/combos";
 import { getLastNGames } from "@/firebase/games";
-import { ICatalog, IProductFromFirebase } from "@/interfaces/objects";
+import { ICatalog, IComboFromFirebase, IProductFromFirebase } from "@/interfaces/objects";
 import { isCatalogEmpty, userRolHasPermissions } from "@/utils/validation";
-import { emptyProduct } from "@/constants/all";
+import { emptyCatalog, emptyCombo, emptyProduct } from "@/constants/all";
 
 function AllCatalog() {
 	const [isContentLoading, setIsContentLoading] = useState(true);
-	const [catalog, setCatalog] = useState<ICatalog>({ promotions: [], combos: [], games: [] });
-	const [selectedProductToEdit, setSelectedProductToEdit] = useState<IProductFromFirebase>(emptyProduct);
+	const [catalog, setCatalog] = useState<ICatalog>(emptyCatalog);
+	const [selectedPromotionToEdit, setSelectedPromotionToEdit] = useState<IProductFromFirebase>(emptyProduct);
+	const [selectedComboToEdit, setSelectedComboToEdit] = useState<IComboFromFirebase>(emptyCombo);
 
 	const userLogged = useUserStore((state) => state.user);
 
@@ -139,7 +141,7 @@ function AllCatalog() {
 															htmlFor="productModal"
 															className="card-title text-base cursor-pointer"
 															tabIndex={0}
-															onClick={() => setSelectedProductToEdit(promotion)}
+															onClick={() => setSelectedPromotionToEdit(promotion)}
 														>
 															&#9998; {promotion.name}
 														</label>
@@ -188,7 +190,18 @@ function AllCatalog() {
 													)}
 												</figure>
 												<div className="card-body gap-0">
-													<h3 className="card-title text-base">{combo.name}</h3>
+													{userRolHasPermissions(userLogged) ? (
+														<label
+															htmlFor="comboModal"
+															className="card-title text-base cursor-pointer"
+															tabIndex={0}
+															onClick={() => setSelectedComboToEdit(combo)}
+														>
+															&#9998; {combo.name}
+														</label>
+													) : (
+														<h3 className="card-title text-base">{combo.name}</h3>
+													)}
 													<p className="font-bold text-primary">
 														Bs {combo.price.toFixed(2)}&nbsp;
 														<del className="text-gray-500 font-semibold text-xs">
@@ -246,10 +259,17 @@ function AllCatalog() {
 				</>
 			)}
 			<ProductModal
-				productToEdit={selectedProductToEdit}
-				changeProductToEdit={setSelectedProductToEdit}
+				productToEdit={selectedPromotionToEdit}
+				changeProductToEdit={setSelectedPromotionToEdit}
 				updateProducts={null}
 				updateCatalogPromotions={setCatalog}
+				catalogData={catalog}
+			/>
+			<ComboModal
+				comboToEdit={selectedComboToEdit}
+				changeComboToEdit={setSelectedComboToEdit}
+				updateCombos={null}
+				updateCatalogCombos={setCatalog}
 				catalogData={catalog}
 			/>
 		</Layout>
