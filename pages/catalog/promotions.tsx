@@ -6,16 +6,19 @@ import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 import Layout from "@/components/Layout";
 import NoData from "@/components/NoData";
 import Loading from "@/components/Loading";
+import ProductModal from "@/components/modals/ProductModal";
 
 import { useCartStore } from "@/store/cartStore";
 import { useUserStore } from "@/store/userStore";
 import { IProductFromFirebase } from "@/interfaces/objects";
 import { getAllPromotions } from "@/firebase/promotions";
 import { userRolHasPermissions } from "@/utils/validation";
+import { emptyProduct } from "@/constants/all";
 
 function Promotions() {
 	const [isContentLoading, setIsContentLoading] = useState(true);
 	const [promotions, setPromotions] = useState<IProductFromFirebase[]>([]);
+	const [selectedPromotionToEdit, setSelectedPromotionToEdit] = useState<IProductFromFirebase>(emptyProduct);
 
 	const userLogged = useUserStore((state) => state.user);
 	const addPromotionToCart = useCartStore((store) => store.add);
@@ -23,11 +26,7 @@ function Promotions() {
 	useEffect(() => {
 		const getAllPromotionsFromFirebase = async () => {
 			const data = await getAllPromotions();
-			if (data !== undefined) {
 				setPromotions(data);
-			} else {
-				setPromotions([]);
-			}
 			setIsContentLoading(false);
 		};
 		getAllPromotionsFromFirebase();
@@ -81,7 +80,18 @@ function Promotions() {
 										)}
 									</figure>
 									<div className="card-body gap-0">
-										<h2 className="card-title text-base">{promotion.name}</h2>
+										{userRolHasPermissions(userLogged) ? (
+											<label
+												htmlFor="productModal"
+												className="card-title text-base cursor-pointer"
+												tabIndex={0}
+												onClick={() => setSelectedPromotionToEdit(promotion)}
+											>
+												&#9998; {promotion.name}
+											</label>
+										) : (
+											<h2 className="card-title text-base">{promotion.name}</h2>
+										)}
 										<p className="font-bold text-primary">
 											Bs {promotion.promotionPrice.toFixed(2)}&nbsp;
 											<del className="text-gray-500 font-semibold text-xs">
@@ -98,6 +108,14 @@ function Promotions() {
 					)}
 				</>
 			)}
+			<ProductModal
+				productToEdit={selectedPromotionToEdit}
+				changeProductToEdit={setSelectedPromotionToEdit}
+				updateProducts={setPromotions}
+				updateCatalogPromotions={null}
+				catalogData={null}
+				productIsPromotion={true}
+			/>
 		</Layout>
 	);
 }

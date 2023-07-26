@@ -1,60 +1,117 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { INewGameInputs } from "@/interfaces/forms";
-import { IGameFromFirebase } from "@/interfaces/objects";
-import { newGameSchema, getYupSchema } from "@/yup/schemas";
-import { createNewGame, getAllGames } from "@/firebase/games";
+import { newGameSchema, getYupSchema, editGameSchema } from "@/yup/schemas";
+import { createNewGame, getAllGames, getLastNGames, updateGame } from "@/firebase/games";
+import { IGameModalProps } from "@/interfaces/props";
+import { gameToEditExist } from "@/utils/validation";
+import { emptyGame } from "@/constants/all";
 
-function NewGameModal({ updateGames }: { updateGames: Dispatch<SetStateAction<IGameFromFirebase[]>> }) {
-	const [isCreatingNewGame, setIsCreatingNewGame] = useState(false);
+function GameModal({ updateGames, gameToEdit, changeGameToEdit, updateCatalogGames, catalogData }: IGameModalProps) {
+	const [isSavingGame, setIsSavingGame] = useState(false);
 
 	const {
 		handleSubmit,
 		register,
 		reset,
+		setValue,
 		formState: { errors },
-	} = useForm<INewGameInputs>(getYupSchema(newGameSchema));
+	} = useForm<INewGameInputs>(
+		gameToEditExist(gameToEdit) ? getYupSchema(editGameSchema) : getYupSchema(newGameSchema)
+	);
+
+	useEffect(() => {
+		if (gameToEditExist(gameToEdit)) {
+			setValue("name", gameToEdit.name);
+			setValue("price", gameToEdit.price);
+		}
+	}, [setValue, gameToEdit]);
 
 	const handleCreateNewGame = handleSubmit(async (data) => {
 		// Set loading as started
-		setIsCreatingNewGame(true);
+		setIsSavingGame(true);
 
 		// Create new game in firebase
 		await createNewGame({
 			...data,
 			image: data.image[0],
 			createdAt: new Date(),
+			updatedAt: new Date(),
 		});
 
 		// Update games displayed with the new created
-		const gamesUpdated = await getAllGames();
-		updateGames(gamesUpdated);
+		if (updateGames !== null) {
+			const gamesUpdated = await getAllGames();
+			updateGames(gamesUpdated);
+		}
 
 		// Close modal and reset inputs
-		document.getElementById("newGameModal")?.click();
+		document.getElementById("gameModal")?.click();
 		reset();
 
 		//Set loading as finished
-		setIsCreatingNewGame(false);
+		setIsSavingGame(false);
+
+		// Show a success alert message
+	});
+
+	const handleEditGame = handleSubmit(async (data) => {
+		// Set loading as started
+		setIsSavingGame(true);
+
+		// Update game information in firebase
+		await updateGame({
+			...data,
+			id: gameToEdit.id,
+			image: data.image[0],
+			updatedAt: new Date(),
+		});
+
+		// Update games displayed with the edited game
+		if (updateGames !== null) {
+			const gamesUpdated = await getAllGames();
+			updateGames(gamesUpdated);
+		} else if (updateCatalogGames !== null && catalogData !== null) {
+			const updatedGames = await getLastNGames(5);
+			const catalogUpdated = {
+				...catalogData,
+				games: updatedGames,
+			};
+			updateCatalogGames(catalogUpdated);
+		}
+
+		// Close modal and reset inputs
+		document.getElementById("gameModal")?.click();
+		reset();
+		changeGameToEdit(emptyGame);
+
+		//Set loading as finished
+		setIsSavingGame(false);
 
 		// Show a success alert message
 	});
 
 	return (
 		<>
-			<input type="checkbox" id="newGameModal" className="modal-toggle" />
+			<input type="checkbox" id="gameModal" className="modal-toggle" />
 			<div className="modal">
-				<form className="modal-box relative max-w-md" onSubmit={handleCreateNewGame}>
+				<form
+					className="modal-box relative max-w-md"
+					onSubmit={gameToEditExist(gameToEdit) ? handleEditGame : handleCreateNewGame}
+				>
 					<label
-						htmlFor="newGameModal"
+						htmlFor="gameModal"
 						className="btn btn-sm btn-circle absolute right-2 top-2"
 						tabIndex={0}
-						onClick={() => reset()}
+						onClick={() => {
+							reset();
+							changeGameToEdit(emptyGame);
+						}}
 					>
 						✕
 					</label>
-					<h3 className="font-bold text-lg mb-2 mr-4">New Game</h3>
+					<h3 className="font-bold text-lg mb-2 mr-4">{gameToEditExist(gameToEdit) ? "Edit Game" : "New Game"}</h3>
 					<div className="flex flex-col gap-2">
 						<div>
 							<p>
@@ -104,7 +161,7 @@ function NewGameModal({ updateGames }: { updateGames: Dispatch<SetStateAction<IG
 						<div className="form-control w-full">
 							<label htmlFor="gameImageFile" className="label justify-start">
 								<span className="label-text">Image</span>
-								<span className="label-text text-red-500">&nbsp;[*]</span>
+								{!gameToEditExist(gameToEdit) && <span className="label-text text-red-500">&nbsp;[*]</span>}
 							</label>
 							<input
 								id="gameImageFile"
@@ -121,11 +178,18 @@ function NewGameModal({ updateGames }: { updateGames: Dispatch<SetStateAction<IG
 						</div>
 					</div>
 					<div className="modal-action">
-						<label htmlFor="newGameModal" className="btn capitalize" onClick={() => reset()}>
+						<label
+							htmlFor="gameModal"
+							className="btn capitalize"
+							onClick={() => {
+								reset();
+								changeGameToEdit(emptyGame);
+							}}
+						>
 							Cancel
 						</label>
-						<button type="submit" className={`btn btn-primary capitalize ${isCreatingNewGame && "loading"}`}>
-							{isCreatingNewGame ? "Saving" : "Save"}
+						<button type="submit" className={`btn btn-primary capitalize ${isSavingGame && "loading"}`}>
+							{isSavingGame ? "Saving" : "Save"}
 						</button>
 					</div>
 				</form>
@@ -134,4 +198,4 @@ function NewGameModal({ updateGames }: { updateGames: Dispatch<SetStateAction<IG
 	);
 }
 
-export default NewGameModal;
+export default GameModal;

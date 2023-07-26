@@ -97,6 +97,16 @@ export const newGameSchema = Yup.object().shape({
 		.test("is-valid-image", "Image uploaded is not valid", (value) => isValidImageType(value)),
 });
 
+export const editGameSchema = Yup.object().shape({
+	name: Yup.string().required("Name is required field"),
+	price: Yup.number()
+		.transform((value) => (isNaN(value) ? undefined : value))
+		.typeError("Price must be a number")
+		.positive("Price can't be negative")
+		.required("Price is required field"),
+	image: Yup.mixed().test("is-valid-image", "Image uploaded is not valid", (value) => isValidEditedImageType(value)),
+});
+
 export function getYupSchema(yupSchema: Yup.ObjectSchema<any, Yup.AnyObject, any, "">) {
 	return { resolver: yupResolver(yupSchema) };
 }

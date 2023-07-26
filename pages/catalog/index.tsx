@@ -21,15 +21,17 @@ import { useUserStore } from "@/store/userStore";
 import { getLastNPromotions } from "@/firebase/promotions";
 import { getLastNCombos } from "@/firebase/combos";
 import { getLastNGames } from "@/firebase/games";
-import { ICatalog, IComboFromFirebase, IProductFromFirebase } from "@/interfaces/objects";
+import { ICatalog, IComboFromFirebase, IGameFromFirebase, IProductFromFirebase } from "@/interfaces/objects";
 import { isCatalogEmpty, userRolHasPermissions } from "@/utils/validation";
-import { emptyCatalog, emptyCombo, emptyProduct } from "@/constants/all";
+import { emptyCatalog, emptyCombo, emptyGame, emptyProduct } from "@/constants/all";
+import GameModal from "@/components/modals/GameModal";
 
 function AllCatalog() {
 	const [isContentLoading, setIsContentLoading] = useState(true);
 	const [catalog, setCatalog] = useState<ICatalog>(emptyCatalog);
 	const [selectedPromotionToEdit, setSelectedPromotionToEdit] = useState<IProductFromFirebase>(emptyProduct);
 	const [selectedComboToEdit, setSelectedComboToEdit] = useState<IComboFromFirebase>(emptyCombo);
+	const [selectedGameToEdit, setSelectedGameToEdit] = useState<IGameFromFirebase>(emptyGame);
 
 	const userLogged = useUserStore((state) => state.user);
 
@@ -243,7 +245,18 @@ function AllCatalog() {
 													)}
 												</figure>
 												<div className="card-body gap-0">
-													<h3 className="card-title text-base">{game.name}</h3>
+													{userRolHasPermissions(userLogged) ? (
+														<label
+															htmlFor="gameModal"
+															className="card-title text-base cursor-pointer"
+															tabIndex={0}
+															onClick={() => setSelectedGameToEdit(game)}
+														>
+															&#9998; {game.name}
+														</label>
+													) : (
+														<h3 className="card-title text-base">{game.name}</h3>
+													)}
 													<p className="font-bold text-primary">Bs {game.price.toFixed(2)}</p>
 												</div>
 											</div>
@@ -264,12 +277,20 @@ function AllCatalog() {
 				updateProducts={null}
 				updateCatalogPromotions={setCatalog}
 				catalogData={catalog}
+				productIsPromotion={true}
 			/>
 			<ComboModal
 				comboToEdit={selectedComboToEdit}
 				changeComboToEdit={setSelectedComboToEdit}
 				updateCombos={null}
 				updateCatalogCombos={setCatalog}
+				catalogData={catalog}
+			/>
+			<GameModal
+				gameToEdit={selectedGameToEdit}
+				changeGameToEdit={setSelectedGameToEdit}
+				updateGames={null}
+				updateCatalogGames={setCatalog}
 				catalogData={catalog}
 			/>
 		</Layout>

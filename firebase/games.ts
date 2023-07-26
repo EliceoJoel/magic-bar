@@ -1,8 +1,8 @@
 import { db, storage } from "./config";
-import { addDoc, collection, getDocs, limit, orderBy, query } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, limit, orderBy, query, updateDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
-import { IGameForFirebase, IGameFromFirebase } from "@/interfaces/objects";
+import { IGameForFirebase, IGameFromFirebase, IGameToEditForFirebase } from "@/interfaces/objects";
 
 export async function createNewGame(newGame: IGameForFirebase) {
 	// Image ref in store
@@ -40,12 +40,56 @@ export async function getAllGames() {
 				price: doc.data().price,
 				image: doc.data().image,
 				createdAt: doc.data().createdAt,
+				updatedAt: doc.data().updateAt,
 			});
 		});
 	} catch (error) {
 		console.error(error);
 	} finally {
 		return games;
+	}
+}
+
+export async function updateGame(gameToEdit: IGameToEditForFirebase) {
+	const gameRef = doc(db, "games", gameToEdit.id);
+	if (gameToEdit.image !== undefined) {
+		// Update info with new image
+
+		// TODO: Remove previous image
+
+		// Image ref in store
+		const storageRef = ref(storage, `games/${gameToEdit.image.name.split(".")[0] + uuidv4()}`);
+		// Upload image to firebase store
+		await uploadBytes(storageRef, gameToEdit.image)
+			.then(async (snapshot) => {
+				await getDownloadURL(snapshot.ref)
+					.then(async (imageUrl) => {
+						// Update game in firestore including generated image url
+						await updateDoc(gameRef, {
+							name: gameToEdit.name,
+							price: gameToEdit.price,
+							image: imageUrl,
+							updatedAt: gameToEdit.updatedAt,
+						}).catch((error) => {
+							console.error("Error updating game in firebase: " + error.message);
+						});
+					})
+					.catch((error) => {
+						console.error("Error generating updated image url: " + error.massage);
+					});
+			})
+			.catch((error) => {
+				console.error("Error uploading image: " + error.message);
+			});
+	} else {
+		// Update info without a new image
+		await updateDoc(gameRef, {
+			name: gameToEdit.name,
+			price: gameToEdit.price,
+			updatedAt: gameToEdit.updatedAt,
+		}).catch((error) => {
+			console.error("Error updating game in firebase: " + error.message);
+		});
 	}
 }
 
@@ -62,6 +106,7 @@ export async function getLastNGames(n: number) {
 				price: doc.data().price,
 				image: doc.data().image,
 				createdAt: doc.data().createdAt,
+				updatedAt: doc.data().updateAt,
 			});
 		});
 	} catch (error) {

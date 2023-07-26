@@ -69,7 +69,7 @@ export async function updateCombo(comboToEdit: IComboToEditForFirebase) {
 			normalPrice: comboToEdit.normalPrice,
 			updatedAt: comboToEdit.updatedAt,
 		}).catch((error) => {
-			console.error("Error updating product in firebase: " + error.message);
+			console.error("Error updating combo in firebase: " + error.message);
 		});
 	}
 }
