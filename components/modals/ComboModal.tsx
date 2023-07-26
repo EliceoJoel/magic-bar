@@ -1,22 +1,21 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { INewComboInputs } from "@/interfaces/forms";
-import { ICatalog, IComboFromFirebase } from "@/interfaces/objects";
+import { IComboModalProps } from "@/interfaces/props";
 import { newComboSchema, getYupSchema, editComboSchema } from "@/yup/schemas";
 import { createNewCombo, getAllCombos, getLastNCombos, updateCombo } from "@/firebase/combos";
 import { comboToEditExist } from "@/utils/validation";
 import { emptyCombo } from "@/constants/all";
 
-interface Props {
-	comboToEdit: IComboFromFirebase;
-	changeComboToEdit: Dispatch<SetStateAction<IComboFromFirebase>>;
-	updateCombos: Dispatch<SetStateAction<IComboFromFirebase[]>> | null;
-	updateCatalogCombos: Dispatch<SetStateAction<ICatalog>> | null;
-	catalogData: ICatalog | null;
-}
-
-function ComboModal({ updateCombos, comboToEdit, changeComboToEdit, updateCatalogCombos, catalogData }: Props) {
+function ComboModal({
+	updateCombos,
+	comboToEdit,
+	changeComboToEdit,
+	updateCatalogCombos,
+	catalogData,
+}: IComboModalProps) {
+	
 	const [isSavingCombo, setIsSavingCombo] = useState(false);
 
 	const {
@@ -74,7 +73,6 @@ function ComboModal({ updateCombos, comboToEdit, changeComboToEdit, updateCatalo
 			...data,
 			id: comboToEdit.id,
 			image: data.image[0],
-			createdAt: comboToEdit.createdAt,
 			updatedAt: new Date(),
 		});
 

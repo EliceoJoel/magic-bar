@@ -121,6 +121,7 @@ function Category({ categoryId }: { categoryId: string }) {
 				updateProducts={setProducts}
 				updateCatalogPromotions={null}
 				catalogData={null}
+				productIsPromotion={false}
 			/>
 		</Layout>
 	);

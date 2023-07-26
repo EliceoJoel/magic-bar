@@ -4,7 +4,7 @@ import Image from "next/image";
 import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 
 import Layout from "@/components/Layout";
-import NewGameModal from "@/components/modals/NewGameModal";
+import GameModal from "@/components/modals/GameModal";
 import NoData from "@/components/NoData";
 import Loading from "@/components/Loading";
 
@@ -13,10 +13,12 @@ import { useUserStore } from "@/store/userStore";
 import { IGameFromFirebase } from "@/interfaces/objects";
 import { getAllGames } from "@/firebase/games";
 import { userRolHasPermissions } from "@/utils/validation";
+import { emptyGame } from "@/constants/all";
 
 function Games() {
 	const [isContentLoading, setIsContentLoading] = useState(true);
 	const [games, setGames] = useState<IGameFromFirebase[]>([]);
+	const [selectedGameToEdit, setSelectedGameToEdit] = useState<IGameFromFirebase>(emptyGame);
 
 	const userLogged = useUserStore((state) => state.user);
 	const addGameToCart = useCartStore((store) => store.add);
@@ -35,7 +37,7 @@ function Games() {
 			<div className="flex justify-between items-center mb-4">
 				<h1 className="text-xl md:text-2xl">Games</h1>
 				{userRolHasPermissions(userLogged) && (
-					<label htmlFor="newGameModal" className="btn btn-primary btn-sm md:btn-md normal-case">
+					<label htmlFor="gameModal" className="btn btn-primary btn-sm md:btn-md normal-case">
 						New game
 					</label>
 				)}
@@ -80,7 +82,18 @@ function Games() {
 										)}
 									</figure>
 									<div className="card-body gap-0">
-										<h2 className="card-title text-base">{game.name}</h2>
+										{userRolHasPermissions(userLogged) ? (
+											<label
+												htmlFor="gameModal"
+												className="card-title text-base cursor-pointer"
+												tabIndex={0}
+												onClick={() => setSelectedGameToEdit(game)}
+											>
+												&#9998; {game.name}
+											</label>
+										) : (
+											<h2 className="card-title text-base">{game.name}</h2>
+										)}
 										<p className="font-bold text-primary">Bs {game.price.toFixed(2)}</p>
 									</div>
 								</div>
@@ -91,7 +104,13 @@ function Games() {
 					)}
 				</>
 			)}
-			<NewGameModal updateGames={setGames} />
+			<GameModal
+				updateGames={setGames}
+				gameToEdit={selectedGameToEdit}
+				changeGameToEdit={setSelectedGameToEdit}
+				updateCatalogGames={null}
+				catalogData={null}
+			/>
 		</Layout>
 	);
 }

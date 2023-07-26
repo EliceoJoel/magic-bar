@@ -1,7 +1,7 @@
 import { validImageExtensions } from "@/constants/all";
 import { UserType } from "@/constants/userType";
 import { INewProductInputs } from "@/interfaces/forms";
-import { ICatalog, IComboFromFirebase, IProductFromFirebase } from "@/interfaces/objects";
+import { ICatalog, IComboFromFirebase, IGameFromFirebase, IProductFromFirebase } from "@/interfaces/objects";
 import { isNotEmpty } from "./StringUtils";
 
 export function isValidImageType(fileList: any) {
@@ -48,5 +48,11 @@ export function comboToEditExist(comboToEdit: IComboFromFirebase) {
 		isNotEmpty(comboToEdit.image) &&
 		comboToEdit.price > 0 &&
 		comboToEdit.normalPrice > 0
+	);
+}
+
+export function gameToEditExist(gameToEdit: IGameFromFirebase) {
+	return (
+		isNotEmpty(gameToEdit.id) && isNotEmpty(gameToEdit.name) && isNotEmpty(gameToEdit.image) && gameToEdit.price > 0
 	);
 }

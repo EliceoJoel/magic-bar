@@ -1,24 +1,16 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { FiInfo } from "react-icons/fi";
 
 import { createNewProduct, getProductsBycategory, updateProduct } from "@/firebase/product";
-import { getLastNPromotions } from "@/firebase/promotions";
+import { getAllPromotions, getLastNPromotions } from "@/firebase/promotions";
 import { INewProductInputs } from "@/interfaces/forms";
-import { ICatalog, IProductFromFirebase } from "@/interfaces/objects";
+import { IProductModalProps } from "@/interfaces/props";
 import { productCategories } from "@/data/product";
 import { newProductSchema, getYupSchema, editProductSchema } from "@/yup/schemas";
 import { productToEditExist } from "@/utils/validation";
 import { emptyProduct } from "@/constants/all";
-
-interface Props {
-	productToEdit: IProductFromFirebase;
-	changeProductToEdit: Dispatch<SetStateAction<IProductFromFirebase>>;
-	updateProducts: Dispatch<SetStateAction<IProductFromFirebase[]>> | null;
-	updateCatalogPromotions: Dispatch<SetStateAction<ICatalog>> | null;
-	catalogData: ICatalog | null;
-}
 
 function ProductModal({
 	productToEdit,
@@ -26,7 +18,8 @@ function ProductModal({
 	updateProducts,
 	updateCatalogPromotions,
 	catalogData,
-}: Props) {
+	productIsPromotion,
+}: IProductModalProps) {
 	const [isSavingProduct, setIsSavingProduct] = useState(false);
 
 	const {
@@ -93,14 +86,18 @@ function ProductModal({
 			id: productToEdit.id,
 			promotionPrice: data.promotionPrice !== undefined ? data.promotionPrice : 0,
 			image: data.image[0],
-			createdAt: productToEdit.createdAt,
 			updateAt: new Date(),
 		});
 
 		// Update products displayed with the new edited
 		if (updateProducts !== null) {
-			const productsUpdated = await getProductsBycategory(productToEdit.category);
-			updateProducts(productsUpdated);
+			if (productIsPromotion) {
+				const promotionsUpdated = await getAllPromotions();
+				updateProducts(promotionsUpdated);
+			} else {
+				const productsUpdated = await getProductsBycategory(productToEdit.category);
+				updateProducts(productsUpdated);
+			}
 		} else if (updateCatalogPromotions !== null && catalogData !== null) {
 			const updatedPromotions = await getLastNPromotions(5);
 			const catalogUpdated = {

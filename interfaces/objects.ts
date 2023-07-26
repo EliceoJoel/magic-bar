@@ -25,7 +25,6 @@ export interface IProductToEditForFirebase {
 	image: File;
 	additional: string;
 	promotionPrice: number;
-	createdAt: Date;
 	updateAt: Date;
 }
 
@@ -57,7 +56,6 @@ export interface IComboToEditForFirebase {
 	price: number;
 	normalPrice: number;
 	image: File;
-	createdAt: Date;
 	updatedAt: Date;
 }
 
@@ -76,6 +74,15 @@ export interface IGameForFirebase {
 	price: number;
 	image: File;
 	createdAt: Date;
+	updatedAt: Date;
+}
+
+export interface IGameToEditForFirebase {
+	id: string;
+	name: string;
+	price: number;
+	image: File;
+	updatedAt: Date;
 }
 
 export interface IGameFromFirebase {
@@ -84,6 +91,7 @@ export interface IGameFromFirebase {
 	price: number;
 	image: string;
 	createdAt: Date;
+	updatedAt: Date;
 }
 
 export interface IPath {
