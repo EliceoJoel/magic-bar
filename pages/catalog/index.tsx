@@ -13,6 +13,7 @@ import NoData from "@/components/NoData";
 import SeeAllItems from "@/components/SeeAllItems";
 import Loading from "@/components/Loading";
 import ComboModal from "@/components/modals/ComboModal";
+import GameModal from "@/components/modals/GameModal";
 
 import { promotions, combos, games } from "data/test";
 import { productCategories } from "data/product";
@@ -22,9 +23,9 @@ import { getLastNPromotions } from "@/firebase/promotions";
 import { getLastNCombos } from "@/firebase/combos";
 import { getLastNGames } from "@/firebase/games";
 import { ICatalog, IComboFromFirebase, IGameFromFirebase, IProductFromFirebase } from "@/interfaces/objects";
-import { isCatalogEmpty, userRolHasPermissions } from "@/utils/validation";
+import { isCatalogEmpty, isUserEmployee } from "@/utils/validation";
 import { emptyCatalog, emptyCombo, emptyGame, emptyProduct } from "@/constants/all";
-import GameModal from "@/components/modals/GameModal";
+import { isNotBlank } from "@/utils/StringUtils";
 
 function AllCatalog() {
 	const [isContentLoading, setIsContentLoading] = useState(true);
@@ -58,7 +59,7 @@ function AllCatalog() {
 		<Layout>
 			<div className="flex justify-between items-center mb-4">
 				<h1 className="text-xl md:text-2xl">All Catalog</h1>
-				{userRolHasPermissions(userLogged) && (
+				{isUserEmployee(userLogged) && (
 					<label htmlFor="productModal" className="btn btn-primary btn-sm md:btn-md normal-case">
 						New product
 					</label>
@@ -125,20 +126,30 @@ function AllCatalog() {
 														width={1000}
 														height={1000}
 													/>
-													{userRolHasPermissions(userLogged) && (
+													{isUserEmployee(userLogged) && (
 														<button
 															className="btn btn-circle btn-primary absolute top-2 right-2"
-															onClick={() => addProductToCart(promotion)}
+															onClick={() =>
+																addProductToCart({
+																	...promotion,
+																	quantity: 1,
+																	name: isNotBlank(promotion.additional)
+																		? promotion.name + " (" + promotion.additional + ")"
+																		: promotion.name,
+																})
+															}
 														>
 															<AiOutlinePlus className="w-6 h-6" />
 														</button>
 													)}
-													<div className="badge badge-sm absolute bottom-2 right-2">
-														{promotion.additional}
-													</div>
+													{isNotBlank(promotion.additional) && (
+														<div className="badge badge-sm absolute bottom-2 right-2">
+															{promotion.additional}
+														</div>
+													)}
 												</figure>
 												<div className="card-body gap-0">
-													{userRolHasPermissions(userLogged) ? (
+													{isUserEmployee(userLogged) ? (
 														<label
 															htmlFor="productModal"
 															className="card-title text-base cursor-pointer"
@@ -182,17 +193,17 @@ function AllCatalog() {
 														width={1000}
 														height={1000}
 													/>
-													{userRolHasPermissions(userLogged) && (
+													{isUserEmployee(userLogged) && (
 														<button
 															className="btn btn-circle btn-primary absolute top-2 right-2"
-															onClick={() => addProductToCart(combo)}
+															onClick={() => addProductToCart({ ...combo, quantity: 1 })}
 														>
 															<AiOutlinePlus className="w-6 h-6" />
 														</button>
 													)}
 												</figure>
 												<div className="card-body gap-0">
-													{userRolHasPermissions(userLogged) ? (
+													{isUserEmployee(userLogged) ? (
 														<label
 															htmlFor="comboModal"
 															className="card-title text-base cursor-pointer"
@@ -235,17 +246,17 @@ function AllCatalog() {
 														width={1000}
 														height={1000}
 													/>
-													{userRolHasPermissions(userLogged) && (
+													{isUserEmployee(userLogged) && (
 														<button
 															className="btn btn-circle btn-primary absolute top-2 right-2"
-															onClick={() => addProductToCart(game)}
+															onClick={() => addProductToCart({ ...game, quantity: 1 })}
 														>
 															<AiOutlinePlus className="w-6 h-6" />
 														</button>
 													)}
 												</figure>
 												<div className="card-body gap-0">
-													{userRolHasPermissions(userLogged) ? (
+													{isUserEmployee(userLogged) ? (
 														<label
 															htmlFor="gameModal"
 															className="card-title text-base cursor-pointer"

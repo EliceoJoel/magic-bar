@@ -12,7 +12,7 @@ import { useCartStore } from "@/store/cartStore";
 import { useUserStore } from "@/store/userStore";
 import { getAllCombos } from "@/firebase/combos";
 import { IComboFromFirebase } from "@/interfaces/objects";
-import { userRolHasPermissions } from "@/utils/validation";
+import { isUserEmployee } from "@/utils/validation";
 import { emptyCombo } from "@/constants/all";
 
 function Combos() {
@@ -36,7 +36,7 @@ function Combos() {
 		<Layout>
 			<div className="flex justify-between items-center mb-4">
 				<h1 className="text-xl md:text-2xl">Combos</h1>
-				{userRolHasPermissions(userLogged) && (
+				{isUserEmployee(userLogged) && (
 					<label htmlFor="comboModal" className="btn btn-primary btn-sm normal-case md:btn-md">
 						New combo
 					</label>
@@ -72,17 +72,17 @@ function Combos() {
 											width={1000}
 											height={1000}
 										/>
-										{userRolHasPermissions(userLogged) && (
+										{isUserEmployee(userLogged) && (
 											<button
 												className="btn btn-circle btn-primary absolute top-2 right-2"
-												onClick={() => addComboToCart(combo)}
+												onClick={() => addComboToCart({ ...combo, quantity: 1 })}
 											>
 												<AiOutlinePlus className="w-6 h-6" />
 											</button>
 										)}
 									</figure>
 									<div className="card-body gap-0">
-										{userRolHasPermissions(userLogged) ? (
+										{isUserEmployee(userLogged) ? (
 											<label
 												htmlFor="comboModal"
 												className="card-title text-base cursor-pointer"

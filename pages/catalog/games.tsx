@@ -12,7 +12,7 @@ import { useCartStore } from "@/store/cartStore";
 import { useUserStore } from "@/store/userStore";
 import { IGameFromFirebase } from "@/interfaces/objects";
 import { getAllGames } from "@/firebase/games";
-import { userRolHasPermissions } from "@/utils/validation";
+import { isUserEmployee } from "@/utils/validation";
 import { emptyGame } from "@/constants/all";
 
 function Games() {
@@ -36,7 +36,7 @@ function Games() {
 		<Layout>
 			<div className="flex justify-between items-center mb-4">
 				<h1 className="text-xl md:text-2xl">Games</h1>
-				{userRolHasPermissions(userLogged) && (
+				{isUserEmployee(userLogged) && (
 					<label htmlFor="gameModal" className="btn btn-primary btn-sm md:btn-md normal-case">
 						New game
 					</label>
@@ -72,17 +72,17 @@ function Games() {
 											width={1000}
 											height={1000}
 										/>
-										{userRolHasPermissions(userLogged) && (
+										{isUserEmployee(userLogged) && (
 											<button
 												className="btn btn-circle btn-primary absolute top-2 right-2"
-												onClick={() => addGameToCart(game)}
+												onClick={() => addGameToCart({ ...game, quantity: 1 })}
 											>
 												<AiOutlinePlus className="w-6 h-6" />
 											</button>
 										)}
 									</figure>
 									<div className="card-body gap-0">
-										{userRolHasPermissions(userLogged) ? (
+										{isUserEmployee(userLogged) ? (
 											<label
 												htmlFor="gameModal"
 												className="card-title text-base cursor-pointer"

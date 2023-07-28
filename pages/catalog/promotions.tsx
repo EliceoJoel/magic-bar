@@ -12,8 +12,9 @@ import { useCartStore } from "@/store/cartStore";
 import { useUserStore } from "@/store/userStore";
 import { IProductFromFirebase } from "@/interfaces/objects";
 import { getAllPromotions } from "@/firebase/promotions";
-import { userRolHasPermissions } from "@/utils/validation";
+import { isUserEmployee } from "@/utils/validation";
 import { emptyProduct } from "@/constants/all";
+import { isNotBlank } from "@/utils/StringUtils";
 
 function Promotions() {
 	const [isContentLoading, setIsContentLoading] = useState(true);
@@ -26,7 +27,7 @@ function Promotions() {
 	useEffect(() => {
 		const getAllPromotionsFromFirebase = async () => {
 			const data = await getAllPromotions();
-				setPromotions(data);
+			setPromotions(data);
 			setIsContentLoading(false);
 		};
 		getAllPromotionsFromFirebase();
@@ -67,20 +68,28 @@ function Promotions() {
 											width={1000}
 											height={1000}
 										/>
-										{userRolHasPermissions(userLogged) && (
+										{isUserEmployee(userLogged) && (
 											<button
 												className="btn btn-circle btn-primary absolute top-2 right-2"
-												onClick={() => addPromotionToCart(promotion)}
+												onClick={() =>
+													addPromotionToCart({
+														...promotion,
+														quantity: 1,
+														name: isNotBlank(promotion.additional)
+															? promotion.name + " (" + promotion.additional + ")"
+															: promotion.name,
+													})
+												}
 											>
 												<AiOutlinePlus className="w-6 h-6" />
 											</button>
 										)}
-										{promotion.additional && (
+										{isNotBlank(promotion.additional) && (
 											<div className="badge badge-sm absolute bottom-2 right-2">{promotion.additional}</div>
 										)}
 									</figure>
 									<div className="card-body gap-0">
-										{userRolHasPermissions(userLogged) ? (
+										{isUserEmployee(userLogged) ? (
 											<label
 												htmlFor="productModal"
 												className="card-title text-base cursor-pointer"

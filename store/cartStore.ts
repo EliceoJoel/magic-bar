@@ -1,31 +1,17 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
-interface Product {
-	id: string;
-	name: string;
-	price: number;
-	image: string;
-}
-
-interface CartProduct {
-	id: string;
-	name: string;
-	price: number;
-	quantity: number;
-	image: string;
-}
+import { ICartProduct } from "@/interfaces/objects";
 
 interface State {
-	products: Array<CartProduct>;
+	products: Array<ICartProduct>;
 }
 
 interface Actions {
-	add: (product: Product) => void;
-	remove: (product: Product) => void;
+	add: (product: ICartProduct) => void;
+	remove: (product: ICartProduct) => void;
 	clear: () => void;
-	decreaseQuantity: (product: CartProduct) => void;
-	increaseQuantity: (product: CartProduct) => void;
+	decreaseQuantity: (product: ICartProduct) => void;
+	increaseQuantity: (product: ICartProduct) => void;
 }
 
 export const useCartStore = create(
@@ -36,7 +22,10 @@ export const useCartStore = create(
 				set((state) => ({
 					products: state.products.some((item) => item.id === product.id)
 						? state.products
-						: [...state.products, { ...product, quantity: 1 }],
+						: [
+								...state.products,
+								{ id: product.id, name: product.name, price: product.price, image: product.image, quantity: 1 },
+						  ],
 				})),
 			remove: (product) => set((state) => ({ products: state.products.filter((item) => item.id !== product.id) })),
 			clear: () => set(() => ({ products: [] })),
@@ -60,7 +49,7 @@ export const useCartStore = create(
 				})),
 		}),
 		{
-			name: "cartStorage"
+			name: "cartStorage",
 		}
 	)
 );

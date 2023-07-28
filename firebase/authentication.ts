@@ -1,21 +1,11 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "./config";
+import { ISignUpUserData, ISignIpUserData } from '@/interfaces/objects'
 
-interface signUpUserData {
-	name: string;
-	lastName: string;
-	email: string;
-	password: string;
-	rol: string;
-}
 
-interface signIpUserData {
-	email: string;
-	password: string;
-}
 
-export async function signUpUser({ name, lastName, email, password, rol }: signUpUserData) {
+export async function signUpUser({ name, lastName, email, password, role }: ISignUpUserData) {
 	try {
 		// Create user in firebase
 		const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -26,12 +16,12 @@ export async function signUpUser({ name, lastName, email, password, rol }: signU
 			name,
 			lastName,
 			email,
-			rol,
+			role,
 		}).catch((error) => {
 			console.error("Error saving user information in firestore: ", error.message);
 		});
 		console.log("User created and saved successfully!");
-		return { name, lastName, email, rol };
+		return { name, lastName, email, role };
 	} catch (error) {
 		if (error instanceof Error) {
 			console.error("Error creating user: ", error.message);
@@ -41,7 +31,7 @@ export async function signUpUser({ name, lastName, email, password, rol }: signU
 	}
 }
 
-export async function signInUser({ email, password }: signIpUserData) {
+export async function signInUser({ email, password }: ISignIpUserData) {
 	try {
 		const userCredential = await signInWithEmailAndPassword(auth, email, password);
 		const docRef = doc(db, `users/${userCredential.user.uid}`);
