@@ -1,8 +1,13 @@
 import { validImageExtensions } from "@/constants/all";
-import { UserType } from "@/constants/userType";
-import { INewProductInputs } from "@/interfaces/forms";
-import { ICatalog, IComboFromFirebase, IGameFromFirebase, IProductFromFirebase } from "@/interfaces/objects";
-import { isNotEmpty } from "./StringUtils";
+import { UserType } from "@/constants/enums";
+import {
+	ICatalog,
+	IComboFromFirebase,
+	IGameFromFirebase,
+	IProductFromFirebase,
+	IUserLogged,
+} from "@/interfaces/objects";
+import { isNotBlank } from "./StringUtils";
 
 export function isValidImageType(fileList: any) {
 	if (fileList[0] !== undefined) {
@@ -26,26 +31,30 @@ export function isCatalogEmpty(catalog: ICatalog) {
 	return catalog.promotions.length === 0 && catalog.combos.length === 0 && catalog.games.length === 0;
 }
 
-export function userRolHasPermissions(user: any) {
-	return user !== null && user.rol === UserType.EMPLOYEE;
+export function isUserEmployee(user: any) {
+	return user !== null && user.role === UserType.EMPLOYEE;
+}
+
+export function isUserOwner(user: any) {
+	return user !== null && user.role === UserType.OWNER;
 }
 
 export function productToEditExist(productToEdit: IProductFromFirebase) {
 	return (
-		isNotEmpty(productToEdit.id) &&
-		isNotEmpty(productToEdit.name) &&
-		isNotEmpty(productToEdit.brand) &&
-		isNotEmpty(productToEdit.category) &&
-		isNotEmpty(productToEdit.image) &&
+		isNotBlank(productToEdit.id) &&
+		isNotBlank(productToEdit.name) &&
+		isNotBlank(productToEdit.brand) &&
+		isNotBlank(productToEdit.category) &&
+		isNotBlank(productToEdit.image) &&
 		productToEdit.price > 0
 	);
 }
 
 export function comboToEditExist(comboToEdit: IComboFromFirebase) {
 	return (
-		isNotEmpty(comboToEdit.id) &&
-		isNotEmpty(comboToEdit.name) &&
-		isNotEmpty(comboToEdit.image) &&
+		isNotBlank(comboToEdit.id) &&
+		isNotBlank(comboToEdit.name) &&
+		isNotBlank(comboToEdit.image) &&
 		comboToEdit.price > 0 &&
 		comboToEdit.normalPrice > 0
 	);
@@ -53,6 +62,10 @@ export function comboToEditExist(comboToEdit: IComboFromFirebase) {
 
 export function gameToEditExist(gameToEdit: IGameFromFirebase) {
 	return (
-		isNotEmpty(gameToEdit.id) && isNotEmpty(gameToEdit.name) && isNotEmpty(gameToEdit.image) && gameToEdit.price > 0
+		isNotBlank(gameToEdit.id) && isNotBlank(gameToEdit.name) && isNotBlank(gameToEdit.image) && gameToEdit.price > 0
 	);
+}
+
+export function userIsLogged(user: IUserLogged) {
+	return isNotBlank(user.email) && isNotBlank(user.lastName) && isNotBlank(user.name) && isNotBlank(user.role);
 }

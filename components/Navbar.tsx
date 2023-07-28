@@ -10,7 +10,7 @@ import { HiOutlineMenu, HiOutlineUserCircle, HiOutlineShoppingBag, HiOutlineMoon
 
 import { useUserStore } from "@/store/userStore";
 import { useCartStore } from "@/store/cartStore";
-import { UserType } from "@/constants/userType";
+import { isUserEmployee, userIsLogged } from "@/utils/validation";
 
 interface OpenDrawer {
 	openDrawer: Function;
@@ -51,9 +51,9 @@ function Navbar({ openDrawer }: OpenDrawer) {
 				<button className="btn btn-circle btn-ghost">
 					<HiOutlineMoon className="w-6 h-6" />
 				</button>
-				{userLogged !== null ? (
+				{userIsLogged(userLogged) ? (
 					<>
-						{userLogged.rol === UserType.EMPLOYEE && (
+						{isUserEmployee(userLogged) && (
 							<label
 								htmlFor="theDrawer"
 								tabIndex={0}

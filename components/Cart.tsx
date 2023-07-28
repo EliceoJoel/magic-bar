@@ -5,10 +5,10 @@ import { HiMinus, HiPlus, HiX } from "react-icons/hi";
 import { FiTrash } from "react-icons/fi";
 
 import { useCartStore } from "@/store/cartStore";
+import { calculateProductsToTalPrice } from "@/utils/all";
 
 function Cart() {
 	const { products, decreaseQuantity, increaseQuantity, clear, remove } = useCartStore((state) => state);
-	const totalPrice = products.reduce((accumulator, currentValue) => accumulator + (currentValue.price * currentValue.quantity), 0);
 
 	return (
 		<div className="menu p-4 w-60 ssm:w-80 bg-base-200 md:w-96">
@@ -53,15 +53,17 @@ function Cart() {
 				</div>
 			))}
 			{products.length > 0 ? (
-				<div className="my-2 flex justify-between">
-					<button className="btn btn-circle btn-outline hover:bg-red-500 hover:border-red-500" onClick={clear}>
-						<FiTrash className="w-6 h-6" />
-					</button>
-					<button className="btn btn-primary flex justify-between w-56 normal-case md:w-72">
-						<span>Make order</span>
-						<span>{totalPrice} Bs.</span>
-					</button>
-				</div>
+				<>
+					<div className="my-2 flex justify-between">
+						<button className="btn btn-circle btn-outline hover:bg-red-500 hover:border-red-500" onClick={clear}>
+							<FiTrash className="w-6 h-6" />
+						</button>
+						<label htmlFor="orderModal" className="btn btn-primary flex justify-between w-56 normal-case md:w-72">
+							<span>Make order</span>
+							<span>{calculateProductsToTalPrice(products)} Bs.</span>
+						</label>
+					</div>
+				</>
 			) : (
 				<div className="my-2">
 					<p className="text-center">No products added to your orden</p>

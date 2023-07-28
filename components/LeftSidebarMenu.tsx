@@ -5,9 +5,14 @@ import { GiWineBottle } from "react-icons/gi";
 import { HiOutlineSparkles } from "react-icons/hi";
 import { IoCloseOutline, IoDiceOutline } from "react-icons/io5";
 import { RxDashboard } from "react-icons/rx";
-import { BsListStars } from "react-icons/bs";
+import { BsCardChecklist, BsListStars } from "react-icons/bs";
+import { FiUsers } from "react-icons/fi";
+import { useUserStore } from "@/store/userStore";
+import { isUserEmployee, isUserOwner } from "@/utils/validation";
 
 function LeftSidebarMenu() {
+	const userLogged = useUserStore((store) => store.user);
+
 	return (
 		<ul className="menu p-4 w-60 ssm:w-80 bg-base-200">
 			<div className="mb-4 flex items-center justify-between lg:hidden">
@@ -51,6 +56,22 @@ function LeftSidebarMenu() {
 					Games
 				</Link>
 			</li>
+			{isUserEmployee(userLogged) && (
+				<li className="bg-white rounded-btn mb-4 shadow-lg">
+					<Link href="/orders">
+						<BsCardChecklist className="h-6 w-6" />
+						Orders
+					</Link>
+				</li>
+			)}
+			{isUserOwner(userLogged) && (
+				<li className="bg-white rounded-btn mb-4 shadow-lg">
+					<Link href="/users">
+						<FiUsers className="h-6 w-6" />
+						Users
+					</Link>
+				</li>
+			)}
 		</ul>
 	);
 }

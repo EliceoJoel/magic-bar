@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import Navbar from "./Navbar";
 import LeftSidebarMenu from "./LeftSidebarMenu";
+import OrderModal from "./modals/OrderModal";
 
 interface DrawerInfo {
 	position: "" | "drawer-end";
@@ -36,6 +37,7 @@ function Layout({ children }: { children: React.ReactNode }) {
 					{drawerInfo.content}
 				</div>
 			</div>
+			<OrderModal />
 		</div>
 	);
 }

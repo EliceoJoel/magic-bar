@@ -9,7 +9,7 @@ import { FaCocktail } from "react-icons/fa";
 import GoogleButton from "@/components/GoogleButton";
 import { getYupSchema, signUpFormSchema } from "@/yup/schemas";
 import { signUpUser } from "@/firebase/authentication";
-import { UserType } from "@/constants/userType";
+import { UserType } from "@/constants/enums";
 import { useUserStore } from "@/store/userStore";
 import { ISignUpInputs } from "@/interfaces/forms";
 
@@ -29,10 +29,11 @@ function SignUp() {
 		setIsSingingUp(true);
 
 		// Sing up on firebase
-		const userLogged = await signUpUser({ ...data, rol: UserType.CLIENT });
+		const userLogged = await signUpUser({ ...data, role: UserType.CLIENT });
 
 		// Save user logged in store
 		registerUserinStore(userLogged);
+		
 		// Redirect to catalog page
 		router.push("/catalog");
 

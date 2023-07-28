@@ -33,3 +33,8 @@ export interface INewGameInputs {
 	price: number;
 	image: FileList;
 }
+
+export interface INewOrderInputs {
+	tableNumber: number;
+	details: string;
+}

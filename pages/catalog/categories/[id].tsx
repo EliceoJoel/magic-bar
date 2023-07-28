@@ -13,8 +13,9 @@ import { useUserStore } from "@/store/userStore";
 import { productCategories } from "@/data/product";
 import { getProductsBycategory } from "@/firebase/product";
 import { IPath, IProductFromFirebase } from "@/interfaces/objects";
-import { userRolHasPermissions } from "@/utils/validation";
+import { isUserEmployee } from "@/utils/validation";
 import { emptyProduct } from "@/constants/all";
+import { isNotBlank } from "@/utils/StringUtils";
 
 export async function getStaticPaths() {
 	const categoriesPaths = productCategories.map((productCategory) => {
@@ -79,20 +80,28 @@ function Category({ categoryId }: { categoryId: string }) {
 											width={1000}
 											height={1000}
 										/>
-										{userRolHasPermissions(userLogged) && (
+										{isUserEmployee(userLogged) && (
 											<button
 												className="btn btn-circle btn-primary absolute top-2 right-2"
-												onClick={() => addProductToCart(product)}
+												onClick={() =>
+													addProductToCart({
+														...product,
+														quantity: 1,
+														name: isNotBlank(product.additional)
+															? product.name + " (" + product.additional + ")"
+															: product.name,
+													})
+												}
 											>
 												<AiOutlinePlus className="w-6 h-6" />
 											</button>
 										)}
-										{product.additional && (
+										{isNotBlank(product.additional) && (
 											<div className="badge badge-sm absolute bottom-2 right-2">{product.additional}</div>
 										)}
 									</figure>
 									<div className="card-body gap-0">
-										{userRolHasPermissions(userLogged) ? (
+										{isUserEmployee(userLogged) ? (
 											<label
 												htmlFor="productModal"
 												className="card-title text-base cursor-pointer"

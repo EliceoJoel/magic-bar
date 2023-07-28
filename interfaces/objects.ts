@@ -1,3 +1,23 @@
+export interface ISignUpUserData {
+	name: string;
+	lastName: string;
+	email: string;
+	password: string;
+	role: string;
+}
+
+export interface ISignIpUserData {
+	email: string;
+	password: string;
+}
+
+export interface IUserLogged {
+	name: string;
+	lastName: string;
+	email: string;
+	role: string;
+}
+
 export interface ICatalog {
 	promotions: IProductFromFirebase[];
 	combos: IComboFromFirebase[];
@@ -92,6 +112,23 @@ export interface IGameFromFirebase {
 	image: string;
 	createdAt: Date;
 	updatedAt: Date;
+}
+
+export interface ICartProduct {
+	id: string;
+	name: string;
+	price: number;
+	quantity: number;
+	image: string;
+}
+
+export interface IOrderForFirebase {
+	tableNumber: number;
+	details: string;
+	totalprice: number;
+	status: string;
+	date: Date;
+	products: Array<ICartProduct>
 }
 
 export interface IPath {
