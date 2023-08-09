@@ -9,7 +9,7 @@ import { useCartStore } from "@/store/cartStore";
 import { calculateProductsToTalPrice } from "@/utils/all";
 import { ICartProduct } from "@/interfaces/objects";
 
-function OrderModal() {
+function MakeOrderModal() {
 	const [isSavingOrder, setIsSavingOrder] = useState(false);
 
 	const { products: cartProducts, clear: clearCart } = useCartStore((state) => state);
@@ -38,7 +38,7 @@ function OrderModal() {
 		clearCart();
 
 		// Close modal and reset inputs
-		document.getElementById("orderModal")?.click();
+		document.getElementById("makeOrderModal")?.click();
 		reset();
 
 		// Close cart right side drawer
@@ -52,11 +52,11 @@ function OrderModal() {
 
 	return (
 		<>
-			<input type="checkbox" id="orderModal" className="modal-toggle" />
+			<input type="checkbox" id="makeOrderModal" className="modal-toggle" />
 			<div className="modal">
 				<form className="modal-box relative max-w-md" onSubmit={handleNewOrder}>
 					<label
-						htmlFor="orderModal"
+						htmlFor="makeOrderModal"
 						className="btn btn-sm btn-circle absolute right-2 top-2"
 						tabIndex={0}
 						onClick={() => reset()}
@@ -104,7 +104,7 @@ function OrderModal() {
 						</div>
 					</div>
 					<div className="modal-action">
-						<label htmlFor="orderModal" className="btn capitalize" onClick={() => reset()}>
+						<label htmlFor="makeOrderModal" className="btn capitalize" onClick={() => reset()}>
 							Cancel
 						</label>
 						<button type="submit" className={`btn btn-primary capitalize ${isSavingOrder && "loading"}`}>
@@ -117,4 +117,4 @@ function OrderModal() {
 	);
 }
 
-export default OrderModal;
+export default MakeOrderModal;

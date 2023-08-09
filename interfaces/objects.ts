@@ -11,7 +11,7 @@ export interface ISignIpUserData {
 	password: string;
 }
 
-export interface IUserLogged {
+export interface IUser {
 	name: string;
 	lastName: string;
 	email: string;

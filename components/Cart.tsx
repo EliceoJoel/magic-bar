@@ -58,7 +58,7 @@ function Cart() {
 						<button className="btn btn-circle btn-outline hover:bg-red-500 hover:border-red-500" onClick={clear}>
 							<FiTrash className="w-6 h-6" />
 						</button>
-						<label htmlFor="orderModal" className="btn btn-primary flex justify-between w-56 normal-case md:w-72">
+						<label htmlFor="makeOrderModal" className="btn btn-primary flex justify-between w-56 normal-case md:w-72">
 							<span>Make order</span>
 							<span>{calculateProductsToTalPrice(products)} Bs.</span>
 						</label>

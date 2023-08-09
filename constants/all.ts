@@ -3,7 +3,7 @@ import {
 	IComboFromFirebase,
 	IGameFromFirebase,
 	IProductFromFirebase,
-	IUserLogged,
+	IUser,
 } from "@/interfaces/objects";
 
 export const emailRegExp =
@@ -45,7 +45,7 @@ export const emptyGame: IGameFromFirebase = {
 	updatedAt: new Date(),
 };
 
-export const emptyUserLogged: IUserLogged = {
+export const emptyUserLogged: IUser = {
 	name: "",
 	lastName: "",
 	email: "",

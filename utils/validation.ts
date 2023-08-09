@@ -1,12 +1,6 @@
 import { validImageExtensions } from "@/constants/all";
 import { UserType } from "@/constants/enums";
-import {
-	ICatalog,
-	IComboFromFirebase,
-	IGameFromFirebase,
-	IProductFromFirebase,
-	IUserLogged,
-} from "@/interfaces/objects";
+import { ICatalog, IComboFromFirebase, IGameFromFirebase, IProductFromFirebase, IUser } from "@/interfaces/objects";
 import { isNotBlank } from "./StringUtils";
 
 export function isValidImageType(fileList: any) {
@@ -31,12 +25,16 @@ export function isCatalogEmpty(catalog: ICatalog) {
 	return catalog.promotions.length === 0 && catalog.combos.length === 0 && catalog.games.length === 0;
 }
 
-export function isUserEmployee(user: any) {
+export function isUserEmployee(user: IUser) {
 	return user !== null && user.role === UserType.EMPLOYEE;
 }
 
-export function isUserOwner(user: any) {
+export function isUserOwner(user: IUser) {
 	return user !== null && user.role === UserType.OWNER;
+}
+
+export function isUserClient(user: IUser) {
+	return user !== null && user.role === UserType.CLIENT;
 }
 
 export function productToEditExist(productToEdit: IProductFromFirebase) {
@@ -66,6 +64,6 @@ export function gameToEditExist(gameToEdit: IGameFromFirebase) {
 	);
 }
 
-export function userIsLogged(user: IUserLogged) {
+export function userIsLogged(user: IUser) {
 	return isNotBlank(user.email) && isNotBlank(user.lastName) && isNotBlank(user.name) && isNotBlank(user.role);
 }
