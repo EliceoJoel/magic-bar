@@ -54,3 +54,8 @@ body {
     transform: rotate(360deg);
   }
 }
+
+/*table*/
+.table th:first-child {
+  position: relative !important;
+}

@@ -1,10 +1,10 @@
 import { emptyUserLogged } from "@/constants/all";
-import { IUserLogged } from "@/interfaces/objects";
+import { IUser } from "@/interfaces/objects";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface State {
-	user: IUserLogged;
+	user: IUser;
 }
 
 interface Actions {
