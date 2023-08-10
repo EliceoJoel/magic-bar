@@ -14,6 +14,7 @@ import { IGameFromFirebase } from "@/interfaces/objects";
 import { getAllGames } from "@/firebase/games";
 import { isUserEmployee } from "@/utils/validation";
 import { emptyGame } from "@/constants/all";
+import { noDataGamesMessage } from "@/constants/text";
 
 function Games() {
 	const [isContentLoading, setIsContentLoading] = useState(true);
@@ -100,7 +101,7 @@ function Games() {
 							))}
 						</div>
 					) : (
-						<NoData />
+						<NoData message={noDataGamesMessage} />
 					)}
 				</>
 			)}

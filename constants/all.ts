@@ -2,6 +2,7 @@ import {
 	ICatalog,
 	IComboFromFirebase,
 	IGameFromFirebase,
+	IOrderFromFirebase,
 	IProductFromFirebase,
 	IUser,
 } from "@/interfaces/objects";
@@ -22,8 +23,8 @@ export const emptyProduct: IProductFromFirebase = {
 	image: "",
 	additional: "",
 	promotionPrice: 0,
-	createdAt: new Date(),
-	updatedAt: new Date(),
+	createdAt: { seconds: 0, nanoseconds: 0 },
+	updatedAt: { seconds: 0, nanoseconds: 0 },
 };
 
 export const emptyCombo: IComboFromFirebase = {
@@ -32,8 +33,8 @@ export const emptyCombo: IComboFromFirebase = {
 	price: 0,
 	normalPrice: 0,
 	image: "",
-	createdAt: new Date(),
-	updatedAt: new Date(),
+	createdAt: { seconds: 0, nanoseconds: 0 },
+	updatedAt: { seconds: 0, nanoseconds: 0 },
 };
 
 export const emptyGame: IGameFromFirebase = {
@@ -41,8 +42,8 @@ export const emptyGame: IGameFromFirebase = {
 	name: "",
 	price: 0,
 	image: "",
-	createdAt: new Date(),
-	updatedAt: new Date(),
+	createdAt: { seconds: 0, nanoseconds: 0 },
+	updatedAt: { seconds: 0, nanoseconds: 0 },
 };
 
 export const emptyUserLogged: IUser = {
@@ -50,4 +51,14 @@ export const emptyUserLogged: IUser = {
 	lastName: "",
 	email: "",
 	role: "",
+};
+
+export const emptyOrder: IOrderFromFirebase = {
+	id: "",
+	tableNumber: 0,
+	details: "",
+	totalprice: 0,
+	status: "",
+	products: [],
+	createdAt: { seconds: 0, nanoseconds: 0 },
 };

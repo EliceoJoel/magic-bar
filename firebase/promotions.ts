@@ -43,6 +43,6 @@ export async function getLastNPromotions(n: number) {
 
 function sortPromotionsByDate(promotions: IProductFromFirebase[]) {
 	return promotions.sort(function (a, b) {
-		return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+		return new Date(b.createdAt.seconds * 1000).getTime() - new Date(a.createdAt.seconds * 1000).getTime();
 	});
 }

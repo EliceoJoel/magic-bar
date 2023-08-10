@@ -1,146 +1,132 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 
 import Layout from "@/components/Layout";
 
 import { useUserStore } from "@/store/userStore";
-import { isUserClient, userIsLogged } from "@/utils/validation";
+import { isUserClient, orderIsNotEmpty, userIsLogged } from "@/utils/validation";
 
 import productImage from "@/public/beersAndCiders.webp";
+import { IOrderFromFirebase } from "@/interfaces/objects";
+import { getOrderById } from "@/firebase/orders";
+import Loading from "@/components/Loading";
+import { emptyOrder } from "@/constants/all";
+import NoData from "@/components/NoData";
+import { noDataOrderMessage } from "@/constants/text";
+import { isNotBlank } from "@/utils/StringUtils";
 
 function Order() {
+	const [isContentLoading, setIsContentLoading] = useState(true);
+	const [order, setOrder] = useState<IOrderFromFirebase>(emptyOrder);
+
 	const router = useRouter();
-	const orderId = router.query.id;
+	const orderId: string = router.query.id?.toString?.() ?? "";
 
 	const userLogged = useUserStore((state) => state.user);
 
 	useEffect(() => {
+		const getOrderFromFirebase = async () => {
+			const data = await getOrderById(orderId);
+			setOrder(data);
+			setIsContentLoading(false);
+		};
+
 		// Protecting route
 		if (!userIsLogged(userLogged) || isUserClient(userLogged)) {
 			router.push("/catalog");
+		} else {
+			getOrderFromFirebase();
 		}
-	}, [router, userLogged]);
+	}, [orderId, router, userLogged]);
 
 	return (
 		<Layout>
 			<div className="mb-4">
 				<h1 className="text-xl md:text-2xl">Order details</h1>
 			</div>
-			<div>
-				<div>
-					<span className="font-bold">Id: </span>
-					<span>{orderId}</span>
-				</div>
-				<div>
-					<span className="font-bold">Status: </span>
-					<span>Pending</span>
-				</div>
-				<div>
-					<span className="font-bold">Table number: </span>
-					<span>2</span>
-				</div>
-				<div>
-					<span className="font-bold">Total price: </span>
-					<span>Bs {Number(110).toFixed(2)}</span>
-				</div>
-				<div>
-					<span className="font-bold">Order date: </span>
-					<span>August 8, 2023, 22:10:09 UTC-4</span>
-				</div>
-				<div>
-					<span className="font-bold">User details: </span>
-					<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent pulvinar imperdiet justo sed
-						maximus. Suspendisse id venenatis lectus. Vivamus consectetur risus a vestibulum sodales. Orci varius
-						natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam dapibus pulvinar
-						sem, quis maximus erat interdum vel. Curabitur at volutpat ipsum, et tristique sem.
-					</p>
-				</div>
-				<div>
-					<span className="font-bold">Products: </span>
-					<div className="overflow-x-auto w-full">
-						<table className="table w-full">
-							{/* head */}
-							<thead>
-								<tr>
-									<th>Image</th>
-									<th>Name</th>
-									<th>Quantity</th>
-									<th>Unit price</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>
-										<div className="flex items-center space-x-3">
-											<div className="avatar">
-												<div className="mask mask-squircle w-12 h-12">
-													<Image src={productImage} alt="product image" />
-												</div>
-											</div>
-										</div>
-									</td>
-									<td>Ron abuelo añejo + Coca cola 2 litros + Hielo test</td>
-									<td>1</td>
-									<td>110</td>
-								</tr>
-								<tr>
-									<td>
-										<div className="flex items-center space-x-3">
-											<div className="avatar">
-												<div className="mask mask-squircle w-12 h-12">
-													<Image src={productImage} alt="product image" />
-												</div>
-											</div>
-										</div>
-									</td>
-									<td>Ron abuelo añejo + Coca cola 2 litros + Hielo test</td>
-									<td>1</td>
-									<td>110</td>
-								</tr>
-								<tr>
-									<td>
-										<div className="flex items-center space-x-3">
-											<div className="avatar">
-												<div className="mask mask-squircle w-12 h-12">
-													<Image src={productImage} alt="product image" />
-												</div>
-											</div>
-										</div>
-									</td>
-									<td>Ron abuelo añejo + Coca cola 2 litros + Hielo test</td>
-									<td>1</td>
-									<td>110</td>
-								</tr>
-								<tr>
-									<td>
-										<div className="flex items-center space-x-3">
-											<div className="avatar">
-												<div className="mask mask-squircle w-12 h-12">
-													<Image src={productImage} alt="product image" />
-												</div>
-											</div>
-										</div>
-									</td>
-									<td>Ron abuelo añejo + Coca cola 2 litros + Hielo test</td>
-									<td>1</td>
-									<td>110</td>
-								</tr>
-							</tbody>
-							{/* foot */}
-							<tfoot>
-								<tr>
-									<th>Image</th>
-									<th>Name</th>
-									<th>Quantity</th>
-									<th>Unit price</th>
-								</tr>
-							</tfoot>
-						</table>
-					</div>
-				</div>
-			</div>
+			{isContentLoading ? (
+				<Loading />
+			) : (
+				<>
+					{orderIsNotEmpty(order) ? (
+						<div>
+							<div>
+								<span className="font-bold">Id: </span>
+								<span>{order.id}</span>
+							</div>
+							<div>
+								<span className="font-bold">Status: </span>
+								<span>{order.status}</span>
+							</div>
+							<div>
+								<span className="font-bold">Table number: </span>
+								<span>{order.tableNumber}</span>
+							</div>
+							<div>
+								<span className="font-bold">Total price: </span>
+								<span>Bs {order.totalprice.toFixed(2)}</span>
+							</div>
+							<div>
+								<span className="font-bold">Order date: </span>
+								<span>{new Date(order.createdAt.seconds * 1000).toString()}</span>
+							</div>
+							<div>
+								<span className="font-bold">User details: </span>
+								<p>{isNotBlank(order.details) ? order.details : "No details"}</p>
+							</div>
+							<div>
+								<span className="font-bold">Products: </span>
+								<div className="overflow-x-auto w-full">
+									<table className="table w-full">
+										<thead>
+											<tr>
+												<th>Image</th>
+												<th>Name</th>
+												<th>Quantity</th>
+												<th>Unit price</th>
+											</tr>
+										</thead>
+										<tbody>
+											{order.products.map((product, index) => (
+												<tr key={index}>
+													<td>
+														<div className="flex items-center space-x-3">
+															<div className="avatar">
+																<div className="mask mask-squircle w-12 h-12">
+																	<Image
+																		src={product.image}
+																		alt={product.name + " Image"}
+																		width={1000}
+																		height={1000}
+																	/>
+																</div>
+															</div>
+														</div>
+													</td>
+													<td>{product.name}</td>
+													<td>{product.quantity}</td>
+													<td>Bs {product.price.toFixed(2)}</td>
+												</tr>
+											))}
+										</tbody>
+										<tfoot>
+											<tr>
+												<th>Image</th>
+												<th>Name</th>
+												<th>Quantity</th>
+												<th>Unit price</th>
+											</tr>
+										</tfoot>
+									</table>
+								</div>
+							</div>
+						</div>
+					) : (
+						<NoData message={noDataOrderMessage} />
+					)}
+				</>
+			)}
 		</Layout>
 	);
 }
