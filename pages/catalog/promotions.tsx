@@ -15,6 +15,7 @@ import { getAllPromotions } from "@/firebase/promotions";
 import { isUserEmployee } from "@/utils/validation";
 import { emptyProduct } from "@/constants/all";
 import { isNotBlank } from "@/utils/StringUtils";
+import { noDataPromotionsMessage } from "@/constants/text";
 
 function Promotions() {
 	const [isContentLoading, setIsContentLoading] = useState(true);
@@ -113,7 +114,7 @@ function Promotions() {
 							))}
 						</div>
 					) : (
-						<NoData />
+						<NoData message={noDataPromotionsMessage} />
 					)}
 				</>
 			)}

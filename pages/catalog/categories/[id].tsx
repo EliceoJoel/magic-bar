@@ -16,6 +16,7 @@ import { IPath, IProductFromFirebase } from "@/interfaces/objects";
 import { isUserEmployee } from "@/utils/validation";
 import { emptyProduct } from "@/constants/all";
 import { isNotBlank } from "@/utils/StringUtils";
+import { noDataCategoryMessage } from "@/constants/text";
 
 export async function getStaticPaths() {
 	const categoriesPaths = productCategories.map((productCategory) => {
@@ -120,7 +121,7 @@ function Category({ categoryId }: { categoryId: string }) {
 							))}
 						</div>
 					) : (
-						<NoData />
+						<NoData message={noDataCategoryMessage} />
 					)}
 				</>
 			)}

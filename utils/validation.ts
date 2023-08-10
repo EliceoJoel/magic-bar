@@ -1,6 +1,13 @@
 import { validImageExtensions } from "@/constants/all";
 import { UserType } from "@/constants/enums";
-import { ICatalog, IComboFromFirebase, IGameFromFirebase, IProductFromFirebase, IUser } from "@/interfaces/objects";
+import {
+	ICatalog,
+	IComboFromFirebase,
+	IGameFromFirebase,
+	IOrderFromFirebase,
+	IProductFromFirebase,
+	IUser,
+} from "@/interfaces/objects";
 import { isNotBlank } from "./StringUtils";
 
 export function isValidImageType(fileList: any) {
@@ -61,6 +68,16 @@ export function comboToEditExist(comboToEdit: IComboFromFirebase) {
 export function gameToEditExist(gameToEdit: IGameFromFirebase) {
 	return (
 		isNotBlank(gameToEdit.id) && isNotBlank(gameToEdit.name) && isNotBlank(gameToEdit.image) && gameToEdit.price > 0
+	);
+}
+
+export function orderIsNotEmpty(order: IOrderFromFirebase) {
+	return (
+		isNotBlank(order.id) &&
+		isNotBlank(order.status) &&
+		order.tableNumber > 0 &&
+		order.totalprice > 0 &&
+		order.products.length > 0
 	);
 }
 

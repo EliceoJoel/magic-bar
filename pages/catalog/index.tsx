@@ -26,6 +26,7 @@ import { ICatalog, IComboFromFirebase, IGameFromFirebase, IProductFromFirebase }
 import { isCatalogEmpty, isUserEmployee } from "@/utils/validation";
 import { emptyCatalog, emptyCombo, emptyGame, emptyProduct } from "@/constants/all";
 import { isNotBlank } from "@/utils/StringUtils";
+import { noDataCatalogMessage } from "@/constants/text";
 
 function AllCatalog() {
 	const [isContentLoading, setIsContentLoading] = useState(true);
@@ -107,7 +108,7 @@ function AllCatalog() {
 			) : (
 				<>
 					{isCatalogEmpty(catalog) ? (
-						<NoData />
+						<NoData message={noDataCatalogMessage} />
 					) : (
 						<>
 							{catalog.promotions.length > 0 && (

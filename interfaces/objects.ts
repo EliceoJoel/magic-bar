@@ -57,8 +57,8 @@ export interface IProductFromFirebase {
 	image: string;
 	additional: string;
 	promotionPrice: number;
-	createdAt: Date;
-	updatedAt: Date;
+	createdAt: ITimestampsFromFirebase;
+	updatedAt: ITimestampsFromFirebase;
 }
 
 export interface IComboForFirebase {
@@ -85,8 +85,8 @@ export interface IComboFromFirebase {
 	price: number;
 	normalPrice: number;
 	image: string;
-	createdAt: Date;
-	updatedAt: Date;
+	createdAt: ITimestampsFromFirebase;
+	updatedAt: ITimestampsFromFirebase;
 }
 
 export interface IGameForFirebase {
@@ -110,8 +110,8 @@ export interface IGameFromFirebase {
 	name: string;
 	price: number;
 	image: string;
-	createdAt: Date;
-	updatedAt: Date;
+	createdAt: ITimestampsFromFirebase;
+	updatedAt: ITimestampsFromFirebase;
 }
 
 export interface ICartProduct {
@@ -127,8 +127,23 @@ export interface IOrderForFirebase {
 	details: string;
 	totalprice: number;
 	status: string;
-	date: Date;
-	products: Array<ICartProduct>
+	products: Array<ICartProduct>;
+	createdAt: Date;
+}
+
+export interface IOrderFromFirebase {
+	id: string;
+	tableNumber: number;
+	details: string;
+	totalprice: number;
+	status: string;
+	products: Array<ICartProduct>;
+	createdAt: ITimestampsFromFirebase;
+}
+
+export interface ITimestampsFromFirebase {
+	seconds: number;
+	nanoseconds: number;
 }
 
 export interface IPath {

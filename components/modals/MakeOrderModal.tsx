@@ -30,7 +30,7 @@ function MakeOrderModal() {
 			...data,
 			totalprice: calculateProductsToTalPrice(cartProducts),
 			status: OrderStatus.PENDING,
-			date: new Date(),
+			createdAt: new Date(),
 			products: cartProducts,
 		});
 

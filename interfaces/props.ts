@@ -7,7 +7,7 @@ export interface IProductModalProps {
 	updateProducts: Dispatch<SetStateAction<IProductFromFirebase[]>> | null;
 	updateCatalogPromotions: Dispatch<SetStateAction<ICatalog>> | null;
 	catalogData: ICatalog | null;
-   productIsPromotion: boolean; 
+	productIsPromotion: boolean;
 }
 
 export interface IComboModalProps {
@@ -24,4 +24,8 @@ export interface IGameModalProps {
 	updateGames: Dispatch<SetStateAction<IGameFromFirebase[]>> | null;
 	updateCatalogGames: Dispatch<SetStateAction<ICatalog>> | null;
 	catalogData: ICatalog | null;
+}
+
+export interface INoDataProps {
+	message: string;
 }

@@ -14,6 +14,7 @@ import { getAllCombos } from "@/firebase/combos";
 import { IComboFromFirebase } from "@/interfaces/objects";
 import { isUserEmployee } from "@/utils/validation";
 import { emptyCombo } from "@/constants/all";
+import { noDataCombosMessage } from "@/constants/text";
 
 function Combos() {
 	const [isContentLoading, setIsContentLoading] = useState(true);
@@ -105,7 +106,7 @@ function Combos() {
 							))}
 						</div>
 					) : (
-						<NoData />
+						<NoData message={noDataCombosMessage} />
 					)}
 				</>
 			)}
