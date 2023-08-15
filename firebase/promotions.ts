@@ -32,7 +32,7 @@ export async function getAllPromotions() {
 export async function getLastNPromotions(n: number) {
 	const allPromotions = await getAllPromotions();
 	try {
-		const sortedPromotions = sortPromotionsByDate(allPromotions);
+		const sortedPromotions = sortDescPromotionsByDate(allPromotions);
 		return sortedPromotions.slice(0, n);
 	} catch (error) {
 		console.error(error);
@@ -41,7 +41,7 @@ export async function getLastNPromotions(n: number) {
 	}
 }
 
-function sortPromotionsByDate(promotions: IProductFromFirebase[]) {
+function sortDescPromotionsByDate(promotions: IProductFromFirebase[]) {
 	return promotions.sort(function (a, b) {
 		return new Date(b.createdAt.seconds * 1000).getTime() - new Date(a.createdAt.seconds * 1000).getTime();
 	});

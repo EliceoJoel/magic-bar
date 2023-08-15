@@ -1,5 +1,5 @@
 import { db } from "./config";
-import { addDoc, collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
 import { IOrderForFirebase, IOrderFromFirebase } from "@/interfaces/objects";
 import { emptyOrder } from "@/constants/all";
 
@@ -14,7 +14,9 @@ export async function createNewOrder(newOrder: IOrderForFirebase) {
 export async function getAllOrders() {
 	const orders: IOrderFromFirebase[] = [];
 	try {
-		const querySnapshot = await getDocs(collection(db, "orders"));
+		const ordersRef = collection(db, "orders");
+		const orderByDescQuery = query(ordersRef, orderBy("updatedAt", "desc"));
+		const querySnapshot = await getDocs(orderByDescQuery);
 		querySnapshot.forEach((doc) => {
 			orders.push({
 				id: doc.id,
@@ -24,6 +26,7 @@ export async function getAllOrders() {
 				status: doc.data().status,
 				products: doc.data().products,
 				createdAt: doc.data().createdAt,
+				updatedAt: doc.data().updatedAt,
 			});
 		});
 	} catch (error) {
@@ -47,6 +50,7 @@ export async function getOrderById(orderId: string) {
 				status: docSnap.data().status,
 				products: docSnap.data().products,
 				createdAt: docSnap.data().createdAt,
+				updatedAt: docSnap.data().updatedAt,
 			};
 		}
 	} catch (error) {
@@ -54,4 +58,45 @@ export async function getOrderById(orderId: string) {
 	} finally {
 		return order;
 	}
+}
+
+export async function updateOrderStatus(orderId: string, newStatus: string) {
+	const orderRef = doc(db, "orders", orderId);
+	await updateDoc(orderRef, {
+		status: newStatus,
+		updatedAt: new Date(),
+	}).catch((error) => {
+		console.error("Error updating order status in firebase: " + error.message);
+	});
+}
+
+export async function getOrdersByStatus(status: string) {
+	const orders: IOrderFromFirebase[] = [];
+	try {
+		const ordersRef = collection(db, "orders");
+		const orderByDescQuery = query(ordersRef, where("status", "==", status));
+		const querySnapshot = await getDocs(orderByDescQuery);
+		querySnapshot.forEach((doc) => {
+			orders.push({
+				id: doc.id,
+				tableNumber: doc.data().tableNumber,
+				details: doc.data().details,
+				totalprice: doc.data().totalprice,
+				status: doc.data().status,
+				products: doc.data().products,
+				createdAt: doc.data().createdAt,
+				updatedAt: doc.data().updatedAt,
+			});
+		});
+	} catch (error) {
+		console.error("Error getting orders by status: " + error);
+	} finally {
+		return sortDescOrdersByDate(orders);
+	}
+}
+
+function sortDescOrdersByDate(orders: IOrderFromFirebase[]) {
+	return orders.sort(function (a, b) {
+		return new Date(b.updatedAt.seconds * 1000).getTime() - new Date(a.updatedAt.seconds * 1000).getTime();
+	});
 }

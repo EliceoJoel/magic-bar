@@ -1,18 +1,26 @@
 import { useEffect, useState } from "react";
-import Layout from "@/components/Layout";
-import { useUserStore } from "@/store/userStore";
-import { isUserClient, userIsLogged } from "@/utils/validation";
 import { useRouter } from "next/router";
-import { IOrderFromFirebase } from "@/interfaces/objects";
-import { getAllOrders } from "@/firebase/orders";
+import Link from "next/link";
+
+import Layout from "@/components/Layout";
 import Loading from "@/components/Loading";
 import NoData from "@/components/NoData";
-import Link from "next/link";
+import ConfirmationModal from "@/components/modals/ConfirmationOrderActionModal";
+
+import { getAllOrders, getOrdersByStatus } from "@/firebase/orders";
+import { useUserStore } from "@/store/userStore";
+import { isUserClient, userIsLogged } from "@/utils/validation";
+import { IConfirmationModalvalues, IOrderFromFirebase } from "@/interfaces/objects";
+
 import { noDataOrdersMessage } from "@/constants/text";
+import { OrderStatus } from "@/constants/enums";
+import { emptyConfirmationModalValues } from "@/constants/all";
 
 function Orders() {
 	const [isContentLoading, setIsContentLoading] = useState(true);
 	const [orders, setOrders] = useState<IOrderFromFirebase[]>([]);
+	const [confirmModalValues, setConfirmModalvalues] = useState<IConfirmationModalvalues>(emptyConfirmationModalValues);
+	const [orderStatusFilterSelected, setOrderStatusFilterSelected] = useState("All");
 
 	const router = useRouter();
 	const userLogged = useUserStore((state) => state.user);
@@ -32,10 +40,77 @@ function Orders() {
 		}
 	}, [router, userLogged]);
 
+	const getStatusClass = (status: string) => {
+		switch (status) {
+			case OrderStatus.PENDING:
+				return "badge-warning";
+			case OrderStatus.COMPLETE:
+				return "badge-success";
+			case OrderStatus.CANCELED:
+				return "badge-error";
+			default:
+				return "";
+		}
+	};
+
+	const handleSelectOrderStatusFilter = async (selectedStatusFilter: string) => {
+		// Set content loading as started
+		setIsContentLoading(true);
+
+		// Change order status filter selected state
+		setOrderStatusFilterSelected(selectedStatusFilter);
+
+		// Get orders by status
+		let ordersByStatus: IOrderFromFirebase[] = [];
+		if (selectedStatusFilter === "All") {
+			ordersByStatus = await getAllOrders();
+		} else {
+			ordersByStatus = await getOrdersByStatus(selectedStatusFilter);
+		}
+
+		// Update orders displayed
+		setOrders(ordersByStatus);
+
+		// Set content loading as finished
+		setIsContentLoading(false);
+	};
+
 	return (
 		<Layout>
 			<div className="mb-4">
 				<h1 className="text-xl md:text-2xl">Orders</h1>
+			</div>
+			<div className="btn-group">
+				<button
+					className={`btn btn-sm ${orderStatusFilterSelected === "All" ? "btn-active" : "btn-outline"} capitalize`}
+					onClick={() => handleSelectOrderStatusFilter("All")}
+				>
+					All
+				</button>
+				<button
+					className={`btn btn-sm ${
+						orderStatusFilterSelected === OrderStatus.PENDING ? "btn-active" : "btn-outline"
+					} capitalize`}
+					onClick={() => handleSelectOrderStatusFilter(OrderStatus.PENDING)}
+				>
+					Pending
+				</button>
+				<button
+					className={`btn btn-sm ${
+						orderStatusFilterSelected === OrderStatus.COMPLETE ? "btn-active" : "btn-outline"
+					} capitalize`}
+					onClick={() => handleSelectOrderStatusFilter(OrderStatus.COMPLETE)}
+				>
+					Complete
+				</button>
+				<button
+					className={`btn btn-sm ${
+						orderStatusFilterSelected === OrderStatus.CANCELED ? "btn-active" : "btn-outline"
+					} capitalize`}
+					onClick={() => handleSelectOrderStatusFilter(OrderStatus.CANCELED)}
+				>
+					Canceled
+				</button>
 			</div>
 			{isContentLoading ? (
 				<Loading />
@@ -57,16 +132,48 @@ function Orders() {
 									{orders.map((order, index) => (
 										<tr key={index}>
 											<td>
-												<Link href={`/orders/${order.id}`} className="underline hover:text-primary">{order.id}</Link>
+												<Link href={`/orders/${order.id}`} className="underline hover:text-primary">
+													{order.id}
+												</Link>
 											</td>
-											<td>{order.status}</td>
+											<td>
+												<div className={`badge badge-lg ${getStatusClass(order.status)}`}>
+													{order.status}
+												</div>
+											</td>
 											<td>{order.tableNumber}</td>
 											<td>{order.totalprice.toFixed(2)}</td>
 											<td>
-												<div className="flex gap-4">
-													<button className="btn btn-sm btn-error capitalize">Cancel</button>
-													<button className="btn btn-sm btn-success capitalize">Complete</button>
-												</div>
+												{order.status === OrderStatus.PENDING && (
+													<div className="flex gap-4">
+														<label
+															htmlFor="confirmationModal"
+															className="btn btn-sm btn-error capitalize"
+															onClick={() => {
+																setConfirmModalvalues({
+																	orderId: order.id,
+																	message: "Do you want to cancel this order?",
+																	actionType: OrderStatus.CANCELED,
+																});
+															}}
+														>
+															Cancel
+														</label>
+														<label
+															htmlFor="confirmationModal"
+															className="btn btn-sm btn-success capitalize"
+															onClick={() => {
+																setConfirmModalvalues({
+																	orderId: order.id,
+																	message: "Do you want to complete this order?",
+																	actionType: OrderStatus.COMPLETE,
+																});
+															}}
+														>
+															Complete
+														</label>
+													</div>
+												)}
 											</td>
 										</tr>
 									))}
@@ -83,10 +190,11 @@ function Orders() {
 							</table>
 						</div>
 					) : (
-						<NoData message={noDataOrdersMessage}/>
+						<NoData message={noDataOrdersMessage} />
 					)}
 				</>
 			)}
+			<ConfirmationModal {...confirmModalValues} updateOrders={setOrders} />
 		</Layout>
 	);
 }

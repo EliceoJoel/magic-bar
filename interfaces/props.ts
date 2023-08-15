@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { ICatalog, IComboFromFirebase, IGameFromFirebase, IProductFromFirebase } from "./objects";
+import { ICatalog, IComboFromFirebase, IGameFromFirebase, IOrderFromFirebase, IProductFromFirebase } from "./objects";
 
 export interface IProductModalProps {
 	productToEdit: IProductFromFirebase;
@@ -28,4 +28,11 @@ export interface IGameModalProps {
 
 export interface INoDataProps {
 	message: string;
+}
+
+export interface IConfirmationOrderActionModalProps {
+	message: string;
+	actionType: string;
+	orderId: string;
+	updateOrders: Dispatch<SetStateAction<IOrderFromFirebase[]>>;
 }
