@@ -7,7 +7,6 @@ import { createNewOrder } from "@/firebase/orders";
 import { OrderStatus } from "@/constants/enums";
 import { useCartStore } from "@/store/cartStore";
 import { calculateProductsToTalPrice } from "@/utils/all";
-import { ICartProduct } from "@/interfaces/objects";
 
 function MakeOrderModal() {
 	const [isSavingOrder, setIsSavingOrder] = useState(false);
@@ -31,6 +30,7 @@ function MakeOrderModal() {
 			totalprice: calculateProductsToTalPrice(cartProducts),
 			status: OrderStatus.PENDING,
 			createdAt: new Date(),
+			updatedAt: new Date(),
 			products: cartProducts,
 		});
 

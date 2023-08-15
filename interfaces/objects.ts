@@ -129,6 +129,7 @@ export interface IOrderForFirebase {
 	status: string;
 	products: Array<ICartProduct>;
 	createdAt: Date;
+	updatedAt: Date;
 }
 
 export interface IOrderFromFirebase {
@@ -139,6 +140,7 @@ export interface IOrderFromFirebase {
 	status: string;
 	products: Array<ICartProduct>;
 	createdAt: ITimestampsFromFirebase;
+	updatedAt: ITimestampsFromFirebase;
 }
 
 export interface ITimestampsFromFirebase {
@@ -148,4 +150,10 @@ export interface ITimestampsFromFirebase {
 
 export interface IPath {
 	id: string;
+}
+
+export interface IConfirmationModalvalues {
+	message: string;
+	actionType: string;
+	orderId: string;
 }
