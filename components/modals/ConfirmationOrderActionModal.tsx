@@ -1,7 +1,9 @@
-import { OrderStatus } from "@/constants/enums";
-import { getAllOrders, updateOrderStatus } from "@/firebase/orders";
-import { IConfirmationOrderActionModalProps } from "@/interfaces/props";
 import { useState } from "react";
+
+import { getAllOrders, updateOrderStatus } from "@/firebase/orders";
+
+import { OrderStatus } from "@/constants/enums";
+import { IConfirmationOrderActionModalProps } from "@/interfaces/props";
 
 function ConfirmationOrderActionModal({
 	message,
@@ -27,7 +29,7 @@ function ConfirmationOrderActionModal({
 		updateOrders(ordersUpdated);
 
 		// Close modal and reset inputs
-		document.getElementById("confirmationModal")?.click();
+		document.getElementById("confirmationOrderActionModal")?.click();
 
 		//Set loading as finished
 		setIsConfirming(false);
@@ -37,10 +39,10 @@ function ConfirmationOrderActionModal({
 
 	return (
 		<>
-			<input type="checkbox" id="confirmationModal" className="modal-toggle" />
+			<input type="checkbox" id="confirmationOrderActionModal" className="modal-toggle" />
 			<div className="modal">
 				<div className="modal-box relative max-w-md">
-					<label htmlFor="confirmationModal" className="btn btn-sm btn-circle absolute right-2 top-2" tabIndex={0}>
+					<label htmlFor="confirmationOrderActionModal" className="btn btn-sm btn-circle absolute right-2 top-2" tabIndex={0}>
 						✕
 					</label>
 					<h3 className="font-bold text-lg mb-2 mr-4">Confirmation</h3>

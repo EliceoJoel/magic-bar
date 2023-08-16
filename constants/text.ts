@@ -5,3 +5,4 @@ export const noDataCombosMessage = "There are no products in combos to show";
 export const noDataGamesMessage = "There are no games to show";
 export const noDataCatalogMessage = "There are no products in out catalog to show";
 export const noDataPromotionsMessage = "There are no prodcuts in promotions to show";
+export const noDataUsersMessage = "There are no users to show";

@@ -129,7 +129,7 @@ function GameModal({ updateGames, gameToEdit, changeGameToEdit, updateCatalogGam
 								id="gameNameInput"
 								type="text"
 								placeholder="Type the name of the new game"
-								className="input input-bordered input-primary w-full"
+								className={`input input-bordered input-primary w-full ${errors.name && "input-error"}`}
 								{...register("name")}
 							/>
 							{errors.name && (
@@ -149,7 +149,7 @@ function GameModal({ updateGames, gameToEdit, changeGameToEdit, updateCatalogGam
 								type="number"
 								step={0.01}
 								placeholder="Type the price of the new game"
-								className="input input-bordered input-primary w-full"
+								className={`input input-bordered input-primary w-full ${errors.price && "input-error"}`}
 								{...register("price")}
 							/>
 							{errors.price && (
@@ -167,7 +167,7 @@ function GameModal({ updateGames, gameToEdit, changeGameToEdit, updateCatalogGam
 								id="gameImageFile"
 								accept="image/png, image/jpeg, image/jpg, image/svg, image/webp"
 								type="file"
-								className="file-input file-input-bordered file-input-primary w-full"
+								className={`file-input file-input-bordered file-input-primary w-full ${errors.image && "file-input-error"}`}
 								{...register("image")}
 							/>
 							{errors.image && (

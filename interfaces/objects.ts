@@ -4,6 +4,8 @@ export interface ISignUpUserData {
 	email: string;
 	password: string;
 	role: string;
+	createdAt: Date;
+	updatedAt: Date;
 }
 
 export interface ISignIpUserData {
@@ -16,6 +18,16 @@ export interface IUser {
 	lastName: string;
 	email: string;
 	role: string;
+}
+
+export interface IUserFromFirebase {
+	id: string;
+	name: string;
+	lastName: string;
+	email: string;
+	role: string;
+	createdAt: ITimestampsFromFirebase;
+	updatedAt: ITimestampsFromFirebase;
 }
 
 export interface ICatalog {

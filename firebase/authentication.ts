@@ -1,11 +1,10 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, or, query, setDoc, where } from "firebase/firestore";
 import { auth, db } from "./config";
-import { ISignUpUserData, ISignIpUserData } from '@/interfaces/objects'
+import { ISignUpUserData, ISignIpUserData, IUserFromFirebase } from "@/interfaces/objects";
+import { UserType } from "@/constants/enums";
 
-
-
-export async function signUpUser({ name, lastName, email, password, role }: ISignUpUserData) {
+export async function signUpUser({ name, lastName, email, password, role, createdAt, updatedAt }: ISignUpUserData) {
 	try {
 		// Create user in firebase
 		const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -17,6 +16,8 @@ export async function signUpUser({ name, lastName, email, password, role }: ISig
 			lastName,
 			email,
 			role,
+			createdAt,
+			updatedAt,
 		}).catch((error) => {
 			console.error("Error saving user information in firestore: ", error.message);
 		});
@@ -37,6 +38,7 @@ export async function signInUser({ email, password }: ISignIpUserData) {
 		const docRef = doc(db, `users/${userCredential.user.uid}`);
 		const docSnap = await getDoc(docRef);
 		console.log("User logged in successfully!");
+		console.log(docSnap.data());
 		return docSnap.data();
 	} catch (error) {
 		if (error instanceof Error) {
@@ -46,4 +48,37 @@ export async function signInUser({ email, password }: ISignIpUserData) {
 			console.log("Unexpected error to login user: ", error);
 		}
 	}
+}
+
+export async function getAllClientOrEmployeUsers() {
+	const users: IUserFromFirebase[] = [];
+	try {
+		const usersRef = collection(db, "users");
+		const userByClientOrEmployeeRoleQuery = query(
+			usersRef,
+			or(where("role", "==", UserType.CLIENT), where("role", "==", UserType.EMPLOYEE))
+		);
+		const querySnapshot = await getDocs(userByClientOrEmployeeRoleQuery);
+		querySnapshot.forEach((doc) => {
+			users.push({
+				id: doc.id,
+				name: doc.data().name,
+				lastName: doc.data().lastName,
+				email: doc.data().email,
+				role: doc.data().role,
+				createdAt: doc.data().createdAt,
+				updatedAt: doc.data().updatedAt,
+			});
+		});
+	} catch (error) {
+		console.error("Error getting user by client or employee role: " + error);
+	} finally {
+		return sortDescUsersByDate(users);
+	}
+}
+
+function sortDescUsersByDate(users: IUserFromFirebase[]) {
+	return users.sort(function (a, b) {
+		return new Date(b.updatedAt.seconds * 1000).getTime() - new Date(a.updatedAt.seconds * 1000).getTime();
+	});
 }

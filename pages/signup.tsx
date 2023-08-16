@@ -29,11 +29,16 @@ function SignUp() {
 		setIsSingingUp(true);
 
 		// Sing up on firebase
-		const userLogged = await signUpUser({ ...data, role: UserType.CLIENT });
+		const userLogged = await signUpUser({
+			...data,
+			role: UserType.CLIENT,
+			createdAt: new Date(),
+			updatedAt: new Date(),
+		});
 
 		// Save user logged in store
 		registerUserinStore(userLogged);
-		
+
 		// Redirect to catalog page
 		router.push("/catalog");
 

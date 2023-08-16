@@ -6,6 +6,7 @@ import {
 	IOrderFromFirebase,
 	IProductFromFirebase,
 	IUser,
+	IUserFromFirebase,
 } from "@/interfaces/objects";
 import { IConfirmationOrderActionModalProps } from "@/interfaces/props";
 
@@ -70,4 +71,14 @@ export const emptyConfirmationModalValues: IConfirmationModalvalues = {
 	orderId: "",
 	message: "",
 	actionType: "",
+};
+
+export const emptyUser: IUserFromFirebase = {
+	id: "",
+	name: "",
+	lastName: "",
+	role: "",
+	email: "",
+	createdAt: { seconds: 0, nanoseconds: 0 },
+	updatedAt: { seconds: 0, nanoseconds: 0 },
 };

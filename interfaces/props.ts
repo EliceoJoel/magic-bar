@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { ICatalog, IComboFromFirebase, IGameFromFirebase, IOrderFromFirebase, IProductFromFirebase } from "./objects";
+import { ICatalog, IComboFromFirebase, IGameFromFirebase, IOrderFromFirebase, IProductFromFirebase, IUserFromFirebase } from "./objects";
 
 export interface IProductModalProps {
 	productToEdit: IProductFromFirebase;
@@ -35,4 +35,10 @@ export interface IConfirmationOrderActionModalProps {
 	actionType: string;
 	orderId: string;
 	updateOrders: Dispatch<SetStateAction<IOrderFromFirebase[]>>;
+}
+
+export interface IUserModalProps {
+	userToEdit: IUserFromFirebase;
+	changeUserToEdit: Dispatch<SetStateAction<IUserFromFirebase>>;
+	updateUsers: Dispatch<SetStateAction<IUserFromFirebase[]>>;
 }

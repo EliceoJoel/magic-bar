@@ -23,7 +23,7 @@ import { getLastNPromotions } from "@/firebase/promotions";
 import { getLastNCombos } from "@/firebase/combos";
 import { getLastNGames } from "@/firebase/games";
 import { ICatalog, IComboFromFirebase, IGameFromFirebase, IProductFromFirebase } from "@/interfaces/objects";
-import { isCatalogEmpty, isUserEmployee } from "@/utils/validation";
+import { isCatalogEmpty, isUserEmployee, isUserOwner } from "@/utils/validation";
 import { emptyCatalog, emptyCombo, emptyGame, emptyProduct } from "@/constants/all";
 import { isNotBlank } from "@/utils/StringUtils";
 import { noDataCatalogMessage } from "@/constants/text";
@@ -60,7 +60,7 @@ function AllCatalog() {
 		<Layout>
 			<div className="flex justify-between items-center mb-4">
 				<h1 className="text-xl md:text-2xl">All Catalog</h1>
-				{isUserEmployee(userLogged) && (
+				{(isUserEmployee(userLogged) || isUserOwner(userLogged)) && (
 					<label htmlFor="productModal" className="btn btn-primary btn-sm md:btn-md normal-case">
 						New product
 					</label>
@@ -127,7 +127,7 @@ function AllCatalog() {
 														width={1000}
 														height={1000}
 													/>
-													{isUserEmployee(userLogged) && (
+													{(isUserEmployee(userLogged) || isUserOwner(userLogged)) && (
 														<button
 															className="btn btn-circle btn-primary absolute top-2 right-2"
 															onClick={() =>
@@ -150,7 +150,7 @@ function AllCatalog() {
 													)}
 												</figure>
 												<div className="card-body gap-0">
-													{isUserEmployee(userLogged) ? (
+													{(isUserEmployee(userLogged) || isUserOwner(userLogged)) ? (
 														<label
 															htmlFor="productModal"
 															className="card-title text-base cursor-pointer"
@@ -194,7 +194,7 @@ function AllCatalog() {
 														width={1000}
 														height={1000}
 													/>
-													{isUserEmployee(userLogged) && (
+													{(isUserEmployee(userLogged) || isUserOwner(userLogged)) && (
 														<button
 															className="btn btn-circle btn-primary absolute top-2 right-2"
 															onClick={() => addProductToCart({ ...combo, quantity: 1 })}
@@ -204,7 +204,7 @@ function AllCatalog() {
 													)}
 												</figure>
 												<div className="card-body gap-0">
-													{isUserEmployee(userLogged) ? (
+													{(isUserEmployee(userLogged) || isUserOwner(userLogged)) ? (
 														<label
 															htmlFor="comboModal"
 															className="card-title text-base cursor-pointer"
@@ -247,7 +247,7 @@ function AllCatalog() {
 														width={1000}
 														height={1000}
 													/>
-													{isUserEmployee(userLogged) && (
+													{(isUserEmployee(userLogged) || isUserOwner(userLogged)) && (
 														<button
 															className="btn btn-circle btn-primary absolute top-2 right-2"
 															onClick={() => addProductToCart({ ...game, quantity: 1 })}
@@ -257,7 +257,7 @@ function AllCatalog() {
 													)}
 												</figure>
 												<div className="card-body gap-0">
-													{isUserEmployee(userLogged) ? (
+													{(isUserEmployee(userLogged) || isUserOwner(userLogged)) ? (
 														<label
 															htmlFor="gameModal"
 															className="card-title text-base cursor-pointer"

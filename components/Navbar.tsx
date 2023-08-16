@@ -10,7 +10,7 @@ import { HiOutlineMenu, HiOutlineUserCircle, HiOutlineShoppingBag, HiOutlineMoon
 
 import { useUserStore } from "@/store/userStore";
 import { useCartStore } from "@/store/cartStore";
-import { isUserEmployee, userIsLogged } from "@/utils/validation";
+import { isUserEmployee, isUserOwner, userIsLogged } from "@/utils/validation";
 
 interface OpenDrawer {
 	openDrawer: Function;
@@ -53,7 +53,7 @@ function Navbar({ openDrawer }: OpenDrawer) {
 				</button>
 				{userIsLogged(userLogged) ? (
 					<>
-						{isUserEmployee(userLogged) && (
+						{(isUserEmployee(userLogged) || isUserOwner(userLogged)) && (
 							<label
 								htmlFor="theDrawer"
 								tabIndex={0}

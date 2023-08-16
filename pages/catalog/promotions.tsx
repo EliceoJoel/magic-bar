@@ -12,7 +12,7 @@ import { useCartStore } from "@/store/cartStore";
 import { useUserStore } from "@/store/userStore";
 import { IProductFromFirebase } from "@/interfaces/objects";
 import { getAllPromotions } from "@/firebase/promotions";
-import { isUserEmployee } from "@/utils/validation";
+import { isUserEmployee, isUserOwner } from "@/utils/validation";
 import { emptyProduct } from "@/constants/all";
 import { isNotBlank } from "@/utils/StringUtils";
 import { noDataPromotionsMessage } from "@/constants/text";
@@ -69,7 +69,7 @@ function Promotions() {
 											width={1000}
 											height={1000}
 										/>
-										{isUserEmployee(userLogged) && (
+										{(isUserEmployee(userLogged) || isUserOwner(userLogged)) && (
 											<button
 												className="btn btn-circle btn-primary absolute top-2 right-2"
 												onClick={() =>
@@ -90,7 +90,7 @@ function Promotions() {
 										)}
 									</figure>
 									<div className="card-body gap-0">
-										{isUserEmployee(userLogged) ? (
+										{(isUserEmployee(userLogged) || isUserOwner(userLogged)) ? (
 											<label
 												htmlFor="productModal"
 												className="card-title text-base cursor-pointer"

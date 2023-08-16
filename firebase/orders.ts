@@ -74,8 +74,8 @@ export async function getOrdersByStatus(status: string) {
 	const orders: IOrderFromFirebase[] = [];
 	try {
 		const ordersRef = collection(db, "orders");
-		const orderByDescQuery = query(ordersRef, where("status", "==", status));
-		const querySnapshot = await getDocs(orderByDescQuery);
+		const ordersByStatusQuery = query(ordersRef, where("status", "==", status));
+		const querySnapshot = await getDocs(ordersByStatusQuery);
 		querySnapshot.forEach((doc) => {
 			orders.push({
 				id: doc.id,

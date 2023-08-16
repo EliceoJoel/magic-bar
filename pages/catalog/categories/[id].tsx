@@ -13,7 +13,7 @@ import { useUserStore } from "@/store/userStore";
 import { productCategories } from "@/data/product";
 import { getProductsBycategory } from "@/firebase/product";
 import { IPath, IProductFromFirebase } from "@/interfaces/objects";
-import { isUserEmployee } from "@/utils/validation";
+import { isUserEmployee, isUserOwner } from "@/utils/validation";
 import { emptyProduct } from "@/constants/all";
 import { isNotBlank } from "@/utils/StringUtils";
 import { noDataCategoryMessage } from "@/constants/text";
@@ -81,7 +81,7 @@ function Category({ categoryId }: { categoryId: string }) {
 											width={1000}
 											height={1000}
 										/>
-										{isUserEmployee(userLogged) && (
+										{(isUserEmployee(userLogged) || isUserOwner(userLogged)) && (
 											<button
 												className="btn btn-circle btn-primary absolute top-2 right-2"
 												onClick={() =>
@@ -102,7 +102,7 @@ function Category({ categoryId }: { categoryId: string }) {
 										)}
 									</figure>
 									<div className="card-body gap-0">
-										{isUserEmployee(userLogged) ? (
+										{(isUserEmployee(userLogged) || isUserOwner(userLogged)) ? (
 											<label
 												htmlFor="productModal"
 												className="card-title text-base cursor-pointer"
