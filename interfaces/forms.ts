@@ -38,3 +38,12 @@ export interface INewOrderInputs {
 	tableNumber: number;
 	details: string;
 }
+
+export interface INewUserInputs {
+	name: string;
+	lastName: string;
+	role: string;
+	email: string;
+	password: string;
+	confirmPassword: string;
+}

@@ -7,6 +7,7 @@ import {
 	IOrderFromFirebase,
 	IProductFromFirebase,
 	IUser,
+	IUserFromFirebase,
 } from "@/interfaces/objects";
 import { isNotBlank } from "./StringUtils";
 
@@ -68,6 +69,16 @@ export function comboToEditExist(comboToEdit: IComboFromFirebase) {
 export function gameToEditExist(gameToEdit: IGameFromFirebase) {
 	return (
 		isNotBlank(gameToEdit.id) && isNotBlank(gameToEdit.name) && isNotBlank(gameToEdit.image) && gameToEdit.price > 0
+	);
+}
+
+export function userToEditExist(userToEdit: IUserFromFirebase) {
+	return (
+		isNotBlank(userToEdit.id) &&
+		isNotBlank(userToEdit.name) &&
+		isNotBlank(userToEdit.lastName) &&
+		isNotBlank(userToEdit.role) &&
+		isNotBlank(userToEdit.email)
 	);
 }
 

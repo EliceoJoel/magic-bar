@@ -12,7 +12,7 @@ import { useCartStore } from "@/store/cartStore";
 import { useUserStore } from "@/store/userStore";
 import { getAllCombos } from "@/firebase/combos";
 import { IComboFromFirebase } from "@/interfaces/objects";
-import { isUserEmployee } from "@/utils/validation";
+import { isUserEmployee, isUserOwner } from "@/utils/validation";
 import { emptyCombo } from "@/constants/all";
 import { noDataCombosMessage } from "@/constants/text";
 
@@ -37,7 +37,7 @@ function Combos() {
 		<Layout>
 			<div className="flex justify-between items-center mb-4">
 				<h1 className="text-xl md:text-2xl">Combos</h1>
-				{isUserEmployee(userLogged) && (
+				{(isUserEmployee(userLogged) || isUserOwner(userLogged)) && (
 					<label htmlFor="comboModal" className="btn btn-primary btn-sm normal-case md:btn-md">
 						New combo
 					</label>
@@ -73,7 +73,7 @@ function Combos() {
 											width={1000}
 											height={1000}
 										/>
-										{isUserEmployee(userLogged) && (
+										{(isUserEmployee(userLogged) || isUserOwner(userLogged)) && (
 											<button
 												className="btn btn-circle btn-primary absolute top-2 right-2"
 												onClick={() => addComboToCart({ ...combo, quantity: 1 })}
@@ -83,7 +83,7 @@ function Combos() {
 										)}
 									</figure>
 									<div className="card-body gap-0">
-										{isUserEmployee(userLogged) ? (
+										{(isUserEmployee(userLogged) || isUserOwner(userLogged)) ? (
 											<label
 												htmlFor="comboModal"
 												className="card-title text-base cursor-pointer"

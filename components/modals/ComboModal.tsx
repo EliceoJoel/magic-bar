@@ -139,7 +139,7 @@ function ComboModal({
 								id="comboNameInput"
 								type="text"
 								placeholder="Type the name of the new combo"
-								className="input input-bordered input-primary w-full"
+								className={`input input-bordered input-primary w-full ${errors.name && "input-error"}`}
 								{...register("name")}
 							/>
 							{errors.name && (
@@ -159,7 +159,7 @@ function ComboModal({
 								type="number"
 								step={0.01}
 								placeholder="Type the promotional price of the new combo"
-								className="input input-bordered input-primary w-full"
+								className={`input input-bordered input-primary w-full ${errors.price && "input-error"}`}
 								{...register("price")}
 							/>
 							{errors.price && (
@@ -179,7 +179,7 @@ function ComboModal({
 								type="number"
 								step={0.01}
 								placeholder="Type the normal price of the new combo"
-								className="input input-bordered input-primary w-full"
+								className={`input input-bordered input-primary w-full ${errors.normalPrice && "input-error"}`}
 								{...register("normalPrice")}
 							/>
 							{errors.normalPrice && (
@@ -197,7 +197,7 @@ function ComboModal({
 								id="comboImageFile"
 								accept="image/png, image/jpeg, image/jpg, image/svg, image/webp"
 								type="file"
-								className="file-input file-input-bordered file-input-primary w-full"
+								className={`file-input file-input-bordered file-input-primary w-full ${errors.image && "file-input-error"}`}
 								{...register("image")}
 							/>
 							{errors.image && (

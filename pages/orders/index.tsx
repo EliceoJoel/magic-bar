@@ -5,7 +5,7 @@ import Link from "next/link";
 import Layout from "@/components/Layout";
 import Loading from "@/components/Loading";
 import NoData from "@/components/NoData";
-import ConfirmationModal from "@/components/modals/ConfirmationOrderActionModal";
+import ConfirmationOrderActionModal from "@/components/modals/ConfirmationOrderActionModal";
 
 import { getAllOrders, getOrdersByStatus } from "@/firebase/orders";
 import { useUserStore } from "@/store/userStore";
@@ -147,7 +147,7 @@ function Orders() {
 												{order.status === OrderStatus.PENDING && (
 													<div className="flex gap-4">
 														<label
-															htmlFor="confirmationModal"
+															htmlFor="confirmationOrderActionModal"
 															className="btn btn-sm btn-error capitalize"
 															onClick={() => {
 																setConfirmModalvalues({
@@ -160,7 +160,7 @@ function Orders() {
 															Cancel
 														</label>
 														<label
-															htmlFor="confirmationModal"
+															htmlFor="confirmationOrderActionModal"
 															className="btn btn-sm btn-success capitalize"
 															onClick={() => {
 																setConfirmModalvalues({
@@ -194,7 +194,7 @@ function Orders() {
 					)}
 				</>
 			)}
-			<ConfirmationModal {...confirmModalValues} updateOrders={setOrders} />
+			<ConfirmationOrderActionModal {...confirmModalValues} updateOrders={setOrders} />
 		</Layout>
 	);
 }

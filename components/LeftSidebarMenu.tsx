@@ -56,7 +56,7 @@ function LeftSidebarMenu() {
 					Games
 				</Link>
 			</li>
-			{isUserEmployee(userLogged) && (
+			{(isUserEmployee(userLogged) || isUserOwner(userLogged)) && (
 				<li className="bg-white rounded-btn mb-4 shadow-lg">
 					<Link href="/orders">
 						<BsCardChecklist className="h-6 w-6" />

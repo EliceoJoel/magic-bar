@@ -157,7 +157,7 @@ function ProductModal({
 								id="productNameInput"
 								type="text"
 								placeholder="Type the name of the product"
-								className="input input-bordered input-primary w-full"
+								className={`input input-bordered input-primary w-full ${errors.name && "input-error"}`}
 								{...register("name")}
 							/>
 							{errors.name && (
@@ -176,7 +176,7 @@ function ProductModal({
 								id="productBrandInput"
 								type="text"
 								placeholder="Type the brand of the product"
-								className="input input-bordered input-primary w-full"
+								className={`input input-bordered input-primary w-full ${errors.brand && "input-error"}`}
 								{...register("brand")}
 							/>
 							{errors.brand && (
@@ -192,7 +192,7 @@ function ProductModal({
 							</label>
 							<select
 								id="productCategorySelect"
-								className="select select-primary text-base font-normal w-full"
+								className={`select select-primary text-base font-normal w-full ${errors.category && "select-error"}`}
 								defaultValue=""
 								{...register("category")}
 							>
@@ -222,7 +222,7 @@ function ProductModal({
 								type="number"
 								step={0.01}
 								placeholder="Type the base price of the product"
-								className="input input-bordered input-primary w-full"
+								className={`input input-bordered input-primary w-full ${errors.price && "input-error"}`}
 								{...register("price")}
 							/>
 							{errors.price && (
@@ -242,7 +242,7 @@ function ProductModal({
 								id="productImageFile"
 								accept="image/png, image/jpeg, image/jpg, image/svg, image/webp"
 								type="file"
-								className="file-input file-input-bordered file-input-primary w-full"
+								className={`file-input file-input-bordered file-input-primary w-full ${errors.image && "file-input-error"}`}
 								{...register("image")}
 							/>
 							{errors.image && (
@@ -278,7 +278,7 @@ function ProductModal({
 								type="number"
 								step={0.01}
 								placeholder="Type the promotion price of the product"
-								className="input input-bordered input-primary w-full"
+								className={`input input-bordered input-primary w-full ${errors.promotionPrice && "input-error"}`}
 								{...register("promotionPrice")}
 							/>
 							{errors.promotionPrice && (

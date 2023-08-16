@@ -38,6 +38,7 @@ function SignIn() {
 			setError("password", { type: "value", message: "Incorrect email or password" });
 		} else {
 			// Save user logged in store
+			console.log(userLoggedIn);
 			registerUserinStore(userLoggedIn);
 			// Redirect to catalog page
 			router.push("/catalog");

@@ -19,6 +19,24 @@ export const signInFormSchema = Yup.object().shape({
 	password: Yup.string().required("Password is required field"),
 });
 
+export const newUserSchema = Yup.object().shape({
+	name: Yup.string().required("Name is required field"),
+	lastName: Yup.string().required("Last name is required field"),
+	email: Yup.string().required("Email is required field").matches(emailRegExp, "Invalid email pattern"),
+	role: Yup.string().required("Select a role for user is required"),
+	password: Yup.string().required("Password is required field").min(6, "Minimum 6 characters required in password"),
+	confirmPassword: Yup.string()
+		.required("Confirm password is required field")
+		.oneOf([Yup.ref("password")], "Passwords does not match"),
+});
+
+export const editUserSchema = Yup.object().shape({
+	name: Yup.string().required("Name is required field"),
+	lastName: Yup.string().required("Last name is required field"),
+	email: Yup.string().required("Email is required field").matches(emailRegExp, "Invalid email pattern"),
+	role: Yup.string().required("Select a role for user is required"),
+});
+
 export const newProductSchema = Yup.object().shape({
 	name: Yup.string().required("Name is required field"),
 	brand: Yup.string().required("Brand is required field"),
