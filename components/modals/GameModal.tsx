@@ -48,7 +48,9 @@ function GameModal({ updateGames, gameToEdit, changeGameToEdit, updateCatalogGam
 
 		// Close modal and reset inputs
 		document.getElementById("gameModal")?.click();
-		reset();
+		setTimeout(() => {
+			reset();
+		}, 200);
 
 		//Set loading as finished
 		setIsSavingGame(false);
@@ -61,12 +63,15 @@ function GameModal({ updateGames, gameToEdit, changeGameToEdit, updateCatalogGam
 		setIsSavingGame(true);
 
 		// Update game information in firebase
-		await updateGame({
-			...data,
-			id: gameToEdit.id,
-			image: data.image[0],
-			updatedAt: new Date(),
-		});
+		await updateGame(
+			{
+				...data,
+				id: gameToEdit.id,
+				image: data.image[0],
+				updatedAt: new Date(),
+			},
+			gameToEdit.image
+		);
 
 		// Update games displayed with the edited game
 		if (updateGames !== null) {
@@ -83,8 +88,10 @@ function GameModal({ updateGames, gameToEdit, changeGameToEdit, updateCatalogGam
 
 		// Close modal and reset inputs
 		document.getElementById("gameModal")?.click();
-		reset();
-		changeGameToEdit(emptyGame);
+		setTimeout(() => {
+			reset();
+			changeGameToEdit(emptyGame);
+		}, 200);
 
 		//Set loading as finished
 		setIsSavingGame(false);
@@ -105,8 +112,10 @@ function GameModal({ updateGames, gameToEdit, changeGameToEdit, updateCatalogGam
 						className="btn btn-sm btn-circle absolute right-2 top-2"
 						tabIndex={0}
 						onClick={() => {
-							reset();
-							changeGameToEdit(emptyGame);
+							setTimeout(() => {
+								reset();
+								changeGameToEdit(emptyGame);
+							}, 200);
 						}}
 					>
 						✕
@@ -167,7 +176,9 @@ function GameModal({ updateGames, gameToEdit, changeGameToEdit, updateCatalogGam
 								id="gameImageFile"
 								accept="image/png, image/jpeg, image/jpg, image/svg, image/webp"
 								type="file"
-								className={`file-input file-input-bordered file-input-primary w-full ${errors.image && "file-input-error"}`}
+								className={`file-input file-input-bordered file-input-primary w-full ${
+									errors.image && "file-input-error"
+								}`}
 								{...register("image")}
 							/>
 							{errors.image && (
@@ -182,8 +193,10 @@ function GameModal({ updateGames, gameToEdit, changeGameToEdit, updateCatalogGam
 							htmlFor="gameModal"
 							className="btn capitalize"
 							onClick={() => {
-								reset();
-								changeGameToEdit(emptyGame);
+								setTimeout(() => {
+									reset();
+									changeGameToEdit(emptyGame);
+								}, 200);
 							}}
 						>
 							Cancel

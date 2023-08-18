@@ -169,3 +169,11 @@ export interface IConfirmationModalvalues {
 	actionType: string;
 	orderId: string;
 }
+
+export interface IUserToUpdateForFirebase {
+	id: string;
+	name: string;
+	lastName: string;
+	role: string;
+	updatedAt: Date;
+}

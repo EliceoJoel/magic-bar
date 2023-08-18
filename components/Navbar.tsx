@@ -75,9 +75,7 @@ function Navbar({ openDrawer }: OpenDrawer) {
 						)}
 						<div className="dropdown dropdown-end dropdown-hover">
 							<label tabIndex={0} className="btn btn-ghost btn-circle">
-								<div className="indicator">
-									<HiOutlineUserCircle className="h-6 w-6" />
-								</div>
+								<HiOutlineUserCircle className="h-6 w-6" />
 							</label>
 							<ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
 								<li>

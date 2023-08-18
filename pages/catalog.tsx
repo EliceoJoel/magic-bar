@@ -15,7 +15,6 @@ import Loading from "@/components/Loading";
 import ComboModal from "@/components/modals/ComboModal";
 import GameModal from "@/components/modals/GameModal";
 
-import { promotions, combos, games } from "data/test";
 import { productCategories } from "data/product";
 import { useCartStore } from "@/store/cartStore";
 import { useUserStore } from "@/store/userStore";
@@ -90,7 +89,7 @@ function AllCatalog() {
 						<Link
 							className="card card-compact bg-base-100 shadow-xl"
 							key={index}
-							href={`/catalog/categories/${category.id}`}
+							href={`/categories/${category.id}`}
 							tabIndex={0}
 						>
 							<figure className="relative">
@@ -172,7 +171,7 @@ function AllCatalog() {
 												</div>
 											</div>
 										))}
-										{promotions.length === 5 && (
+										{catalog.promotions.length === 5 && (
 											<SeeAllItems title="promotions" icon={<HiOutlineSparkles className="h-16 w-16" />} />
 										)}
 									</div>
@@ -225,7 +224,7 @@ function AllCatalog() {
 												</div>
 											</div>
 										))}
-										{combos.length === 5 && (
+										{catalog.combos.length === 5 && (
 											<SeeAllItems title="combos" icon={<GiWineBottle className="h-16 w-16" />} />
 										)}
 									</div>
@@ -273,7 +272,7 @@ function AllCatalog() {
 												</div>
 											</div>
 										))}
-										{games.length === 5 && (
+										{catalog.games.length === 5 && (
 											<SeeAllItems title="games" icon={<IoDiceOutline className="h-16 w-16" />} />
 										)}
 									</div>

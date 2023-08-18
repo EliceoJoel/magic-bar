@@ -33,7 +33,6 @@ export const newUserSchema = Yup.object().shape({
 export const editUserSchema = Yup.object().shape({
 	name: Yup.string().required("Name is required field"),
 	lastName: Yup.string().required("Last name is required field"),
-	email: Yup.string().required("Email is required field").matches(emailRegExp, "Invalid email pattern"),
 	role: Yup.string().required("Select a role for user is required"),
 });
 

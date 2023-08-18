@@ -42,3 +42,8 @@ export interface IUserModalProps {
 	changeUserToEdit: Dispatch<SetStateAction<IUserFromFirebase>>;
 	updateUsers: Dispatch<SetStateAction<IUserFromFirebase[]>>;
 }
+
+export interface IDeleteUserConfirmationModalProps {
+	userId: string;
+	updateUsers: Dispatch<SetStateAction<IUserFromFirebase[]>>
+}

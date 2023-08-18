@@ -39,7 +39,9 @@ function MakeOrderModal() {
 
 		// Close modal and reset inputs
 		document.getElementById("makeOrderModal")?.click();
-		reset();
+		setTimeout(() => {
+			reset();
+		}, 200);
 
 		// Close cart right side drawer
 		document.getElementById("theDrawer")?.click();
@@ -59,7 +61,11 @@ function MakeOrderModal() {
 						htmlFor="makeOrderModal"
 						className="btn btn-sm btn-circle absolute right-2 top-2"
 						tabIndex={0}
-						onClick={() => reset()}
+						onClick={() => {
+							setTimeout(() => {
+								reset();
+							}, 200);
+						}}
 					>
 						✕
 					</label>
@@ -104,7 +110,15 @@ function MakeOrderModal() {
 						</div>
 					</div>
 					<div className="modal-action">
-						<label htmlFor="makeOrderModal" className="btn capitalize" onClick={() => reset()}>
+						<label
+							htmlFor="makeOrderModal"
+							className="btn capitalize"
+							onClick={() => {
+								setTimeout(() => {
+									reset();
+								}, 200);
+							}}
+						>
 							Cancel
 						</label>
 						<button type="submit" className={`btn btn-primary capitalize ${isSavingOrder && "loading"}`}>

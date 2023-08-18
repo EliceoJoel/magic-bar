@@ -32,13 +32,26 @@ function Orders() {
 			setIsContentLoading(false);
 		};
 
+		const getOrdersByStatusFromFirebase = async () => {
+			const data = await getOrdersByStatus(router.query.filter as string);
+			setOrders(data);
+			setIsContentLoading(false);
+		};
+
 		// Protecting route
 		if (!userIsLogged(userLogged) || isUserClient(userLogged)) {
 			router.push("/catalog");
 		} else {
-			getAllOrdersFromFirebase();
+			//Getting data according to filter selected
+			if (router.query.filter === "All" || router.query.filter === undefined) {
+				getAllOrdersFromFirebase();
+				setOrderStatusFilterSelected("All");
+			} else {
+				getOrdersByStatusFromFirebase();
+				setOrderStatusFilterSelected(router.query.filter as string);
+			}
 		}
-	}, [router, userLogged]);
+	}, [router, userLogged, orderStatusFilterSelected]);
 
 	const getStatusClass = (status: string) => {
 		switch (status) {
@@ -54,25 +67,8 @@ function Orders() {
 	};
 
 	const handleSelectOrderStatusFilter = async (selectedStatusFilter: string) => {
-		// Set content loading as started
 		setIsContentLoading(true);
-
-		// Change order status filter selected state
-		setOrderStatusFilterSelected(selectedStatusFilter);
-
-		// Get orders by status
-		let ordersByStatus: IOrderFromFirebase[] = [];
-		if (selectedStatusFilter === "All") {
-			ordersByStatus = await getAllOrders();
-		} else {
-			ordersByStatus = await getOrdersByStatus(selectedStatusFilter);
-		}
-
-		// Update orders displayed
-		setOrders(ordersByStatus);
-
-		// Set content loading as finished
-		setIsContentLoading(false);
+		router.push({ pathname: "/orders", query: { filter: selectedStatusFilter } });
 	};
 
 	return (

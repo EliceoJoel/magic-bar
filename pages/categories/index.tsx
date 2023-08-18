@@ -15,7 +15,7 @@ function Categories() {
 				{productCategories.map((category, index) => (
 					<Link
 						className="card card-compact bg-base-100 shadow-xl"
-						href={`/catalog/categories/${category.id}`}
+						href={`/categories/${category.id}`}
 						key={index}
 						tabIndex={0}
 					>

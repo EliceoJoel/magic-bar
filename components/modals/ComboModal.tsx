@@ -15,7 +15,6 @@ function ComboModal({
 	updateCatalogCombos,
 	catalogData,
 }: IComboModalProps) {
-	
 	const [isSavingCombo, setIsSavingCombo] = useState(false);
 
 	const {
@@ -56,7 +55,9 @@ function ComboModal({
 
 		// Close modal and reset inputs
 		document.getElementById("comboModal")?.click();
-		reset();
+		setTimeout(() => {
+			reset();
+		}, 200);
 
 		//Set loading as finished
 		setIsSavingCombo(false);
@@ -69,12 +70,15 @@ function ComboModal({
 		setIsSavingCombo(true);
 
 		// Update combo in firebase
-		await updateCombo({
-			...data,
-			id: comboToEdit.id,
-			image: data.image[0],
-			updatedAt: new Date(),
-		});
+		await updateCombo(
+			{
+				...data,
+				id: comboToEdit.id,
+				image: data.image[0],
+				updatedAt: new Date(),
+			},
+			comboToEdit.image
+		);
 
 		// Update combos displayed with the new edited
 		if (updateCombos !== null) {
@@ -91,8 +95,10 @@ function ComboModal({
 
 		// Close modal and reset inputs
 		document.getElementById("comboModal")?.click();
-		reset();
-		changeComboToEdit(emptyCombo);
+		setTimeout(() => {
+			reset();
+			changeComboToEdit(emptyCombo);
+		}, 200);
 
 		//Set loading as finished
 		setIsSavingCombo(false);
@@ -113,8 +119,10 @@ function ComboModal({
 						className="btn btn-sm btn-circle absolute right-2 top-2"
 						tabIndex={0}
 						onClick={() => {
-							reset();
-							changeComboToEdit(emptyCombo);
+							setTimeout(() => {
+								reset();
+								changeComboToEdit(emptyCombo);
+							}, 200);
 						}}
 					>
 						✕
@@ -197,7 +205,9 @@ function ComboModal({
 								id="comboImageFile"
 								accept="image/png, image/jpeg, image/jpg, image/svg, image/webp"
 								type="file"
-								className={`file-input file-input-bordered file-input-primary w-full ${errors.image && "file-input-error"}`}
+								className={`file-input file-input-bordered file-input-primary w-full ${
+									errors.image && "file-input-error"
+								}`}
 								{...register("image")}
 							/>
 							{errors.image && (
@@ -212,8 +222,10 @@ function ComboModal({
 							htmlFor="comboModal"
 							className="btn capitalize"
 							onClick={() => {
-								reset();
-								changeComboToEdit(emptyCombo);
+								setTimeout(() => {
+									reset();
+									changeComboToEdit(emptyCombo);
+								}, 200);
 							}}
 						>
 							Cancel
