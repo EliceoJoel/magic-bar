@@ -68,7 +68,9 @@ function ProductModal({
 
 		// Close modal and reset inputs
 		document.getElementById("productModal")?.click();
-		reset();
+		setTimeout(() => {
+			reset();
+		}, 200);
 
 		// Set loading as finished
 		setIsSavingProduct(false);
@@ -81,13 +83,16 @@ function ProductModal({
 		setIsSavingProduct(true);
 
 		// Update product in firebase
-		await updateProduct({
-			...data,
-			id: productToEdit.id,
-			promotionPrice: data.promotionPrice !== undefined ? data.promotionPrice : 0,
-			image: data.image[0],
-			updateAt: new Date(),
-		});
+		await updateProduct(
+			{
+				...data,
+				id: productToEdit.id,
+				promotionPrice: data.promotionPrice !== undefined ? data.promotionPrice : 0,
+				image: data.image[0],
+				updateAt: new Date(),
+			},
+			productToEdit.image
+		);
 
 		// Update products displayed with the new edited
 		if (updateProducts !== null) {
@@ -109,8 +114,10 @@ function ProductModal({
 
 		// Close modal and reset inputs
 		document.getElementById("productModal")?.click();
-		reset();
-		changeProductToEdit(emptyProduct);
+		setTimeout(() => {
+			reset();
+			changeProductToEdit(emptyProduct);
+		}, 200);
 
 		// Set loading as finished
 		setIsSavingProduct(false);
@@ -131,8 +138,10 @@ function ProductModal({
 						className="btn btn-sm btn-circle absolute right-2 top-2"
 						tabIndex={0}
 						onClick={() => {
-							reset();
-							changeProductToEdit !== null && changeProductToEdit(emptyProduct);
+							setTimeout(() => {
+								reset();
+								changeProductToEdit !== null && changeProductToEdit(emptyProduct);
+							}, 200);
 						}}
 					>
 						✕
@@ -192,7 +201,9 @@ function ProductModal({
 							</label>
 							<select
 								id="productCategorySelect"
-								className={`select select-primary text-base font-normal w-full ${errors.category && "select-error"}`}
+								className={`select select-primary text-base font-normal w-full ${
+									errors.category && "select-error"
+								}`}
 								defaultValue=""
 								{...register("category")}
 							>
@@ -242,7 +253,9 @@ function ProductModal({
 								id="productImageFile"
 								accept="image/png, image/jpeg, image/jpg, image/svg, image/webp"
 								type="file"
-								className={`file-input file-input-bordered file-input-primary w-full ${errors.image && "file-input-error"}`}
+								className={`file-input file-input-bordered file-input-primary w-full ${
+									errors.image && "file-input-error"
+								}`}
 								{...register("image")}
 							/>
 							{errors.image && (
@@ -278,7 +291,9 @@ function ProductModal({
 								type="number"
 								step={0.01}
 								placeholder="Type the promotion price of the product"
-								className={`input input-bordered input-primary w-full ${errors.promotionPrice && "input-error"}`}
+								className={`input input-bordered input-primary w-full ${
+									errors.promotionPrice && "input-error"
+								}`}
 								{...register("promotionPrice")}
 							/>
 							{errors.promotionPrice && (
@@ -293,8 +308,10 @@ function ProductModal({
 							htmlFor="productModal"
 							className="btn capitalize"
 							onClick={() => {
-								reset();
-								changeProductToEdit !== null && changeProductToEdit(emptyProduct);
+								setTimeout(() => {
+									reset();
+									changeProductToEdit !== null && changeProductToEdit(emptyProduct);
+								}, 200);
 							}}
 						>
 							Cancel

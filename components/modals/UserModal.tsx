@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { getAllClientOrEmployeUsers, signUpUser } from "@/firebase/authentication";
+import { getAllClientOrEmployeUsers, signUpUser, updateUserInformation } from "@/firebase/authentication";
 
 import { INewUserInputs } from "@/interfaces/forms";
 import { IUserModalProps } from "@/interfaces/props";
@@ -31,7 +31,6 @@ function UserModal({ updateUsers, userToEdit, changeUserToEdit }: IUserModalProp
 			setValue("name", userToEdit.name);
 			setValue("lastName", userToEdit.lastName);
 			setValue("role", userToEdit.role);
-			setValue("email", userToEdit.email);
 		}
 	}, [setValue, userToEdit]);
 
@@ -65,11 +64,11 @@ function UserModal({ updateUsers, userToEdit, changeUserToEdit }: IUserModalProp
 		setIsSavingUser(true);
 
 		// Update user information in firebase
-		// await updateUser({
-		// 	...data,
-		// 	id: gameToEdit.id,
-		// 	updatedAt: new Date(),
-		// });
+		await updateUserInformation({
+			...data,
+			id: userToEdit.id,
+			updatedAt: new Date(),
+		});
 
 		// Update users displayed with the edited user
 		const clientOrEmployeUsersUpdated = await getAllClientOrEmployeUsers();
@@ -77,8 +76,10 @@ function UserModal({ updateUsers, userToEdit, changeUserToEdit }: IUserModalProp
 
 		// Close modal and reset inputs
 		document.getElementById("userModal")?.click();
-		reset();
-		changeUserToEdit(emptyUser);
+		setTimeout(() => {
+			reset();
+			changeUserToEdit(emptyUser);
+		}, 200);
 
 		//Set loading as finished
 		setIsSavingUser(false);
@@ -98,8 +99,10 @@ function UserModal({ updateUsers, userToEdit, changeUserToEdit }: IUserModalProp
 						className="btn btn-sm btn-circle absolute right-2 top-2"
 						tabIndex={0}
 						onClick={() => {
-							reset();
-							changeUserToEdit(emptyUser);
+							setTimeout(() => {
+								reset();
+								changeUserToEdit(emptyUser);
+							}, 200);
 						}}
 					>
 						✕
@@ -175,73 +178,81 @@ function UserModal({ updateUsers, userToEdit, changeUserToEdit }: IUserModalProp
 								</span>
 							)}
 						</div>
-						<div className="form-control w-full">
-							<label htmlFor="userEmailInput" className="label justify-start">
-								<span className="label-text">Email</span>
-								<span className="label-text text-red-500">&nbsp;[*]</span>
-							</label>
-							<input
-								autoComplete="off"
-								id="userEmailInput"
-								type="text"
-								placeholder="Type the email of the new user"
-								className={`input input-bordered input-primary w-full ${errors.email && "input-error"}`}
-								{...register("email")}
-							/>
-							{errors.email && (
-								<span className="text-sm text-error mt-1" role="alert">
-									{errors.email.message}
-								</span>
-							)}
-						</div>
-						<div className="form-control w-full">
-							<label htmlFor="userPasswordInput" className="label justify-start">
-								<span className="label-text">Password</span>
-								<span className="label-text text-red-500">&nbsp;[*]</span>
-							</label>
-							<input
-								autoComplete="off"
-								id="userPasswordInput"
-								type="password"
-								placeholder="Type your password, 6+ characters"
-								className={`input input-bordered input-primary w-full ${errors.password && "input-error"}`}
-								{...register("password")}
-							/>
-							{errors.password && (
-								<span className="text-sm text-error mt-1" role="alert">
-									{errors.password.message}
-								</span>
-							)}
-						</div>
-						<div className="form-control w-full">
-							<label htmlFor="userconfirmPasswordInput" className="label justify-start">
-								<span className="label-text">Confirm password</span>
-                        <span className="label-text text-red-500">&nbsp;[*]</span>
-							</label>
-							<input
-								autoComplete="off"
-								id="userconfirmPasswordInput"
-								type="password"
-								placeholder="Confirm your password"
-								className={`input input-bordered input-primary w-full ${
-									errors.confirmPassword && "input-error"
-								}`}
-								{...register("confirmPassword")}
-							/>
-							{errors.confirmPassword && (
-								<span className="text-sm text-error mt-1" role="alert">
-									{errors.confirmPassword.message}
-								</span>
-							)}
-						</div>
+						{!userToEditExist(userToEdit) && (
+							<>
+								<div className="form-control w-full">
+									<label htmlFor="userEmailInput" className="label justify-start">
+										<span className="label-text">Email</span>
+										<span className="label-text text-red-500">&nbsp;[*]</span>
+									</label>
+									<input
+										autoComplete="off"
+										id="userEmailInput"
+										type="text"
+										placeholder="Type the email of the new user"
+										className={`input input-bordered input-primary w-full ${errors.email && "input-error"}`}
+										{...register("email")}
+									/>
+									{errors.email && (
+										<span className="text-sm text-error mt-1" role="alert">
+											{errors.email.message}
+										</span>
+									)}
+								</div>
+								<div className="form-control w-full">
+									<label htmlFor="userPasswordInput" className="label justify-start">
+										<span className="label-text">Password</span>
+										<span className="label-text text-red-500">&nbsp;[*]</span>
+									</label>
+									<input
+										autoComplete="off"
+										id="userPasswordInput"
+										type="password"
+										placeholder="Type your password, 6+ characters"
+										className={`input input-bordered input-primary w-full ${
+											errors.password && "input-error"
+										}`}
+										{...register("password")}
+									/>
+									{errors.password && (
+										<span className="text-sm text-error mt-1" role="alert">
+											{errors.password.message}
+										</span>
+									)}
+								</div>
+								<div className="form-control w-full">
+									<label htmlFor="userconfirmPasswordInput" className="label justify-start">
+										<span className="label-text">Confirm password</span>
+										<span className="label-text text-red-500">&nbsp;[*]</span>
+									</label>
+									<input
+										autoComplete="off"
+										id="userconfirmPasswordInput"
+										type="password"
+										placeholder="Confirm your password"
+										className={`input input-bordered input-primary w-full ${
+											errors.confirmPassword && "input-error"
+										}`}
+										{...register("confirmPassword")}
+									/>
+									{errors.confirmPassword && (
+										<span className="text-sm text-error mt-1" role="alert">
+											{errors.confirmPassword.message}
+										</span>
+									)}
+								</div>
+							</>
+						)}
 					</div>
 					<div className="modal-action">
 						<label
 							htmlFor="userModal"
 							className="btn capitalize"
 							onClick={() => {
-								reset();
-								changeUserToEdit(emptyUser);
+								setTimeout(() => {
+									reset();
+									changeUserToEdit(emptyUser);
+								}, 200);
 							}}
 						>
 							Cancel

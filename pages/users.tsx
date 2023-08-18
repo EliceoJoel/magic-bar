@@ -16,11 +16,14 @@ import { emptyUser } from "@/constants/all";
 import { IUserFromFirebase } from "@/interfaces/objects";
 
 import { isUserClient, isUserEmployee, userIsLogged } from "@/utils/validation";
+import { SlowBuffer } from "buffer";
+import DeleteUserConfirmationModal from "@/components/modals/DeleteUserConfirmationModal";
 
 function Users() {
 	const [isContentLoading, setIsContentLoading] = useState(true);
 	const [users, setUsers] = useState<IUserFromFirebase[]>([]);
 	const [selectedUserToEdit, setSelectedUserToEdit] = useState<IUserFromFirebase>(emptyUser);
+	const [userIdToDelete, setUserIdToDelete] = useState<string>("");
 
 	const router = useRouter();
 	const userLogged = useUserStore((state) => state.user);
@@ -73,12 +76,17 @@ function Users() {
 											<td>{user.role}</td>
 											<td>
 												<div className="flex gap-4">
-													<label htmlFor="userModal" className="btn btn-sm btn-warning capitalize">
+													<label
+														htmlFor="userModal"
+														className="btn btn-sm btn-warning capitalize"
+														onClick={() => setSelectedUserToEdit(user)}
+													>
 														Edit
 													</label>
 													<label
 														htmlFor="deleteUserConfirmationModal"
 														className="btn btn-sm btn-error capitalize"
+														onClick={() => setUserIdToDelete(user.id)}
 													>
 														Delete
 													</label>
@@ -104,6 +112,7 @@ function Users() {
 				</>
 			)}
 			<UserModal userToEdit={selectedUserToEdit} changeUserToEdit={setSelectedUserToEdit} updateUsers={setUsers} />
+			<DeleteUserConfirmationModal userId={userIdToDelete} updateUsers={setUsers} />
 		</Layout>
 	);
 }

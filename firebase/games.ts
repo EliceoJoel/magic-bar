@@ -1,6 +1,6 @@
 import { db, storage } from "./config";
 import { addDoc, collection, doc, getDocs, limit, orderBy, query, updateDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import { IGameForFirebase, IGameFromFirebase, IGameToEditForFirebase } from "@/interfaces/objects";
 
@@ -50,12 +50,13 @@ export async function getAllGames() {
 	}
 }
 
-export async function updateGame(gameToEdit: IGameToEditForFirebase) {
+export async function updateGame(gameToEdit: IGameToEditForFirebase, previousImageUrl: string) {
 	const gameRef = doc(db, "games", gameToEdit.id);
 	if (gameToEdit.image !== undefined) {
 		// Update info with new image
 
-		// TODO: Remove previous image
+		// Remove previous image
+		await removePreviousImage(previousImageUrl);
 
 		// Image ref in store
 		const storageRef = ref(storage, `games/${gameToEdit.image.name.split(".")[0] + uuidv4()}`);
@@ -91,6 +92,21 @@ export async function updateGame(gameToEdit: IGameToEditForFirebase) {
 			console.error("Error updating game in firebase: " + error.message);
 		});
 	}
+}
+
+async function removePreviousImage(imageStorageUrl: string) {
+	//Getting original name in firebase store
+	const prevImageNameEndoded = imageStorageUrl.split("/o/")[1].split("?alt=")[0];
+	const imageRef = decodeURIComponent(prevImageNameEndoded);
+
+	// Create a reference to the file to delete
+	const desertRef = ref(storage, imageRef);
+
+	// Delete the file
+	await deleteObject(desertRef)
+		.catch((error) => {
+			console.error("Error removeing old image: " + error);
+		});
 }
 
 export async function getLastNGames(n: number) {

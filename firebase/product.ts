@@ -1,5 +1,5 @@
 import { addDoc, collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { db, storage } from "./config";
 import { v4 as uuidv4 } from "uuid";
 import { IProductForFirebase, IProductFromFirebase, IProductToEditForFirebase } from "@/interfaces/objects";
@@ -29,12 +29,13 @@ export async function createNewProduct(newProduct: IProductForFirebase) {
 		});
 }
 
-export async function updateProduct(productToEdit: IProductToEditForFirebase) {
+export async function updateProduct(productToEdit: IProductToEditForFirebase, previousImageUrl: string) {
 	const productRef = doc(db, "products", productToEdit.id);
 	if (productToEdit.image !== undefined) {
 		// Update info with new image
 
-		// TODO: Remove previous image
+		// Remove previous image
+		await removePreviousImage(previousImageUrl);
 
 		// Image ref in store
 		const storageRef = ref(storage, `products/${productToEdit.image.name.split(".")[0] + uuidv4()}`);
@@ -78,6 +79,21 @@ export async function updateProduct(productToEdit: IProductToEditForFirebase) {
 			console.error("Error updating product in firebase: " + error.message);
 		});
 	}
+}
+
+async function removePreviousImage(imageStorageUrl: string) {
+	//Getting original name in firebase store
+	const prevImageNameEndoded = imageStorageUrl.split("/o/")[1].split("?alt=")[0];
+	const imageRef = decodeURIComponent(prevImageNameEndoded);
+
+	// Create a reference to the file to delete
+	const desertRef = ref(storage, imageRef);
+
+	// Delete the file
+	await deleteObject(desertRef)
+		.catch((error) => {
+			console.error("Error removeing old image: " + error);
+		});
 }
 
 export async function getProductsBycategory(categoryId: string) {

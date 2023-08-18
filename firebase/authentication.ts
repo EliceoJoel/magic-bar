@@ -1,7 +1,7 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { collection, doc, getDoc, getDocs, or, query, setDoc, where } from "firebase/firestore";
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { collection, deleteDoc, doc, getDoc, getDocs, or, query, setDoc, updateDoc, where } from "firebase/firestore";
 import { auth, db } from "./config";
-import { ISignUpUserData, ISignIpUserData, IUserFromFirebase } from "@/interfaces/objects";
+import { ISignUpUserData, ISignIpUserData, IUserFromFirebase, IUserToUpdateForFirebase } from "@/interfaces/objects";
 import { UserType } from "@/constants/enums";
 
 export async function signUpUser({ name, lastName, email, password, role, createdAt, updatedAt }: ISignUpUserData) {
@@ -81,4 +81,26 @@ function sortDescUsersByDate(users: IUserFromFirebase[]) {
 	return users.sort(function (a, b) {
 		return new Date(b.updatedAt.seconds * 1000).getTime() - new Date(a.updatedAt.seconds * 1000).getTime();
 	});
+}
+
+export async function updateUserInformation(userToUpdate: IUserToUpdateForFirebase) {
+	const userRef = doc(db, "users", userToUpdate.id);
+	await updateDoc(userRef, {
+		name: userToUpdate.name,
+		lastName: userToUpdate.lastName,
+		role: userToUpdate.role,
+		updatedAt: userToUpdate.updatedAt,
+	}).catch((error) => {
+		console.error("Error updating user in firebase: " + error.message);
+	});
+}
+
+export async function deleteUser(userId: string) {
+	// DEVNOTE: for the moment admin should remove user from firebase auht
+	// user list manually and app will remove only colection in firestore
+	try {
+		await deleteDoc(doc(db, "users", userId));
+	} catch (error) {
+		console.error("Error trying to delete user from firestore: " + error);
+	}
 }

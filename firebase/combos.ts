@@ -1,6 +1,6 @@
 import { db, storage } from "./config";
 import { addDoc, collection, doc, getDocs, limit, orderBy, query, updateDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL, getStorage, deleteObject } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import { IComboForFirebase, IComboFromFirebase, IComboToEditForFirebase } from "@/interfaces/objects";
 
@@ -29,12 +29,13 @@ export async function createNewCombo(newCombo: IComboForFirebase) {
 		});
 }
 
-export async function updateCombo(comboToEdit: IComboToEditForFirebase) {
+export async function updateCombo(comboToEdit: IComboToEditForFirebase, previousImageUrl: string) {
 	const comboRef = doc(db, "combos", comboToEdit.id);
 	if (comboToEdit.image !== undefined) {
 		// Update info with new image
 
-		// TODO: Remove previous image
+		// Remove previous image
+		await removePreviousImage(previousImageUrl);
 
 		// Image ref in store
 		const storageRef = ref(storage, `combos/${comboToEdit.image.name.split(".")[0] + uuidv4()}`);
@@ -74,10 +75,27 @@ export async function updateCombo(comboToEdit: IComboToEditForFirebase) {
 	}
 }
 
+async function removePreviousImage(imageStorageUrl: string) {
+	//Getting original name in firebase store
+	const prevImageNameEndoded = imageStorageUrl.split("/o/")[1].split("?alt=")[0];
+	const imageRef = decodeURIComponent(prevImageNameEndoded);
+
+	// Create a reference to the file to delete
+	const desertRef = ref(storage, imageRef);
+
+	// Delete the file
+	await deleteObject(desertRef)
+		.catch((error) => {
+			console.error("Error removeing old image: " + error);
+		});
+}
+
 export async function getAllCombos() {
 	const combos: IComboFromFirebase[] = [];
 	try {
-		const querySnapshot = await getDocs(collection(db, "combos"));
+		const combosRef = collection(db, "combos");
+		const orderDescQuery = query(combosRef, orderBy("createdAt", "desc"));
+		const querySnapshot = await getDocs(orderDescQuery);
 		querySnapshot.forEach((doc) => {
 			combos.push({
 				id: doc.id,
