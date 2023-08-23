@@ -92,7 +92,7 @@ async function removePreviousImage(imageStorageUrl: string) {
 	// Delete the file
 	await deleteObject(desertRef)
 		.catch((error) => {
-			console.error("Error removeing old image: " + error);
+			console.error("Error removing old image: " + error);
 		});
 }
 

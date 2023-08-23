@@ -47,3 +47,7 @@ export interface INewUserInputs {
 	password: string;
 	confirmPassword: string;
 }
+
+export interface ISearchInput {
+	search: string;
+}

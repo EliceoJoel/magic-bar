@@ -3,6 +3,7 @@ import { addDoc, collection, doc, getDocs, limit, orderBy, query, updateDoc } fr
 import { ref, uploadBytes, getDownloadURL, getStorage, deleteObject } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import { IComboForFirebase, IComboFromFirebase, IComboToEditForFirebase } from "@/interfaces/objects";
+import { isNotBlank } from "@/utils/StringUtils";
 
 export async function createNewCombo(newCombo: IComboForFirebase) {
 	// Image ref in store
@@ -84,10 +85,9 @@ async function removePreviousImage(imageStorageUrl: string) {
 	const desertRef = ref(storage, imageRef);
 
 	// Delete the file
-	await deleteObject(desertRef)
-		.catch((error) => {
-			console.error("Error removeing old image: " + error);
-		});
+	await deleteObject(desertRef).catch((error) => {
+		console.error("Error removing old image: " + error);
+	});
 }
 
 export async function getAllCombos() {
@@ -135,5 +135,14 @@ export async function getLastNCombos(n: number) {
 		console.error(error);
 	} finally {
 		return resultData;
+	}
+}
+
+export async function searchCombos(searchText: string) {
+	const allCombos = await getAllCombos();
+	if (!isNotBlank(searchText)) {
+		return allCombos;
+	} else {
+		return allCombos.filter((combo) => combo.name.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()));
 	}
 }

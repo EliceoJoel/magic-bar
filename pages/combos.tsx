@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 
@@ -10,11 +12,19 @@ import Loading from "@/components/Loading";
 
 import { useCartStore } from "@/store/cartStore";
 import { useUserStore } from "@/store/userStore";
-import { getAllCombos } from "@/firebase/combos";
+
+import { getAllCombos, searchCombos } from "@/firebase/combos";
+
 import { IComboFromFirebase } from "@/interfaces/objects";
-import { isUserEmployee, isUserOwner } from "@/utils/validation";
+import { ISearchInput } from "@/interfaces/forms";
+
 import { emptyCombo } from "@/constants/all";
 import { noDataCombosMessage } from "@/constants/text";
+
+import { isUserEmployee, isUserOwner } from "@/utils/validation";
+import { isNotBlank } from "@/utils/StringUtils";
+
+import { searchSchema, getYupSchema } from "@/yup/schemas";
 
 function Combos() {
 	const [isContentLoading, setIsContentLoading] = useState(true);
@@ -24,14 +34,38 @@ function Combos() {
 	const userLogged = useUserStore((state) => state.user);
 	const addComboToCart = useCartStore((store) => store.add);
 
+	const router = useRouter();
+
+	const { register, handleSubmit } = useForm<ISearchInput>(getYupSchema(searchSchema));
+
 	useEffect(() => {
 		const getAllCombosFromFirebase = async () => {
 			const data = await getAllCombos();
 			setCombos(data);
 			setIsContentLoading(false);
 		};
-		getAllCombosFromFirebase();
-	}, []);
+		const getCombosBasedOnSearchText = async (searchText: string) => {
+			const data = await searchCombos(searchText);
+			setCombos(data);
+			setIsContentLoading(false);
+		};
+		if (router.query.search === undefined) {
+			getAllCombosFromFirebase();
+		} else {
+			getCombosBasedOnSearchText(router.query.search as string);
+		}
+	}, [router]);
+
+	const handleSearch = handleSubmit(async (data) => {
+		setIsContentLoading(true);
+		if (isNotBlank(data.search)) {
+			router.push({ pathname: "/combos", query: { search: data.search } });
+		} else {
+			const allCombos = await getAllCombos();
+			setCombos(allCombos);
+			setIsContentLoading(false);
+		}
+	});
 
 	return (
 		<Layout>
@@ -45,16 +79,18 @@ function Combos() {
 			</div>
 			<div className="flex justify-end mb-4">
 				<div className="form-control w-[28rem]">
-					<div className="input-group input-group-sm md:input-group-md">
+					<form className="input-group input-group-sm md:input-group-md" onSubmit={handleSearch}>
 						<input
+							autoComplete="off"
 							type="search"
 							placeholder="Search in combos..."
 							className="input input-bordered input-sm input-primary w-full max-w-md md:input-md"
+							{...register("search")}
 						/>
-						<button className="btn btn-primary btn-square btn-sm md:btn-md">
+						<button className="btn btn-primary btn-square btn-sm md:btn-md" type="submit">
 							<AiOutlineSearch className="w-6 h-6" />
 						</button>
-					</div>
+					</form>
 				</div>
 			</div>
 			{isContentLoading ? (
@@ -83,7 +119,7 @@ function Combos() {
 										)}
 									</figure>
 									<div className="card-body gap-0">
-										{(isUserEmployee(userLogged) || isUserOwner(userLogged)) ? (
+										{isUserEmployee(userLogged) || isUserOwner(userLogged) ? (
 											<label
 												htmlFor="comboModal"
 												className="card-title text-base cursor-pointer"

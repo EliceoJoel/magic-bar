@@ -131,7 +131,11 @@ export const newOrderSchema = Yup.object().shape({
 		.positive("Table number can't be negative")
 		.integer("Table number must be integer number")
 		.required("Table number is required field"),
-})
+});
+
+export const searchSchema = Yup.object().shape({
+	search: Yup.string(),
+});
 
 export function getYupSchema(yupSchema: Yup.ObjectSchema<any, Yup.AnyObject, any, "">) {
 	return { resolver: yupResolver(yupSchema) };
