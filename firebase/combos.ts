@@ -94,7 +94,7 @@ export async function getAllCombos() {
 	const combos: IComboFromFirebase[] = [];
 	try {
 		const combosRef = collection(db, "combos");
-		const orderDescQuery = query(combosRef, orderBy("createdAt", "desc"));
+		const orderDescQuery = query(combosRef, orderBy("updatedAt", "desc"));
 		const querySnapshot = await getDocs(orderDescQuery);
 		querySnapshot.forEach((doc) => {
 			combos.push({
@@ -118,7 +118,7 @@ export async function getLastNCombos(n: number) {
 	const resultData: IComboFromFirebase[] = [];
 	try {
 		const combosRef = collection(db, "combos");
-		const lastNCombosQuery = query(combosRef, orderBy("createdAt", "desc"), limit(n));
+		const lastNCombosQuery = query(combosRef, orderBy("updatedAt", "desc"), limit(n));
 		const querySnapshot = await getDocs(lastNCombosQuery);
 		querySnapshot.forEach((doc) => {
 			resultData.push({
@@ -140,9 +140,5 @@ export async function getLastNCombos(n: number) {
 
 export async function searchCombos(searchText: string) {
 	const allCombos = await getAllCombos();
-	if (!isNotBlank(searchText)) {
-		return allCombos;
-	} else {
-		return allCombos.filter((combo) => combo.name.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()));
-	}
+	return allCombos.filter((combo) => combo.name.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()));
 }

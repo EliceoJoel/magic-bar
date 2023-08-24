@@ -52,7 +52,7 @@ export const emailRegExp =
 
 export const validImageExtensions: string[] = ["jpg", "png", "jpeg", "svg", "webp"];
 
-export const emptyCatalog: ICatalog = { promotions: [], combos: [], games: [] };
+export const emptyCatalog: ICatalog = { promotions: [], combos: [], games: [], general: [] };
 
 export const emptyProduct: IProductFromFirebase = {
 	id: "",

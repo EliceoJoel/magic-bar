@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
 
 import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 
@@ -11,11 +13,13 @@ import ProductModal from "@/components/modals/ProductModal";
 import { useCartStore } from "@/store/cartStore";
 import { useUserStore } from "@/store/userStore";
 import { IProductFromFirebase } from "@/interfaces/objects";
-import { getAllPromotions } from "@/firebase/promotions";
+import { getAllPromotions, searchPromotions } from "@/firebase/promotions";
 import { isUserEmployee, isUserOwner } from "@/utils/validation";
 import { emptyProduct } from "@/constants/all";
 import { isNotBlank } from "@/utils/StringUtils";
 import { noDataPromotionsMessage } from "@/constants/text";
+import { ISearchInput } from "@/interfaces/forms";
+import { searchSchema, getYupSchema } from "@/yup/schemas";
 
 function Promotions() {
 	const [isContentLoading, setIsContentLoading] = useState(true);
@@ -25,14 +29,36 @@ function Promotions() {
 	const userLogged = useUserStore((state) => state.user);
 	const addPromotionToCart = useCartStore((store) => store.add);
 
+	const router = useRouter();
+
+	const { register, handleSubmit } = useForm<ISearchInput>(getYupSchema(searchSchema));
+
 	useEffect(() => {
 		const getAllPromotionsFromFirebase = async () => {
 			const data = await getAllPromotions();
 			setPromotions(data);
 			setIsContentLoading(false);
 		};
-		getAllPromotionsFromFirebase();
-	}, []);
+		const getPromotionsBasedOnSearchText = async (searchText: string) => {
+			const data = await searchPromotions(searchText);
+			setPromotions(data);
+			setIsContentLoading(false);
+		};
+		if (router.query.search === undefined) {
+			getAllPromotionsFromFirebase();
+		} else {
+			getPromotionsBasedOnSearchText(router.query.search as string);
+		}
+	}, [router]);
+
+	const handleSearch = handleSubmit(async (data) => {
+		setIsContentLoading(true);
+		if (isNotBlank(data.search)) {
+			router.push({ pathname: "/promotions", query: { search: data.search } });
+		} else {
+			router.push("/promotions");
+		}
+	});
 
 	return (
 		<Layout>
@@ -40,16 +66,18 @@ function Promotions() {
 				<h1 className="text-xl mb-4 sm:mb-0 md:text-2xl">Promotions</h1>
 				<div className="flex justify-end mb-4">
 					<div className="form-control w-full sm:w-[28rem]">
-						<div className="input-group input-group-sm md:input-group-md">
+						<form className="input-group input-group-sm md:input-group-md" onSubmit={handleSearch}>
 							<input
+								autoComplete="off"
 								type="search"
 								placeholder="Search in promotions..."
 								className="input input-bordered input-sm input-primary w-full sm:max-w-md md:input-md"
+								{...register("search")}
 							/>
-							<button className="btn btn-primary btn-square btn-sm md:btn-md">
+							<button className="btn btn-primary btn-square btn-sm md:btn-md" type="submit">
 								<AiOutlineSearch className="w-6 h-6" />
 							</button>
-						</div>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -90,7 +118,7 @@ function Promotions() {
 										)}
 									</figure>
 									<div className="card-body gap-0">
-										{(isUserEmployee(userLogged) || isUserOwner(userLogged)) ? (
+										{isUserEmployee(userLogged) || isUserOwner(userLogged) ? (
 											<label
 												htmlFor="productModal"
 												className="card-title text-base cursor-pointer"

@@ -90,10 +90,9 @@ async function removePreviousImage(imageStorageUrl: string) {
 	const desertRef = ref(storage, imageRef);
 
 	// Delete the file
-	await deleteObject(desertRef)
-		.catch((error) => {
-			console.error("Error removing old image: " + error);
-		});
+	await deleteObject(desertRef).catch((error) => {
+		console.error("Error removing old image: " + error);
+	});
 }
 
 export async function getProductsBycategory(categoryId: string) {
@@ -121,4 +120,46 @@ export async function getProductsBycategory(categoryId: string) {
 	} finally {
 		return resultData;
 	}
+}
+
+/**
+ * Returns list of products that are not considered promotions
+ * @returns list of products
+ */
+export async function getAllGeneralProducts() {
+	const products: IProductFromFirebase[] = [];
+	try {
+		const productsRef = collection(db, "products");
+		const orderDescQuery = query(productsRef, where("promotionPrice", "==", 0));
+		const querySnapshot = await getDocs(orderDescQuery);
+		querySnapshot.forEach((doc) => {
+			products.push({
+				id: doc.id,
+				name: doc.data().name,
+				brand: doc.data().brand,
+				price: doc.data().price,
+				category: doc.data().category,
+				image: doc.data().image,
+				additional: doc.data().additional,
+				promotionPrice: doc.data().promotionPrice,
+				createdAt: doc.data().createdAt,
+				updatedAt: doc.data().updatedAt,
+			});
+		});
+	} catch (error) {
+		console.error("Error getting all product, not promotions: " + error);
+	} finally {
+		return sortDescProductsByDate(products);
+	}
+}
+
+function sortDescProductsByDate(products: IProductFromFirebase[]) {
+	return products.sort(function (a, b) {
+		return new Date(b.updatedAt.seconds * 1000).getTime() - new Date(a.updatedAt.seconds * 1000).getTime();
+	});
+}
+
+export async function searchGeneralProducts(searchText: string) {
+	const allGeneralProducts = await getAllGeneralProducts();
+	return allGeneralProducts.filter((combo) => combo.name.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()));
 }

@@ -34,6 +34,7 @@ export interface ICatalog {
 	promotions: IProductFromFirebase[];
 	combos: IComboFromFirebase[];
 	games: IGameFromFirebase[];
+	general: IProductFromFirebase[];
 }
 
 export interface IProductForFirebase {

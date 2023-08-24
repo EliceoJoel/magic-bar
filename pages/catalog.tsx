@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
 
 import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 import { HiOutlineSparkles } from "react-icons/hi";
@@ -18,14 +20,17 @@ import GameModal from "@/components/modals/GameModal";
 import { productCategories } from "data/product";
 import { useCartStore } from "@/store/cartStore";
 import { useUserStore } from "@/store/userStore";
-import { getLastNPromotions } from "@/firebase/promotions";
-import { getLastNCombos } from "@/firebase/combos";
-import { getLastNGames } from "@/firebase/games";
+import { getLastNPromotions, searchPromotions } from "@/firebase/promotions";
+import { getLastNCombos, searchCombos } from "@/firebase/combos";
+import { getLastNGames, searchGames } from "@/firebase/games";
 import { ICatalog, IComboFromFirebase, IGameFromFirebase, IProductFromFirebase } from "@/interfaces/objects";
 import { isCatalogEmpty, isUserEmployee, isUserOwner } from "@/utils/validation";
 import { emptyCatalog, emptyCombo, emptyGame, emptyProduct } from "@/constants/all";
 import { isNotBlank } from "@/utils/StringUtils";
 import { noDataCatalogMessage } from "@/constants/text";
+import { ISearchInput } from "@/interfaces/forms";
+import { searchSchema, getYupSchema } from "@/yup/schemas";
+import { searchGeneralProducts } from "@/firebase/product";
 
 function AllCatalog() {
 	const [isContentLoading, setIsContentLoading] = useState(true);
@@ -35,25 +40,53 @@ function AllCatalog() {
 	const [selectedGameToEdit, setSelectedGameToEdit] = useState<IGameFromFirebase>(emptyGame);
 
 	const userLogged = useUserStore((state) => state.user);
+	const addProductToCart = useCartStore((store) => store.add);
+
+	const router = useRouter();
+
+	const { register, handleSubmit } = useForm<ISearchInput>(getYupSchema(searchSchema));
 
 	useEffect(() => {
 		async function getLastFiveProductsFromFirestore() {
 			const lastFivePromotions = await getLastNPromotions(5);
 			const lastFiveCombos = await getLastNCombos(5);
 			const lastFiveGames = await getLastNGames(5);
-			if (lastFivePromotions !== undefined && lastFiveCombos !== undefined && lastFiveGames !== undefined) {
-				setCatalog({
-					promotions: lastFivePromotions,
-					combos: lastFiveCombos,
-					games: lastFiveGames,
-				});
-			}
+			setCatalog({
+				promotions: lastFivePromotions,
+				combos: lastFiveCombos,
+				games: lastFiveGames,
+				general: [],
+			});
 			setIsContentLoading(false);
 		}
-		getLastFiveProductsFromFirestore();
-	}, []);
+		async function getProductsBasedOnSearchText(searchText: string) {
+			const promotionsResulst = await searchPromotions(searchText);
+			const combosResult = await searchCombos(searchText);
+			const gamesResult = await searchGames(searchText);
+			const generalResult = await searchGeneralProducts(searchText);
+			setCatalog({
+				promotions: promotionsResulst,
+				combos: combosResult,
+				games: gamesResult,
+				general: generalResult,
+			});
+			setIsContentLoading(false);
+		}
+		if (router.query.search === undefined) {
+			getLastFiveProductsFromFirestore();
+		} else {
+			getProductsBasedOnSearchText(router.query.search as string);
+		}
+	}, [router]);
 
-	const addProductToCart = useCartStore((store) => store.add);
+	const handleSearch = handleSubmit(async (data) => {
+		setIsContentLoading(true);
+		if (isNotBlank(data.search)) {
+			router.push({ pathname: "/catalog", query: { search: data.search } });
+		} else {
+			router.push("/catalog");
+		}
+	});
 
 	return (
 		<Layout>
@@ -67,41 +100,45 @@ function AllCatalog() {
 			</div>
 			<div className="flex justify-end mb-4">
 				<div className="form-control w-[28rem]">
-					<div className="input-group input-group-sm md:input-group-md">
+					<form className="input-group input-group-sm md:input-group-md" onSubmit={handleSearch}>
 						<input
+							autoComplete="off"
 							type="search"
 							placeholder="Search in catalog..."
 							className="input input-bordered input-sm input-primary w-full max-w-md md:input-md"
+							{...register("search")}
 						/>
-						<button className="btn btn-primary btn-square btn-sm md:btn-md">
+						<button className="btn btn-primary btn-square btn-sm md:btn-md" type="submit">
 							<AiOutlineSearch className="w-6 h-6" />
 						</button>
-					</div>
+					</form>
 				</div>
 			</div>
 			{/* Display categories only for devices with width display higher than 768px */}
-			<div className="mb-4 hidden md:block">
-				<div className="flex items-center justify-between mb-2">
-					<h2 className="text-xl lg:text-2xl">Categories</h2>
+			{router.query.search === undefined && (
+				<div className="mb-4 hidden md:block">
+					<div className="flex items-center justify-between mb-2">
+						<h2 className="text-xl lg:text-2xl">Categories</h2>
+					</div>
+					<div className="grid gap-4 md:grid-cols-6 xl:grid-cols-6 2xl:grid-cols-12">
+						{productCategories.map((category, index) => (
+							<Link
+								className="card card-compact bg-base-100 shadow-xl"
+								key={index}
+								href={`/categories/${category.id}`}
+								tabIndex={0}
+							>
+								<figure className="relative">
+									<Image alt={category.name} src={category.image} />
+								</figure>
+								<div className="card-body gap-0 items-center">
+									<h3 className="card-title text-base">{category.name}</h3>
+								</div>
+							</Link>
+						))}
+					</div>
 				</div>
-				<div className="grid gap-4 md:grid-cols-6 xl:grid-cols-6 2xl:grid-cols-12">
-					{productCategories.map((category, index) => (
-						<Link
-							className="card card-compact bg-base-100 shadow-xl"
-							key={index}
-							href={`/categories/${category.id}`}
-							tabIndex={0}
-						>
-							<figure className="relative">
-								<Image alt={category.name} src={category.image} />
-							</figure>
-							<div className="card-body gap-0 items-center">
-								<h3 className="card-title text-base">{category.name}</h3>
-							</div>
-						</Link>
-					))}
-				</div>
-			</div>
+			)}
 			{isContentLoading ? (
 				<Loading />
 			) : (
@@ -149,7 +186,8 @@ function AllCatalog() {
 													)}
 												</figure>
 												<div className="card-body gap-0">
-													{(isUserEmployee(userLogged) || isUserOwner(userLogged)) ? (
+													{(isUserEmployee(userLogged) || isUserOwner(userLogged)) &&
+													router.query.search === undefined ? (
 														<label
 															htmlFor="productModal"
 															className="card-title text-base cursor-pointer"
@@ -203,7 +241,8 @@ function AllCatalog() {
 													)}
 												</figure>
 												<div className="card-body gap-0">
-													{(isUserEmployee(userLogged) || isUserOwner(userLogged)) ? (
+													{(isUserEmployee(userLogged) || isUserOwner(userLogged)) &&
+													router.query.search === undefined ? (
 														<label
 															htmlFor="comboModal"
 															className="card-title text-base cursor-pointer"
@@ -256,7 +295,8 @@ function AllCatalog() {
 													)}
 												</figure>
 												<div className="card-body gap-0">
-													{(isUserEmployee(userLogged) || isUserOwner(userLogged)) ? (
+													{(isUserEmployee(userLogged) || isUserOwner(userLogged)) &&
+													router.query.search === undefined ? (
 														<label
 															htmlFor="gameModal"
 															className="card-title text-base cursor-pointer"
@@ -275,6 +315,66 @@ function AllCatalog() {
 										{catalog.games.length === 5 && (
 											<SeeAllItems title="games" icon={<IoDiceOutline className="h-16 w-16" />} />
 										)}
+									</div>
+								</div>
+							)}
+							{catalog.general.length > 0 && (
+								<div className="mb-4">
+									<div className="flex items-center justify-between mb-2">
+										<h2 className="text-xl lg:text-2xl">General</h2>
+									</div>
+									<div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
+										{catalog?.general.map((product, index) => (
+											<div className="card card-compact bg-base-100 shadow-xl" key={index}>
+												<figure className="relative">
+													<Image
+														className="w-[500px]"
+														alt={product.name}
+														src={product.image}
+														width={1000}
+														height={1000}
+													/>
+													{(isUserEmployee(userLogged) || isUserOwner(userLogged)) && (
+														<button
+															className="btn btn-circle btn-primary absolute top-2 right-2"
+															onClick={() =>
+																addProductToCart({
+																	...product,
+																	quantity: 1,
+																	name: isNotBlank(product.additional)
+																		? product.name + " (" + product.additional + ")"
+																		: product.name,
+																})
+															}
+														>
+															<AiOutlinePlus className="w-6 h-6" />
+														</button>
+													)}
+													{isNotBlank(product.additional) && (
+														<div className="badge badge-sm absolute bottom-2 right-2">
+															{product.additional}
+														</div>
+													)}
+												</figure>
+												<div className="card-body gap-0">
+													{(isUserEmployee(userLogged) || isUserOwner(userLogged)) &&
+													router.query.search === undefined ? (
+														<label
+															htmlFor="productModal"
+															className="card-title text-base cursor-pointer"
+															tabIndex={0}
+															onClick={() => setSelectedPromotionToEdit(product)}
+														>
+															&#9998; {product.name}
+														</label>
+													) : (
+														<h3 className="card-title text-base">{product.name}</h3>
+													)}
+													<p className="font-bold text-primary">Bs {product.price.toFixed(2)}</p>
+													<p>{product.brand}</p>
+												</div>
+											</div>
+										))}
 									</div>
 								</div>
 							)}

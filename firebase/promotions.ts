@@ -25,7 +25,7 @@ export async function getAllPromotions() {
 	} catch (error) {
 		console.error(error);
 	} finally {
-		return resultData;
+		return sortDescPromotionsByDate(resultData);
 	}
 }
 
@@ -43,6 +43,11 @@ export async function getLastNPromotions(n: number) {
 
 function sortDescPromotionsByDate(promotions: IProductFromFirebase[]) {
 	return promotions.sort(function (a, b) {
-		return new Date(b.createdAt.seconds * 1000).getTime() - new Date(a.createdAt.seconds * 1000).getTime();
+		return new Date(b.updatedAt.seconds * 1000).getTime() - new Date(a.updatedAt.seconds * 1000).getTime();
 	});
+}
+
+export async function searchPromotions(searchText: string) {
+	const allPromotions = await getAllPromotions();
+	return allPromotions.filter((combo) => combo.name.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()));
 }
