@@ -3,6 +3,7 @@ import { addDoc, collection, doc, getDocs, limit, orderBy, query, updateDoc } fr
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import { IGameForFirebase, IGameFromFirebase, IGameToEditForFirebase } from "@/interfaces/objects";
+import { isNotBlank } from "@/utils/StringUtils";
 
 export async function createNewGame(newGame: IGameForFirebase) {
 	// Image ref in store
@@ -32,7 +33,9 @@ export async function createNewGame(newGame: IGameForFirebase) {
 export async function getAllGames() {
 	const games: IGameFromFirebase[] = [];
 	try {
-		const querySnapshot = await getDocs(collection(db, "games"));
+		const gamesRef = collection(db, "games");
+		const orderDescQuery = query(gamesRef, orderBy("updatedAt", "desc"));
+		const querySnapshot = await getDocs(orderDescQuery);
 		querySnapshot.forEach((doc) => {
 			games.push({
 				id: doc.id,
@@ -103,17 +106,16 @@ async function removePreviousImage(imageStorageUrl: string) {
 	const desertRef = ref(storage, imageRef);
 
 	// Delete the file
-	await deleteObject(desertRef)
-		.catch((error) => {
-			console.error("Error removing old image: " + error);
-		});
+	await deleteObject(desertRef).catch((error) => {
+		console.error("Error removing old image: " + error);
+	});
 }
 
 export async function getLastNGames(n: number) {
 	const resultData: IGameFromFirebase[] = [];
 	try {
 		const gamesRef = collection(db, "games");
-		const lastNGamesQuery = query(gamesRef, orderBy("createdAt", "desc"), limit(n));
+		const lastNGamesQuery = query(gamesRef, orderBy("updatedAt", "desc"), limit(n));
 		const querySnapshot = await getDocs(lastNGamesQuery);
 		querySnapshot.forEach((doc) => {
 			resultData.push({
@@ -130,4 +132,9 @@ export async function getLastNGames(n: number) {
 	} finally {
 		return resultData;
 	}
+}
+
+export async function searchGames(searchText: string) {
+	const allGames = await getAllGames();
+	return allGames.filter((combo) => combo.name.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()));
 }

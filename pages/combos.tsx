@@ -61,9 +61,7 @@ function Combos() {
 		if (isNotBlank(data.search)) {
 			router.push({ pathname: "/combos", query: { search: data.search } });
 		} else {
-			const allCombos = await getAllCombos();
-			setCombos(allCombos);
-			setIsContentLoading(false);
+			router.push("/combos")
 		}
 	});
 
