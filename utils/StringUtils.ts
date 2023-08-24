@@ -1,3 +1,3 @@
 export function isNotBlank(text: string): boolean {
-   return text.trim() !== "";
+	return text != undefined && text.trim() !== "";
 }

@@ -3,7 +3,6 @@ import { addDoc, collection, doc, getDocs, limit, orderBy, query, updateDoc } fr
 import { ref, uploadBytes, getDownloadURL, getStorage, deleteObject } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import { IComboForFirebase, IComboFromFirebase, IComboToEditForFirebase } from "@/interfaces/objects";
-import { isNotBlank } from "@/utils/StringUtils";
 
 export async function createNewCombo(newCombo: IComboForFirebase) {
 	// Image ref in store
