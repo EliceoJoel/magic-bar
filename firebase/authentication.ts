@@ -21,7 +21,6 @@ export async function signUpUser({ name, lastName, email, password, role, create
 		}).catch((error) => {
 			console.error("Error saving user information in firestore: ", error.message);
 		});
-		console.log("User created and saved successfully!");
 		return { name, lastName, email, role };
 	} catch (error) {
 		if (error instanceof Error) {
@@ -37,8 +36,6 @@ export async function signInUser({ email, password }: ISignIpUserData) {
 		const userCredential = await signInWithEmailAndPassword(auth, email, password);
 		const docRef = doc(db, `users/${userCredential.user.uid}`);
 		const docSnap = await getDoc(docRef);
-		console.log("User logged in successfully!");
-		console.log(docSnap.data());
 		return docSnap.data();
 	} catch (error) {
 		if (error instanceof Error) {

@@ -46,29 +46,6 @@ function SignUp() {
 		setIsSingingUp(false);
 	});
 
-	const signUpByGoogleMethod = useGoogleLogin({
-		onSuccess: async (tokenResponse) => {
-			const userInfo = await getUserInfoFromGoogle(tokenResponse.access_token);
-		},
-		onError: (tokenResponse) => console.log(tokenResponse),
-	});
-
-	async function getUserInfoFromGoogle(userToken: string) {
-		try {
-			const response = await fetch(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${userToken}`, {
-				method: "GET",
-				headers: {
-					Authorization: `Bearer ${userToken}`,
-					"Content-Type": "application/json",
-				},
-			});
-			const jsonData = await response.json();
-			return jsonData;
-		} catch (error) {
-			console.log(error);
-		}
-	}
-
 	return (
 		<div className="h-screen flex items-center justify-center">
 			<main className="w-full max-w-fit ssm:max-w-xs sm:max-w-sm">
@@ -181,8 +158,6 @@ function SignUp() {
 							Sign in
 						</Link>
 					</p>
-					<div className="divider">OR</div>
-					<GoogleButton onClick={signUpByGoogleMethod} text="Sign up with Google" />
 				</form>
 			</main>
 		</div>

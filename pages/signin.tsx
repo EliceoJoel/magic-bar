@@ -48,11 +48,6 @@ function SignIn() {
 		setIsSigningIn(false);
 	});
 
-	const signInByGoogleMethod = useGoogleLogin({
-		onSuccess: (tokenResponse) => console.log(tokenResponse),
-		onError: (tokenResponse) => console.log(tokenResponse),
-	});
-
 	return (
 		<div className="h-screen flex items-center justify-center">
 			<main className="w-full max-w-fit ssm:max-w-xs sm:max-w-sm">
@@ -109,8 +104,6 @@ function SignIn() {
 							Sign up
 						</Link>
 					</p>
-					<div className="divider">OR</div>
-					<GoogleButton onClick={signInByGoogleMethod} text="Sign in with Google" />
 				</form>
 			</main>
 		</div>
