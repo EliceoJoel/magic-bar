@@ -30,8 +30,8 @@ function LeftSidebarMenu() {
 				</label>
 			</div>
 			{catalogRoutes.map((catalogRoute, index) => (
-				<li className="bg-white rounded-btn mb-4 shadow-lg" key={index}>
-					<Link href={catalogRoute.path} className={`${pathname?.includes(catalogRoute.path) && "active"}`}>
+				<li className="rounded-btn mb-4 shadow-lg" key={index}>
+					<Link href={catalogRoute.path} className={`${pathname?.includes(catalogRoute.path) ? "active" : "bg-white text-black"}`}>
 						<catalogRoute.icon className="h-6 w-6" />
 						{catalogRoute.name}
 					</Link>
@@ -39,7 +39,7 @@ function LeftSidebarMenu() {
 			))}
 			{(isUserEmployee(userLogged) || isUserOwner(userLogged)) && (
 				<li className="bg-white rounded-btn mb-4 shadow-lg">
-					<Link href="/orders" className={`${pathname?.includes("/orders") && "active"}`}>
+					<Link href="/orders" className={`${pathname?.includes("/orders")? "active" : "bg-white text-black"}`}>
 						<BsCardChecklist className="h-6 w-6" />
 						Orders
 					</Link>
@@ -47,7 +47,7 @@ function LeftSidebarMenu() {
 			)}
 			{isUserOwner(userLogged) && (
 				<li className="bg-white rounded-btn mb-4 shadow-lg">
-					<Link href="/users" className={`${pathname?.includes("/users") && "active"}`}>
+					<Link href="/users" className={`${pathname?.includes("/users") ? "active" : "bg-white text-black"}`}>
 						<FiUsers className="h-6 w-6" />
 						Users
 					</Link>
